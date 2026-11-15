@@ -162,7 +162,7 @@ p { margin: 0 0 14px; max-width: 65ch; }
 .log time { font-family: var(--mono); font-size: 12.5px; color: var(--circuit); margin-right: 8px; font-variant-numeric: tabular-nums; }
 
 /* Smaller projects */
-.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid3 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 .card { border: 1px solid var(--rule); border-radius: 6px; padding: 22px; display: flex; flex-direction: column; background: var(--paper); }
 .card h3 { font-size: 22px; }
 .card p { font-size: 15.5px; }
@@ -252,7 +252,7 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
     <section id="work" aria-labelledby="work-h">
       <div class="sec-head">
         <h2 id="work-h">Projects</h2>
-        <span class="label">5 entries · code on GitHub</span>
+        <span class="label">6 entries · code on GitHub</span>
       </div>
 
       <!-- 01 Garden monitor -->
@@ -405,6 +405,13 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
           <ul class="stack"><li>Python 3</li><li>CLI</li></ul>
           <p>A command-line ordering app with category menus, a cart you can edit, student, staff and member discounts, 9% GST, a lucky-draw game at checkout and input validation throughout.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/python-terminal-shop">Code ↗</a></div>
+        </article>
+        <article class="card">
+          <span class="p-num">06 / Python · Nov 2026</span>
+          <h3>Pokémon card portfolio tracker</h3>
+          <ul class="stack"><li>Python 3</li><li>Telegram Bot API</li><li>launchd</li><li>JSON</li></ul>
+          <p>A bot that watches my Pokémon card collection on Collectr. Every morning it messages me on Telegram with the 3 cards that rose the most and the 3 that fell the most; every Sunday it sends how much the whole portfolio moved that week. It reads the public showcase page, keeps a daily snapshot history and runs on a macOS schedule, using only the Python standard library.</p>
+          <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/collectr-portfolio-tracker">Code ↗</a></div>
         </article>
       </div>
     </section>
