@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jaden Chua Portfolio</title>
+<meta name="description" content="Jaden Chua, Electronic and Computer Engineering student at Nanyang Polytechnic. Embedded systems and IoT projects on M5Stack, Arduino, ATmega328P and Raspberry Pi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a lab notebook. Narrow reading column, numbered project entries, each with its own wiring diagram and spec readouts. */
+:root {
+  --paper: #f5f0e6;
+  --paper-2: #ece5d6;
+  --ink: #221d17;
+  --ink-soft: #5d554a;
+  --rule: #d4cab6;
+  --accent: #a3401c;
+  --accent-soft: #f1dccf;
+  --circuit: #2f5d50;
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1a1714;
+    --paper-2: #24201b;
+    --ink: #eee6d8;
+    --ink-soft: #b3a998;
+    --rule: #3b352d;
+    --accent: #e08a62;
+    --accent-soft: #3a2519;
+    --circuit: #8fc2b0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1a1714;
+  --paper-2: #24201b;
+  --ink: #eee6d8;
+  --ink-soft: #b3a998;
+  --rule: #3b352d;
+  --accent: #e08a62;
+  --accent-soft: #3a2519;
+  --circuit: #8fc2b0;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+img, svg { max-width: 100%; height: auto; display: block; }
+
+.wrap { width: min(1080px, 100% - 40px); margin-inline: auto; }
+
+/* Nav */
+.nav {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; flex-wrap: wrap; }
+.nav-name { font-family: var(--display); font-weight: 600; font-size: 19px; color: var(--ink); text-decoration: none; }
+.nav-links { display: flex; gap: 22px; flex-wrap: wrap; font-size: 15px; }
+.nav-links a { color: var(--ink-soft); text-decoration: none; }
+.nav-links a:hover { color: var(--accent); }
+
+/* Hero */
+.hero { padding: 72px 0 48px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; align-items: end; }
+.label { font-family: var(--mono); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+h1 {
+  font-family: var(--display); font-weight: 400; font-size: clamp(52px, 8vw, 92px);
+  line-height: .98; letter-spacing: -.02em; margin: 14px 0 22px; text-wrap: balance;
+}
+h1 em { font-style: italic; color: var(--accent); }
+.lede { font-size: 20px; line-height: 1.5; max-width: 34em; margin: 0 0 28px; color: var(--ink); }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border: 1px solid var(--ink); border-radius: 999px;
+  color: var(--ink); text-decoration: none; font-size: 15px; font-weight: 500;
+  transition: background .15s, color .15s;
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+.facts { border-top: 2px solid var(--ink); margin: 0; }
+.facts div { display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+.facts dt { color: var(--ink-soft); font-size: 15px; }
+.facts dd { margin: 0; font-family: var(--mono); font-size: 15px; font-variant-numeric: tabular-nums; text-align: right; }
+.facts dd strong { font-family: var(--display); font-size: 30px; font-weight: 600; color: var(--accent); }
+
+/* Now building */
+.now {
+  display: flex; gap: 18px; align-items: baseline; flex-wrap: wrap;
+  padding: 16px 20px; background: var(--paper-2); border-left: 3px solid var(--circuit);
+  margin-bottom: 72px; font-size: 16px;
+}
+.now .label { color: var(--circuit); }
+.now .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--circuit); margin-right: 8px; animation: pulse 2s infinite; }
+@keyframes pulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .now .dot { animation: none; } }
+
+/* Sections */
+section { padding: 24px 0 72px; }
+.sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; margin-bottom: 40px; flex-wrap: wrap; }
+h2 { font-family: var(--display); font-weight: 400; font-size: clamp(32px, 4.5vw, 44px); margin: 0; letter-spacing: -.01em; }
+h3 { font-family: var(--display); font-weight: 600; font-size: 28px; line-height: 1.15; margin: 6px 0 12px; text-wrap: balance; }
+h4 { font-family: var(--mono); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); font-weight: 500; margin: 26px 0 10px; }
+p { margin: 0 0 14px; max-width: 65ch; }
+
+/* Featured project */
+.project { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding: 0 0 56px; margin-bottom: 56px; border-bottom: 1px solid var(--rule); }
+.project:last-of-type { border-bottom: 0; margin-bottom: 0; }
+.p-num { font-family: var(--mono); font-size: 14px; color: var(--accent); }
+.stack { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 18px; padding: 0; list-style: none; }
+.stack li { font-family: var(--mono); font-size: 12.5px; padding: 3px 9px; border: 1px solid var(--rule); border-radius: 4px; color: var(--ink-soft); background: var(--paper); }
+.fixes { list-style: none; padding: 0; margin: 0; }
+.fixes li { padding: 10px 0 10px 28px; border-top: 1px solid var(--rule); position: relative; font-size: 15.5px; }
+.fixes li::before { content: "fix"; position: absolute; left: 0; top: 12px; font-family: var(--mono); font-size: 11px; color: var(--accent); }
+.fixes b { font-weight: 600; }
+.links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+
+.figure { background: var(--paper-2); border: 1px solid var(--rule); border-radius: 6px; padding: 20px; }
+.figure figcaption { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-top: 12px; }
+.diagram text { font-family: var(--body); fill: var(--ink); }
+.diagram .box { fill: var(--paper); stroke: var(--ink-soft); stroke-width: 1.2; }
+.diagram .core { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.6; }
+.diagram .group { fill: none; stroke: var(--ink-soft); stroke-dasharray: 4 4; }
+.diagram .wire { stroke: var(--circuit); stroke-width: 1.8; fill: none; }
+.diagram .pin { font-family: var(--mono); font-size: 10.5px; fill: var(--circuit); }
+.diagram .t { font-size: 13px; font-weight: 600; }
+.diagram .s { font-size: 11px; fill: var(--ink-soft); }
+.diagram .tc { font-size: 15px; font-weight: 600; fill: var(--accent); }
+.diagram .ah { fill: var(--circuit); }
+
+.readout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; margin-top: 16px; }
+.readout div { background: var(--paper); padding: 12px 14px; }
+.readout span { display: block; font-family: var(--mono); font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .05em; }
+.readout b { font-family: var(--mono); font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+.log { list-style: none; padding: 0; margin: 0; border-left: 1px solid var(--rule); }
+.log li { position: relative; padding: 0 0 12px 18px; font-size: 15px; }
+.log li::before { content: ""; position: absolute; left: -4px; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--circuit); }
+.log time { font-family: var(--mono); font-size: 12.5px; color: var(--circuit); margin-right: 8px; font-variant-numeric: tabular-nums; }
+
+/* Smaller projects */
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.card { border: 1px solid var(--rule); border-radius: 6px; padding: 22px; display: flex; flex-direction: column; background: var(--paper); }
+.card h3 { font-size: 22px; }
+.card p { font-size: 15.5px; }
+.card .links { margin-top: auto; padding-top: 12px; }
+.card .btn { padding: 7px 14px; font-size: 14px; }
+
+/* Skills */
+.skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.skills h4 { margin-top: 0; }
+.skills ul { list-style: none; padding: 0; margin: 0; }
+.skills li { padding: 7px 0; border-top: 1px solid var(--rule); font-size: 15.5px; }
+
+/* Record */
+.record { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.entry { padding: 16px 0; border-top: 1px solid var(--rule); }
+.entry:first-of-type { border-top: 0; padding-top: 0; }
+.entry .when { font-family: var(--mono); font-size: 13px; color: var(--ink-soft); }
+.entry h3 { font-size: 22px; margin: 4px 0 6px; }
+.entry p { font-size: 15.5px; margin: 0; }
+
+/* Contact */
+.contact { background: var(--ink); color: var(--paper); padding: 64px 0; }
+.contact h2 { font-size: clamp(36px, 6vw, 60px); max-width: 16em; text-wrap: balance; }
+.contact p { color: color-mix(in srgb, var(--paper) 75%, var(--ink)); margin-top: 14px; }
+.contact-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 36px; background: color-mix(in srgb, var(--paper) 25%, var(--ink)); }
+.contact-list a { background: var(--ink); color: var(--paper); padding: 20px; text-decoration: none; display: block; }
+.contact-list a:hover { background: color-mix(in srgb, var(--paper) 8%, var(--ink)); }
+.contact-list span { display: block; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; opacity: .65; }
+.contact-list b { font-weight: 500; font-size: 16px; word-break: break-word; }
+footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); }
+
+@media (max-width: 860px) {
+  .hero, .project, .record { grid-template-columns: 1fr; gap: 32px; }
+  .grid3 { grid-template-columns: 1fr; }
+  .skills { grid-template-columns: 1fr 1fr; }
+  .contact-list { grid-template-columns: 1fr; }
+  .hero { padding-top: 44px; }
+}
+@media (max-width: 420px) {
+  .skills { grid-template-columns: 1fr; }
+  .readout { grid-template-columns: 1fr 1fr; }
+  .nav-links { gap: 14px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="nav-name" href="#top">Jaden Chua</a>
+    <div class="nav-links">
+      <a href="#work">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#record">Education</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+  <div class="wrap">
+    <header class="hero">
+      <div>
+        <div class="label">Electronic &amp; Computer Engineering · Nanyang Polytechnic</div>
+        <h1>Jaden Chua<br><em>builds hardware.</em></h1>
+        <p class="lede">I take prototypes from a bag of sensors to a working device: wiring, firmware, the power bugs nobody warns you about, and a write-up good enough for someone else to rebuild it.</p>
+        <div class="cta">
+          <a class="btn primary" href="#work">See projects</a>
+          <a class="btn" href="https://github.com/jadenchua-dot">GitHub ↗</a>
+          <a class="btn" href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">LinkedIn ↗</a>
+        </div>
+      </div>
+      <dl class="facts">
+        <div><dt>Cumulative GPA</dt><dd><strong>3.97</strong> / 4.00</dd></div>
+        <div><dt>Director's List</dt><dd>Y1S1 · Y1S2 · Y2S1</dd></div>
+        <div><dt>Diploma (C89)</dt><dd>Year 2 of 3 · Grad 2028</dd></div>
+        <div><dt>Based in</dt><dd>Singapore</dd></div>
+      </dl>
+    </header>
+
+    <div class="now" role="note">
+      <span class="label"><span class="dot" aria-hidden="true"></span>Now building</span>
+      <span>A TinyML vibration anomaly detector on the M5Stack Fire: trained in Edge Impulse on IMU data, running inference on the device with no internet.</span>
+    </div>
+
+    <!-- PROJECTS -->
+    <section id="work" aria-labelledby="work-h">
+      <div class="sec-head">
+        <h2 id="work-h">Projects</h2>
+        <span class="label">5 entries · code on GitHub</span>
+      </div>
+
+      <!-- 01 Garden monitor -->
+      <article class="project">
+        <div>
+          <span class="p-num">01 / Nov 2026</span>
+          <h3>M5Stack self-watering garden monitor</h3>
+          <ul class="stack"><li>ESP32 · M5Stack Fire</li><li>C++ / Arduino</li><li>I2C</li><li>M5GFX</li><li>WiFi web server</li></ul>
+          <p>Singapore imports around 90% of its food, and community garden plots often fail for a simple reason: uneven watering. This node reads soil moisture, air conditions and tank level, then releases water through a servo-pinched tube only when the soil has stayed dry across five readings in a row.</p>
+          <p>It skips a cycle when the tank is under 20% or the air is above 90% humidity, waits through a cooldown before it can water again, and serves a live dashboard over WiFi from the Fire itself.</p>
+
+          <h4>What broke, and the fix</h4>
+          <ul class="fixes">
+            <li><b>Fire reset mid-cycle and watered again.</b> The servo arm stalled against the Lego frame and its current spike browned out the board. Fixed with arm clearance, 1° stepping and a reset-reason log.</li>
+            <li><b>Screen blinked when the servo moved.</b> Traced to the laptop's USB port sagging under load; running from battery or a 1&nbsp;A supply cured it.</li>
+            <li><b>Display and ToF sensor fought over I2C.</b> Moved screen drawing to M5GFX so display code stays off the sensor bus.</li>
+          </ul>
+
+          <div class="links">
+            <a class="btn primary" href="https://youtube.com/shorts/DR6Jm-IQAWk">Watch demo ↗</a>
+            <a class="btn" href="https://github.com/jadenchua-dot/m5stack-garden-monitor">Code &amp; build log ↗</a>
+          </div>
+        </div>
+
+        <div>
+          <figure class="figure" style="margin:0">
+            <svg class="diagram" viewBox="0 0 520 300" role="img" aria-labelledby="g-title">
+              <title id="g-title">Wiring: Earth unit on Port B, ENV II and ToF on Port A through a HUB, servo on Port C, all into the M5Stack Fire</title>
+              <defs><marker id="ah1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10z"/></marker></defs>
+              <rect class="box" x="10" y="20" width="140" height="52" rx="5"/>
+              <text class="t" x="80" y="42" text-anchor="middle">Earth unit</text>
+              <text class="s" x="80" y="59" text-anchor="middle">soil moisture, analog</text>
+              <rect class="group" x="4" y="104" width="152" height="150" rx="6"/>
+              <text class="s" x="80" y="122" text-anchor="middle">HUB · I2C</text>
+              <rect class="box" x="16" y="132" width="128" height="48" rx="5"/>
+              <text class="t" x="80" y="152" text-anchor="middle">ENV II</text>
+              <text class="s" x="80" y="168" text-anchor="middle">temp · humidity · hPa</text>
+              <rect class="box" x="16" y="192" width="128" height="48" rx="5"/>
+              <text class="t" x="80" y="212" text-anchor="middle">ToF</text>
+              <text class="s" x="80" y="228" text-anchor="middle">tank water level</text>
+              <rect class="core" x="196" y="84" width="128" height="132" rx="8"/>
+              <text class="tc" x="260" y="122" text-anchor="middle">M5Stack Fire</text>
+              <text class="s" x="260" y="140" text-anchor="middle">ESP32</text>
+              <text class="s" x="260" y="168" text-anchor="middle">read · decide</text>
+              <text class="s" x="260" y="184" text-anchor="middle">water · display</text>
+              <rect class="box" x="370" y="30" width="140" height="52" rx="5"/>
+              <text class="t" x="440" y="52" text-anchor="middle">Screen + WiFi</text>
+              <text class="s" x="440" y="69" text-anchor="middle">live dashboard</text>
+              <rect class="box" x="370" y="210" width="140" height="52" rx="5"/>
+              <text class="t" x="440" y="232" text-anchor="middle">Servo valve</text>
+              <text class="s" x="440" y="249" text-anchor="middle">pinches the tube</text>
+              <path class="wire" d="M150 46 H172 V110 H194" marker-end="url(#ah1)"/>
+              <text class="pin" x="158" y="40">Port B · G36</text>
+              <path class="wire" d="M156 180 H176 V190 H194" marker-end="url(#ah1)"/>
+              <text class="pin" x="158" y="222">Port A</text>
+              <path class="wire" d="M324 110 H346 V56 H368" marker-end="url(#ah1)"/>
+              <path class="wire" d="M324 190 H346 V236 H368" marker-end="url(#ah1)"/>
+              <text class="pin" x="350" y="200">Port C · G17</text>
+            </svg>
+            <figcaption>Fig. 1 · Port map, from the I2C scan and M5Stack Fire pinout</figcaption>
+          </figure>
+
+          <div class="readout" aria-label="Measured values">
+            <div><span>ToF addr</span><b>0x29</b></div>
+            <div><span>SHT30 / BMP280</span><b>0x44 · 0x76</b></div>
+            <div><span>Dry threshold</span><b>raw 3300</b></div>
+            <div><span>Air · water</span><b>4095 · ~2020</b></div>
+            <div><span>Valve shut · open</span><b>25° · 130°</b></div>
+            <div><span>Milestone sketches</span><b>11</b></div>
+          </div>
+
+          <h4>Build log</h4>
+          <ol class="log">
+            <li><time datetime="2026-11-12">12 Nov</time>Toolchain set up, I2C scan finds ToF and ENV II</li>
+            <li><time datetime="2026-11-13">13 Nov</time>Sensors calibrated, servo valve, watering logic, tank warning</li>
+            <li><time datetime="2026-11-14">14 Nov</time>Valve angles tuned, prototype built, demo recorded</li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- 02 Window guard -->
+      <article class="project">
+        <div>
+          <span class="p-num">02 / IoT prototype</span>
+          <h3>Smart Window Energy Guard</h3>
+          <ul class="stack"><li>Arduino Uno</li><li>Raspberry Pi</li><li>Python · pySerial</li><li>Flask</li><li>MariaDB</li></ul>
+          <p>Air-conditioning is one of the largest loads in Singapore buildings, and an open window lets the cooled air walk out. This system acts as a smart timer for the window: you get a grace period for ventilation, then a red LED and buzzer go off if it's still open.</p>
+          <p>The Arduino reads an IR reflective sensor for window state and a rotary knob that sets the grace period from 5 to 60 seconds. It streams both to a Raspberry Pi over USB serial. The Pi runs the timing logic, sends the alarm command back, logs every event to MariaDB and shows live status and history on a Flask dashboard.</p>
+          <div class="links">
+            <a class="btn primary" href="https://youtu.be/IUG_-EWEwes">Watch demo ↗</a>
+            <a class="btn" href="https://github.com/jadenchua-dot/iot-window-energy-monitor">Code ↗</a>
+          </div>
+        </div>
+        <div>
+          <figure class="figure" style="margin:0">
+            <svg class="diagram" viewBox="0 0 520 250" role="img" aria-labelledby="w-title">
+              <title id="w-title">Data flow: sensors into Arduino, USB serial to Raspberry Pi, Pi to database and dashboard, alarm command back to Arduino</title>
+              <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10z"/></marker></defs>
+              <rect class="box" x="10" y="20" width="130" height="62" rx="5"/>
+              <text class="t" x="75" y="45" text-anchor="middle">IR sensor</text>
+              <text class="s" x="75" y="62" text-anchor="middle">+ rotary knob 5–60 s</text>
+              <rect class="core" x="190" y="20" width="130" height="62" rx="8"/>
+              <text class="tc" x="255" y="48" text-anchor="middle">Arduino Uno</text>
+              <text class="s" x="255" y="66" text-anchor="middle">sense · alarm</text>
+              <rect class="core" x="370" y="20" width="140" height="62" rx="8"/>
+              <text class="tc" x="440" y="48" text-anchor="middle">Raspberry Pi</text>
+              <text class="s" x="440" y="66" text-anchor="middle">timing logic</text>
+              <rect class="box" x="190" y="160" width="130" height="52" rx="5"/>
+              <text class="t" x="255" y="182" text-anchor="middle">LED + buzzer</text>
+              <text class="s" x="255" y="199" text-anchor="middle">time exceeded</text>
+              <rect class="box" x="370" y="150" width="66" height="52" rx="5"/>
+              <text class="t" x="403" y="172" text-anchor="middle">MariaDB</text>
+              <text class="s" x="403" y="189" text-anchor="middle">event log</text>
+              <rect class="box" x="444" y="150" width="66" height="52" rx="5"/>
+              <text class="t" x="477" y="172" text-anchor="middle">Flask</text>
+              <text class="s" x="477" y="189" text-anchor="middle">dashboard</text>
+              <path class="wire" d="M140 51 H188" marker-end="url(#ah2)"/>
+              <path class="wire" d="M320 42 H368" marker-end="url(#ah2)"/>
+              <text class="pin" x="322" y="13">USB serial</text>
+              <path class="wire" d="M368 64 H322" marker-end="url(#ah2)"/>
+              <text class="pin" x="324" y="98">alarm cmd</text>
+              <path class="wire" d="M255 82 V158" marker-end="url(#ah2)"/>
+              <path class="wire" d="M403 82 V148" marker-end="url(#ah2)"/>
+              <path class="wire" d="M477 82 V148" marker-end="url(#ah2)"/>
+            </svg>
+            <figcaption>Fig. 2 · Four-step loop: sense, transmit, decide, alert and log</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <!-- Smaller projects -->
+      <div class="grid3">
+        <article class="card">
+          <span class="p-num">03 / Hackathon · Nov 2026</span>
+          <h3>SafeLens AI</h3>
+          <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Team of 3</li></ul>
+          <p>Built at GovTech's Digital4Good hackathon for the "Report Inappropriate Content" problem statement. A browser prototype that helps youths spot online harm: it scores messages across 11 categories with rules plus a Naive Bayes model, blurs risky ones behind a salted SHA-256 password, and builds an evidence file for escalation.</p>
+          <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">Code ↗</a></div>
+        </article>
+        <article class="card">
+          <span class="p-num">04 / Coursework</span>
+          <h3>ATmega328P embedded C labs</h3>
+          <ul class="stack"><li>AVR C</li><li>Registers</li><li>Interrupts</li></ul>
+          <p>Seven labs of bare-metal C: GPIO, ADC, UART serial and external interrupts (INT0/INT1 with ISRs), written with direct hex register values and no blocking delays. Ends with a temperature monitor that drives a fan.</p>
+          <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/MicroController-embedded-system">Code ↗</a></div>
+        </article>
+        <article class="card">
+          <span class="p-num">05 / Python</span>
+          <h3>Fast food ordering system</h3>
+          <ul class="stack"><li>Python 3</li><li>CLI</li></ul>
+          <p>A command-line ordering app with category menus, a cart you can edit, student, staff and member discounts, 9% GST, a lucky-draw game at checkout and input validation throughout.</p>
+          <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/python-terminal-shop">Code ↗</a></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" aria-labelledby="skills-h">
+      <div class="sec-head"><h2 id="skills-h">Toolkit</h2></div>
+      <div class="skills">
+        <div>
+          <h4>Languages</h4>
+          <ul><li>C / C++ (Arduino, AVR)</li><li>Python</li><li>HTML, CSS, JavaScript</li><li>SQL (MariaDB)</li></ul>
+        </div>
+        <div>
+          <h4>Hardware</h4>
+          <ul><li>M5Stack Fire (ESP32) and units</li><li>ATmega328P</li><li>Arduino Uno, Raspberry Pi</li><li>BeagleBone Black, mikroBUS Clicks</li><li>PCB layout</li></ul>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <ul><li>Arduino IDE 2</li><li>Git / GitHub</li><li>Flask</li><li>PyCharm, Thonny</li><li>pandas, seaborn</li></ul>
+        </div>
+        <div>
+          <h4>Theory</h4>
+          <ul><li>AC / DC circuit analysis</li><li>BPSK, QPSK, QAM</li><li>BER and link budgets</li><li>Statistics</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION & LEADERSHIP -->
+    <section id="record" aria-labelledby="record-h">
+      <div class="sec-head"><h2 id="record-h">Education &amp; leadership</h2></div>
+      <div class="record">
+        <div>
+          <div class="entry">
+            <div class="when">2025 – 2028 (expected)</div>
+            <h3>Nanyang Polytechnic</h3>
+            <p>Diploma in Electronic and Computer Engineering (C89). GPA 3.97 / 4.00. Director's List in Year 1 Semester 1, Year 1 Semester 2 and Year 2 Semester 1.</p>
+          </div>
+          <div class="entry">
+            <div class="when">Relevant modules</div>
+            <p>Microcontroller Systems · Electronic Communication System Analysis · Smart Connected System Project for Sustainability · Statistical Analysis for Computing</p>
+          </div>
+        </div>
+        <div>
+          <div class="entry">
+            <div class="when">2026</div>
+            <h3>Singapore Young Leaders Programme</h3>
+            <p>Selected for SYLP and completed the NYC Youth Leaders' Course (NYCLC).</p>
+          </div>
+          <div class="entry">
+            <div class="when">2026</div>
+            <h3>Polytechnic Forum</h3>
+            <p>Represented Nanyang Polytechnic.</p>
+          </div>
+          <div class="entry">
+            <div class="when">Nov 2026</div>
+            <h3>GovTech Digital4Good Hackathon</h3>
+            <p>Built SafeLens AI with a team of three.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact" aria-labelledby="contact-h">
+    <div class="wrap">
+      <div class="label" style="color:inherit;opacity:.65">Contact</div>
+      <h2 id="contact-h">Get in touch.</h2>
+      <p>Languages: English, Chinese.</p>
+      <div class="contact-list">
+        <a href="mailto:jadenchua20@gmail.com"><span>Email</span><b>jadenchua20@gmail.com</b></a>
+        <a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/"><span>LinkedIn</span><b>jaden-chua ↗</b></a>
+        <a href="https://github.com/jadenchua-dot"><span>GitHub</span><b>jadenchua-dot ↗</b></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Jaden Chua · Singapore</div>
+</footer>
+
+</body>
+</html>
