@@ -75,7 +75,11 @@ img, svg { max-width: 100%; height: auto; display: block; }
   width: min(1380px, 100% - 48px); margin: 24px auto; background: var(--paper);
   border-radius: 36px; overflow: clip;
   box-shadow: 0 30px 80px -44px rgba(40,30,15,.4);
+  transition: width .8s cubic-bezier(.2,.8,.2,1), margin .8s cubic-bezier(.2,.8,.2,1), border-radius .8s cubic-bezier(.2,.8,.2,1);
 }
+/* Framed on the laptop screen; once you're inside, the site grows to fill the whole window */
+.intro-done .shell { width: 100%; margin: 0 auto; border-radius: 0; box-shadow: none; }
+@media (prefers-reduced-motion: reduce) { .shell { transition: none; } }
 
 /* Nav */
 .nav {
@@ -130,7 +134,7 @@ img, svg { max-width: 100%; height: auto; display: block; }
     linear-gradient(180deg, #b9b2a5 0%, #d6d0c4 42%, #efebe3 82%, var(--paper) 100%);
 }
 .stage-grid {
-  display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center;
+  display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; max-width: 1440px; margin-inline: auto;
   padding: clamp(40px, 6vw, 96px) clamp(20px, 5vw, 72px) clamp(44px, 5vw, 76px);
 }
 .badge { display: flex; align-items: center; gap: 14px; font-family: var(--display); line-height: 1.25; }
@@ -401,6 +405,10 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
 @media (max-width: 1080px) {
   .stage-grid { grid-template-columns: 1fr; }
   .media { width: 100%; max-width: 620px; margin-inline: auto; }
+}
+@media (max-width: 700px) {
+  /* Phone: just the photo and play button, no floating tags/cards over it */
+  .chips-layer, .stat-layer, .feat-layer { display: none; }
 }
 @media (max-width: 860px) {
   .stage-grid, .project, .record { grid-template-columns: 1fr; gap: 32px; }
