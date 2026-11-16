@@ -1761,9 +1761,15 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
     if (cur !== target) requestAnimationFrame(loop); else running = false;
   }
   function kick() { if (!running) { running = true; requestAnimationFrame(loop); } }
+  // On phones the address bar hides/shows while scrolling, which fires "resize" with a slightly
+  // different height. Ignore those, otherwise the intro length changes mid-scroll and the page jumps.
+  var lastW = 0, lastH = 0;
   function size() {
-    mobile = innerWidth < 700;
-    D = Math.round(innerHeight * (mobile ? 1.2 : 1.6));
+    var w = innerWidth, h = innerHeight;
+    if (lastW && w === lastW && Math.abs(h - lastH) < 160) return;
+    lastW = w; lastH = h;
+    mobile = w < 700;
+    D = Math.round(h * (mobile ? 1.2 : 1.6));
     spacer.style.height = D + 'px';
     if (held()) return;
     cur = clamp(scrollY / D);
@@ -1788,7 +1794,7 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
     shell.scrollTop = 0;
     var y = id === '#top' ? D : Math.max(D, t.getBoundingClientRect().top + scrollY - 92);
     scrollTo({ top: y, behavior: fromIntro ? 'instant' : 'smooth' });
-    if (history.replaceState) history.replaceState(null, '', id);
+    // Deliberately NOT writing #section into the address bar: otherwise a refresh jumps back there
   });
   // The Menu button is inside the laptop screen: leave the intro before the panel opens
   document.querySelector('.menu-btn').addEventListener('click', function () {
@@ -1806,7 +1812,11 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
     addEventListener('load', function () {
       hold(1200);
       setTimeout(jump, 50); setTimeout(jump, 400);
-      setTimeout(function () { root.style.scrollBehavior = ''; }, 900);
+      setTimeout(function () {
+        root.style.scrollBehavior = '';
+        // A shared #link takes you there once; after that the address is clean, so refresh starts at the top
+        if (history.replaceState) history.replaceState(null, '', location.pathname + location.search);
+      }, 900);
     });
   }
 })();
