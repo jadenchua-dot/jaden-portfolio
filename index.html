@@ -161,6 +161,28 @@ p { margin: 0 0 14px; max-width: 65ch; }
 .log li::before { content: ""; position: absolute; left: -4px; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--circuit); }
 .log time { font-family: var(--mono); font-size: 12.5px; color: var(--circuit); margin-right: 8px; font-variant-numeric: tabular-nums; }
 
+/* Demo videos: thumbnail + play button, the YouTube player loads only on click */
+.demo { margin: 22px 0 6px; }
+.demo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 220px)); gap: 14px; }
+.video {
+  position: relative; display: block; overflow: hidden; border-radius: 6px;
+  border: 1px solid var(--rule); background: #000; aspect-ratio: 16 / 9; color: #fff;
+}
+.video.short { aspect-ratio: 9 / 16; max-width: 240px; }
+.demo-grid .video.short { max-width: none; }
+.video img { width: 100%; height: 100%; object-fit: cover; opacity: .88; transition: opacity .15s, transform .3s; }
+.video:hover img { opacity: 1; transform: scale(1.02); }
+.video .play {
+  position: absolute; left: 50%; top: 50%; width: 58px; height: 58px; margin: -29px 0 0 -29px;
+  border-radius: 50%; background: var(--accent); display: grid; place-items: center;
+  box-shadow: 0 4px 18px rgba(0,0,0,.35); transition: transform .15s;
+}
+.video:hover .play { transform: scale(1.08); }
+.video .play svg { width: 22px; height: 22px; margin-left: 4px; fill: #fff; }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-cap { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin: 7px 0 0; line-height: 1.4; }
+@media (prefers-reduced-motion: reduce) { .video img, .video .play { transition: none; } .video:hover img, .video:hover .play { transform: none; } }
+
 /* Smaller projects */
 .grid3 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 .card { border: 1px solid var(--rule); border-radius: 6px; padding: 22px; display: flex; flex-direction: column; background: var(--paper); }
@@ -205,6 +227,7 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
   .skills { grid-template-columns: 1fr; }
   .readout { grid-template-columns: 1fr 1fr; }
   .nav-links { gap: 14px; }
+  .demo-grid { gap: 10px; }
 }
 </style>
 </head>
@@ -252,7 +275,7 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
     <section id="work" aria-labelledby="work-h">
       <div class="sec-head">
         <h2 id="work-h">Projects</h2>
-        <span class="label">6 entries · code on GitHub</span>
+        <span class="label">7 entries · code on GitHub</span>
       </div>
 
       <!-- 01 Garden monitor -->
@@ -264,6 +287,14 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
           <p>Singapore imports around 90% of its food, and community garden plots often fail for a simple reason: uneven watering. This node reads soil moisture, air conditions and tank level, then releases water through a servo-pinched tube only when the soil has stayed dry across five readings in a row.</p>
           <p>It skips a cycle when the tank is under 20% or the air is above 90% humidity, waits through a cooldown before it can water again, and serves a live dashboard over WiFi from the Fire itself.</p>
 
+          <div class="demo">
+            <a class="video short" href="https://youtube.com/shorts/DR6Jm-IQAWk" data-yt="DR6Jm-IQAWk" aria-label="Play video: garden monitor prototype demo">
+              <img src="https://i.ytimg.com/vi/DR6Jm-IQAWk/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+              <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z"/></svg></span>
+            </a>
+            <p class="video-cap">Prototype demo: dry reading opens the valve, wet keeps it shut</p>
+          </div>
+
           <h4>What broke, and the fix</h4>
           <ul class="fixes">
             <li><b>Fire reset mid-cycle and watered again.</b> The servo arm stalled against the Lego frame and its current spike browned out the board. Fixed with arm clearance, 1° stepping and a reset-reason log.</li>
@@ -272,8 +303,8 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
           </ul>
 
           <div class="links">
-            <a class="btn primary" href="https://youtube.com/shorts/DR6Jm-IQAWk">Watch demo ↗</a>
-            <a class="btn" href="https://github.com/jadenchua-dot/m5stack-garden-monitor">Code &amp; build log ↗</a>
+            <a class="btn primary" href="https://github.com/jadenchua-dot/m5stack-garden-monitor">Code &amp; build log ↗</a>
+            <a class="btn" href="https://youtube.com/shorts/DR6Jm-IQAWk">YouTube ↗</a>
           </div>
         </div>
 
@@ -333,17 +364,113 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
         </div>
       </article>
 
-      <!-- 02 Window guard -->
+      <!-- 02 Tilt sensor -->
       <article class="project">
         <div>
-          <span class="p-num">02 / IoT prototype</span>
+          <span class="p-num">02 / Nov 2026</span>
+          <h3>M5Stack tilt alarm with web dashboard</h3>
+          <ul class="stack"><li>ESP32 · M5Stack Fire</li><li>C++ / PlatformIO</li><li>MPU6886 IMU</li><li>Web server + JSON API</li><li>ntfy push</li></ul>
+          <p>A tilt alarm for anything that has to stay level. The Fire's IMU measures how far the device has tilted from a level position you set with one button. Past the limit, the screen and LED bars turn red, the speaker beeps, and a push notification goes to your phone. Straighten it and everything goes back to green.</p>
+          <p>The Fire also serves its own dashboard over WiFi, where you can watch the angle live, mute the beeper, change the limit and reset the level position. The screen rotates itself to however the device is mounted.</p>
+
+          <div class="demo">
+            <div class="demo-grid">
+              <div>
+                <a class="video short" href="https://youtube.com/shorts/oyhKpcI64IE" data-yt="oyhKpcI64IE" aria-label="Play video: tilt alarm main demo">
+                  <img src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+                  <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z"/></svg></span>
+                </a>
+                <p class="video-cap">Main demo</p>
+              </div>
+              <div>
+                <a class="video short" href="https://youtu.be/x5wJCI2qH80" data-yt="x5wJCI2qH80" aria-label="Play video: alarm limit and web dashboard controls">
+                  <img src="https://i.ytimg.com/vi/x5wJCI2qH80/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+                  <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z"/></svg></span>
+                </a>
+                <p class="video-cap">Limit test, plus mute, set limit and re-zero from the website</p>
+              </div>
+            </div>
+          </div>
+
+          <h4>What broke, and the fix</h4>
+          <ul class="fixes">
+            <li><b>Screen auto-rotate was wrong, twice.</b> The IMU sits rotated 90° inside the Fire, so every orientation was a quarter turn out. Worked out the real axes from photos of the screen and remapped them.</li>
+            <li><b>Reading drifted while lying still.</b> Screen redraws held the loop to about 18 IMU reads a second, too slow for gyro integration. Switched to an accelerometer-only low-pass filter: lying flat it now jitters 0.1–0.35° instead of swinging tens of degrees.</li>
+            <li><b>Router rejected the first WiFi attempts.</b> Added retries, a hotspot fallback, and a background retry that switches back to home WiFi on its own.</li>
+          </ul>
+
+          <div class="links">
+            <a class="btn primary" href="https://github.com/jadenchua-dot/m5stack-fire-tilt-sensor">Code &amp; write-up ↗</a>
+          </div>
+        </div>
+
+        <div>
+          <figure class="figure" style="margin:0">
+            <svg class="diagram" viewBox="0 0 520 280" role="img" aria-labelledby="t-title">
+              <title id="t-title">Data flow: the IMU's accelerometer feeds the M5Stack Fire, which drives the screen and LED bars, the speaker, a WiFi web dashboard and ntfy phone push notifications</title>
+              <defs><marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10z"/></marker></defs>
+              <rect class="box" x="10" y="112" width="140" height="56" rx="5"/>
+              <text class="t" x="80" y="135" text-anchor="middle">MPU6886 IMU</text>
+              <text class="s" x="80" y="152" text-anchor="middle">accelerometer · gravity</text>
+              <rect class="core" x="196" y="74" width="128" height="132" rx="8"/>
+              <text class="tc" x="260" y="112" text-anchor="middle">M5Stack Fire</text>
+              <text class="s" x="260" y="130" text-anchor="middle">ESP32</text>
+              <text class="s" x="260" y="158" text-anchor="middle">angle vs. zero</text>
+              <text class="s" x="260" y="174" text-anchor="middle">alarm logic</text>
+              <rect class="box" x="370" y="10" width="140" height="50" rx="5"/>
+              <text class="t" x="440" y="31" text-anchor="middle">Screen + LEDs</text>
+              <text class="s" x="440" y="48" text-anchor="middle">green · amber · red</text>
+              <rect class="box" x="370" y="78" width="140" height="50" rx="5"/>
+              <text class="t" x="440" y="99" text-anchor="middle">Speaker</text>
+              <text class="s" x="440" y="116" text-anchor="middle">beeps while tilted</text>
+              <rect class="box" x="370" y="152" width="140" height="50" rx="5"/>
+              <text class="t" x="440" y="173" text-anchor="middle">Web dashboard</text>
+              <text class="s" x="440" y="190" text-anchor="middle">live angle · controls</text>
+              <rect class="box" x="370" y="220" width="140" height="50" rx="5"/>
+              <text class="t" x="440" y="241" text-anchor="middle">ntfy push</text>
+              <text class="s" x="440" y="258" text-anchor="middle">phone alert</text>
+              <path class="wire" d="M150 140 H194" marker-end="url(#ah3)"/>
+              <text class="pin" x="152" y="132">I2C</text>
+              <path class="wire" d="M324 92 H346 V35 H368" marker-end="url(#ah3)"/>
+              <path class="wire" d="M324 118 H346 V103 H368" marker-end="url(#ah3)"/>
+              <path class="wire" d="M324 166 H346 V177 H368" marker-end="url(#ah3)"/>
+              <path class="wire" d="M324 192 H346 V245 H368" marker-end="url(#ah3)"/>
+              <text class="pin" x="300" y="224">WiFi</text>
+            </svg>
+            <figcaption>Fig. 2 · One sensor in, four outputs</figcaption>
+          </figure>
+
+          <div class="readout" aria-label="Measured values">
+            <div><span>Default limit</span><b>10°</b></div>
+            <div><span>Flat jitter</span><b>0.1–0.35°</b></div>
+            <div><span>Warn zone</span><b>70% of limit</b></div>
+            <div><span>Alarm delay</span><b>0.5 s</b></div>
+            <div><span>Hysteresis</span><b>1.5°</b></div>
+            <div><span>Screen rotations</span><b>4</b></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 03 Window guard -->
+      <article class="project">
+        <div>
+          <span class="p-num">03 / IoT prototype</span>
           <h3>Smart Window Energy Guard</h3>
           <ul class="stack"><li>Arduino Uno</li><li>Raspberry Pi</li><li>Python · pySerial</li><li>Flask</li><li>MariaDB</li></ul>
           <p>Air-conditioning is one of the largest loads in Singapore buildings, and an open window lets the cooled air walk out. This system acts as a smart timer for the window: you get a grace period for ventilation, then a red LED and buzzer go off if it's still open.</p>
           <p>The Arduino reads an IR reflective sensor for window state and a rotary knob that sets the grace period from 5 to 60 seconds. It streams both to a Raspberry Pi over USB serial. The Pi runs the timing logic, sends the alarm command back, logs every event to MariaDB and shows live status and history on a Flask dashboard.</p>
+
+          <div class="demo">
+            <a class="video" href="https://youtu.be/IUG_-EWEwes" data-yt="IUG_-EWEwes" aria-label="Play video: Smart Window Energy Guard demo">
+              <img src="https://i.ytimg.com/vi/IUG_-EWEwes/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+              <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z"/></svg></span>
+            </a>
+            <p class="video-cap">Prototype demo</p>
+          </div>
+
           <div class="links">
-            <a class="btn primary" href="https://youtu.be/IUG_-EWEwes">Watch demo ↗</a>
-            <a class="btn" href="https://github.com/jadenchua-dot/iot-window-energy-monitor">Code ↗</a>
+            <a class="btn primary" href="https://github.com/jadenchua-dot/iot-window-energy-monitor">Code ↗</a>
+            <a class="btn" href="https://youtu.be/IUG_-EWEwes">YouTube ↗</a>
           </div>
         </div>
         <div>
@@ -378,7 +505,7 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
               <path class="wire" d="M403 82 V148" marker-end="url(#ah2)"/>
               <path class="wire" d="M477 82 V148" marker-end="url(#ah2)"/>
             </svg>
-            <figcaption>Fig. 2 · Four-step loop: sense, transmit, decide, alert and log</figcaption>
+            <figcaption>Fig. 3 · Four-step loop: sense, transmit, decide, alert and log</figcaption>
           </figure>
         </div>
       </article>
@@ -386,28 +513,28 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
       <!-- Smaller projects -->
       <div class="grid3">
         <article class="card">
-          <span class="p-num">03 / Hackathon · Nov 2026</span>
+          <span class="p-num">04 / Hackathon · Nov 2026</span>
           <h3>SafeLens AI</h3>
           <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Team of 3</li></ul>
           <p>Built at GovTech's Digital4Good hackathon for the "Report Inappropriate Content" problem statement. A browser prototype that helps youths spot online harm: it scores messages across 11 categories with rules plus a Naive Bayes model, blurs risky ones behind a salted SHA-256 password, and builds an evidence file for escalation.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">Code ↗</a></div>
         </article>
         <article class="card">
-          <span class="p-num">04 / Coursework</span>
+          <span class="p-num">05 / Coursework</span>
           <h3>ATmega328P embedded C labs</h3>
           <ul class="stack"><li>AVR C</li><li>Registers</li><li>Interrupts</li></ul>
           <p>Seven labs of bare-metal C: GPIO, ADC, UART serial and external interrupts (INT0/INT1 with ISRs), written with direct hex register values and no blocking delays. Ends with a temperature monitor that drives a fan.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/MicroController-embedded-system">Code ↗</a></div>
         </article>
         <article class="card">
-          <span class="p-num">05 / Python</span>
+          <span class="p-num">06 / Python</span>
           <h3>Fast food ordering system</h3>
           <ul class="stack"><li>Python 3</li><li>CLI</li></ul>
           <p>A command-line ordering app with category menus, a cart you can edit, student, staff and member discounts, 9% GST, a lucky-draw game at checkout and input validation throughout.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/python-terminal-shop">Code ↗</a></div>
         </article>
         <article class="card">
-          <span class="p-num">06 / Python · Nov 2026</span>
+          <span class="p-num">07 / Python · Nov 2026</span>
           <h3>Pokémon card portfolio tracker</h3>
           <ul class="stack"><li>Python 3</li><li>Telegram Bot API</li><li>launchd</li><li>JSON</li></ul>
           <p>A bot that watches my Pokémon card collection on Collectr. Every morning it messages me on Telegram with the 3 cards that rose the most and the 3 that fell the most; every Sunday it sends how much the whole portfolio moved that week. It reads the public showcase page, keeps a daily snapshot history and runs on a macOS schedule, using only the Python standard library.</p>
@@ -493,6 +620,26 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
 <footer>
   <div class="wrap">© 2026 Jaden Chua · Singapore</div>
 </footer>
+
+<script>
+// Click a video thumbnail to swap in the YouTube player (privacy-enhanced
+// youtube-nocookie domain). Without JavaScript the thumbnail is a plain link.
+document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
+  link.addEventListener('click', function (e) {
+    e.preventDefault();
+    var box = document.createElement('div');
+    box.className = link.className;
+    var frame = document.createElement('iframe');
+    frame.src = 'https://www.youtube-nocookie.com/embed/' + link.dataset.yt + '?autoplay=1&rel=0&playsinline=1';
+    frame.title = link.getAttribute('aria-label').replace('Play video: ', '');
+    frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    frame.allowFullscreen = true;
+    box.appendChild(frame);
+    link.replaceWith(box);
+    frame.focus();
+  });
+});
+</script>
 
 </body>
 </html>
