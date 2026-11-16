@@ -646,17 +646,20 @@ html, body { overflow-x: clip; }
   position: absolute; left: -15vw; top: 6vh; width: 70vw; height: 45vh; transform: rotate(-24deg);
   background: radial-gradient(closest-side, rgba(255,255,255,.16), transparent);
 }
-#device { position: relative; z-index: 1; display: flow-root; transform-origin: 50% 50vh; will-change: transform; }
+/* The browser itself pins the device (sticky) for the length of the spacer after it, so there's no
+   script fighting the phone's scrolling, and the page is full length from the start (no iOS bounce). */
+#intro-wrap { position: relative; overflow-y: clip; overflow-clip-margin: 0px; }
+#device { position: sticky; top: 0; z-index: 1; display: flow-root; transform-origin: 50% calc(var(--vh, 100vh) / 2); will-change: transform; }
 #device > .shell { position: relative; z-index: 2; }
-.screen-bg { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: 100vh; background: var(--bg); border-radius: 1.2vw; }
+.screen-bg { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: var(--vh, 100vh); background: var(--bg); border-radius: 1.2vw; }
 .bezel {
-  position: absolute; z-index: 0; left: -1.8vw; right: -1.8vw; top: -1.8vw; height: calc(100vh + 3.6vw);
+  position: absolute; z-index: 0; left: -1.8vw; right: -1.8vw; top: -1.8vw; height: calc(var(--vh, 100vh) + 3.6vw);
   border-radius: 3vw; background: #0f0f0f;
   box-shadow: inset 0 0 0 .35vw #3b3936, 0 0 0 .25vw #9a9894, 0 8vw 14vw -4vw rgba(0,0,0,.85);
 }
 .bezel::before { content: ""; position: absolute; left: 50%; top: .55vw; width: .7vw; height: .7vw; margin-left: -.35vw; border-radius: 50%; background: #2a2a2a; }
 .base {
-  position: absolute; z-index: 0; left: -10vw; right: -10vw; top: calc(100vh + 1.8vw); height: 3vw;
+  position: absolute; z-index: 0; left: -10vw; right: -10vw; top: calc(var(--vh, 100vh) + 1.8vw); height: 3vw;
   border-radius: .4vw .4vw 4vw 4vw / .4vw .4vw 2.6vw 2.6vw;
   background: linear-gradient(180deg, #e9e9e7 0%, #bdbcb8 45%, #7e7d79 100%);
   box-shadow: 0 3vw 6vw -1vw rgba(0,0,0,.8);
@@ -728,6 +731,31 @@ html, body { overflow-x: clip; }
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500;62..125,600&display=swap" rel="stylesheet">
 </head>
 <body>
+<script>
+// While the site is shrunk onto the laptop screen, sections below are technically "on screen", so their
+// scroll-in animations and counters would fire before anyone sees them. Hold those back until the
+// intro is over, then let them start fresh.
+(function () {
+  var N = window.IntersectionObserver;
+  if (!N) return;
+  var all = [];
+  function live() { return document.documentElement.classList.contains('intro-done'); }
+  window.IntersectionObserver = function (cb, opts) {
+    var targets = new Set();
+    var io = new N(function (es, ob) { if (live()) cb(es, ob); }, opts);
+    var obs = io.observe.bind(io), un = io.unobserve.bind(io), dis = io.disconnect.bind(io);
+    io.observe = function (t) { targets.add(t); obs(t); };
+    io.unobserve = function (t) { targets.delete(t); un(t); };
+    io.disconnect = function () { targets.clear(); dis(); };
+    all.push({ targets: targets, obs: obs, un: un });
+    return io;
+  };
+  window.IntersectionObserver.prototype = N.prototype;
+  window.__introReplay = function () {
+    all.forEach(function (r) { r.targets.forEach(function (t) { r.un(t); r.obs(t); }); });
+  };
+})();
+</script>
 
 <div class="intro-bg" aria-hidden="true"><span class="beam"></span><span class="chair"></span></div>
 <div class="intro-ui" aria-hidden="true">
@@ -737,8 +765,8 @@ html, body { overflow-x: clip; }
 </div>
 <div class="scroll-hint" aria-hidden="true"><i></i>Scroll to enter</div>
 <a class="skip" href="#top">Skip intro ↓</a>
-<div class="intro-spacer" aria-hidden="true"></div>
 <noscript><style>.intro-spacer,.intro-bg,.intro-ui,.skip,.scroll-hint,.bezel,.base{display:none}</style></noscript>
+<div id="intro-wrap">
 <div id="device">
 <div class="bezel" aria-hidden="true"></div>
 <div class="base" aria-hidden="true"></div>
@@ -1358,6 +1386,8 @@ html, body { overflow-x: clip; }
 </footer>
 </div>
 </div>
+<div class="intro-spacer" aria-hidden="true"></div>
+</div>
 <div class="progress" aria-hidden="true"></div>
 <button class="to-top" type="button" aria-label="Back to top"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg></button>
 
@@ -1712,7 +1742,9 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
   var cur = 0, done = false, running = false;
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    spacer.style.height = '0px'; root.classList.add('intro-done'); return;
+    spacer.style.height = '0px'; dev.style.position = 'relative'; root.classList.add('intro-done');
+    if (window.__introReplay) window.__introReplay();
+    return;
   }
   // A reload starts from the intro (or the #section in the address), not a half-finished scroll position
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -1721,20 +1753,23 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
 
   // Leave the intro: the site becomes a normal page again
   function release() {
+    var was = done;
     done = true; cur = 1;
     root.classList.add('intro-done');
-    dev.style.transform = ''; shell.style.height = ''; shell.style.overflow = '';
+    dev.style.transform = ''; shell.style.clipPath = '';
     bezel.style.opacity = base.style.opacity = 0; bg.style.opacity = 0; ui.style.opacity = 0;
+    if (!was && window.__introReplay) window.__introReplay();
   }
+  var VH = innerHeight;
   function apply(p, y) {
     var e = ease(p), k = 1 - e;
     var s0 = mobile ? .58 : .46, s = s0 + (1 - s0) * e;
     var rx = (mobile ? 8 : 14) * k, ry = (mobile ? -8 : -16) * k, rz = (mobile ? 3 : 5) * k;
-    // translateY(y - D) keeps the device pinned to the window; the rest is the tilt and zoom
-    dev.style.transform = 'translate3d(0,' + (y - D) + 'px,0) translateY(' + (mobile ? 14 : 13) * k + 'vh) perspective(1800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) rotateZ(' + rz + 'deg) scale(' + s + ')';
-    // Only the first screen of the site is "on" the laptop until we are inside
-    shell.style.height = (innerHeight - shell.offsetTop) + 'px';
-    shell.style.overflow = 'clip';
+    // No scroll compensation here: the browser keeps the device pinned (position: sticky)
+    dev.style.transform = 'translate3d(0,' + ((mobile ? 14 : 13) * k * VH / 100).toFixed(2) + 'px,0) perspective(1800px) rotateX(' + rx.toFixed(3) + 'deg) rotateY(' + ry.toFixed(3) + 'deg) rotateZ(' + rz.toFixed(3) + 'deg) scale(' + s.toFixed(4) + ')';
+    // Only the first screen of the site is "on" the laptop; clip the rest without changing the page length
+    var shown = VH - shell.offsetTop + Math.max(0, y - D);
+    shell.style.clipPath = 'inset(0 0 ' + Math.max(0, shell.offsetHeight - shown) + 'px 0)';
     bezel.style.opacity = 1 - clamp((p - .78) / .2);
     base.style.opacity = 1 - clamp((p - .45) / .3);
     bg.style.opacity = 1 - clamp((p - .55) / .4);
@@ -1753,9 +1788,9 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
   function loop() {
     if (held()) { running = false; return; }
     var y = scrollY, target = clamp(y / D);
-    cur += (target - cur) * .12;
+    cur += (target - cur) * .14;
     if (Math.abs(target - cur) < .0008) cur = target;
-    if (cur >= 1 && y >= D) { if (!done) release(); running = false; return; }
+    if (cur >= .999 && y >= D) { if (!done) release(); running = false; return; }
     if (done) { done = false; root.classList.remove('intro-done'); }
     apply(cur, y);
     if (cur !== target) requestAnimationFrame(loop); else running = false;
@@ -1767,7 +1802,8 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
   function size() {
     var w = innerWidth, h = innerHeight;
     if (lastW && w === lastW && Math.abs(h - lastH) < 160) return;
-    lastW = w; lastH = h;
+    lastW = w; lastH = h; VH = h;
+    root.style.setProperty('--vh', h + 'px');
     mobile = w < 700;
     D = Math.round(h * (mobile ? 1.2 : 1.6));
     spacer.style.height = D + 'px';
@@ -1779,6 +1815,11 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
   addEventListener('resize', size);
   skip.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); scrollTo({ top: D, behavior: 'smooth' }); });
 
+  // Where a section ends up once the intro is over: the site starts D px down the page
+  function targetY(t, id) {
+    if (id === '#top') return D;
+    return Math.max(D, D + t.getBoundingClientRect().top - dev.getBoundingClientRect().top - 92);
+  }
   // In-page links (nav, menu, map pins): while the site is still inside the laptop the browser
   // can't work out where sections are, so leave the intro first, then scroll to the right place.
   document.addEventListener('click', function (e) {
@@ -1791,9 +1832,7 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
     e.preventDefault();
     var fromIntro = !done || scrollY < D;
     release(); hold(1500);
-    shell.scrollTop = 0;
-    var y = id === '#top' ? D : Math.max(D, t.getBoundingClientRect().top + scrollY - 92);
-    scrollTo({ top: y, behavior: fromIntro ? 'instant' : 'smooth' });
+    scrollTo({ top: targetY(t, id), behavior: fromIntro ? 'instant' : 'smooth' });
     // Deliberately NOT writing #section into the address bar: otherwise a refresh jumps back there
   });
   // The Menu button is inside the laptop screen: leave the intro before the panel opens
@@ -1805,7 +1844,7 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
   // Opened with a #link in the address bar: go straight to it
   if (location.hash.length > 1 && document.getElementById(location.hash.slice(1))) {
     var h = document.getElementById(location.hash.slice(1));
-    var jump = function () { release(); scrollTo({ top: Math.max(D, h.getBoundingClientRect().top + scrollY - 92), behavior: 'instant' }); };
+    var jump = function () { release(); scrollTo({ top: targetY(h, location.hash), behavior: 'instant' }); };
     // Turn the browser's own smooth scroll off for a moment so it can't fight these jumps
     root.style.scrollBehavior = 'auto';
     release(); hold(2500); setTimeout(jump, 0);
