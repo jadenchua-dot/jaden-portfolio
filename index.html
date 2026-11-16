@@ -414,6 +414,195 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
   .feat strong { font-size: 17px; }
   .cta { gap: 22px; }
 }
+/* ================= Added from the demo ================= */
+em.s { font-family: var(--display); font-style: italic; font-weight: 400; color: var(--accent); }
+.nav-end .menu-btn { display: inline-flex; align-items: center; gap: 8px; background: none; cursor: pointer; font-family: inherit; }
+.menu-btn svg { width: 16px; height: 16px; }
+
+/* Slide-in projects menu */
+.scrim { position: fixed; inset: 0; z-index: 60; background: rgba(21,19,15,.25); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity .35s; }
+.panel {
+  position: fixed; z-index: 70; top: 12px; right: 12px; bottom: 12px; width: min(440px, calc(100% - 24px));
+  background: #fff; border-radius: 26px; padding: 22px 22px 18px; display: flex; flex-direction: column; gap: 14px; overflow: auto;
+  box-shadow: 0 30px 80px -30px rgba(0,0,0,.35); transform: translateX(110%); visibility: hidden;
+  transition: transform .55s cubic-bezier(.7,0,.2,1), visibility 0s .55s;
+}
+.menu-open .scrim { opacity: 1; pointer-events: auto; }
+.menu-open .panel { transform: none; visibility: visible; transition: transform .55s cubic-bezier(.7,0,.2,1); }
+.panel-head { display: flex; justify-content: space-between; align-items: center; }
+.panel-head h2 { font: 500 24px var(--display); margin: 0; }
+.x { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--rule); background: #fff; cursor: pointer; display: grid; place-items: center; transition: transform .3s; }
+.x:hover { transform: rotate(90deg); }
+.mlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.mlist a { display: flex; align-items: center; gap: 14px; padding: 9px; border-radius: 14px; text-decoration: none; color: var(--ink); transition: background .2s; }
+.mlist a:hover { background: var(--paper-2); }
+.mthumb { width: 52px; height: 52px; border-radius: 12px; overflow: hidden; flex: none; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font: 600 13px var(--mono); }
+.mthumb img { width: 100%; height: 100%; object-fit: cover; }
+.mthumb img.short, .feat-ph img.short { transform: scale(1.8); }
+.mlist b { display: block; font-size: 15px; font-weight: 600; line-height: 1.3; }
+.mlist small { color: var(--ink-soft); font-size: 13px; }
+.arrow { margin-left: auto; width: 30px; height: 30px; border-radius: 50%; background: var(--paper-2); display: grid; place-items: center; flex: none; transition: background .2s, color .2s, transform .3s; }
+.arrow svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2; fill: none; }
+.mlist a:hover .arrow { background: var(--hot); color: #fff; transform: rotate(-45deg); }
+.mlist li, .menu-feat, .panel-foot { opacity: 0; transform: translateX(30px); transition: opacity .4s, transform .5s cubic-bezier(.2,.8,.2,1); }
+.menu-open .mlist li, .menu-open .menu-feat, .menu-open .panel-foot { opacity: 1; transform: none; transition-delay: calc(.2s + var(--i, 0) * .05s); }
+.menu-feat { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: var(--paper-2); border-radius: 18px; padding: 12px; text-decoration: none; color: var(--ink); }
+.feat-ph { border-radius: 12px; overflow: hidden; aspect-ratio: 1; background: #222; }
+.feat-ph img { width: 100%; height: 100%; object-fit: cover; }
+.menu-feat b { display: block; font-size: 15px; line-height: 1.3; margin: 4px 0 6px; }
+.menu-feat small { color: var(--ink-soft); font-size: 13px; line-height: 1.4; display: block; }
+.panel-foot { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-soft); margin-top: auto; padding-top: 8px; }
+.panel-foot a { margin-left: 14px; font-weight: 600; color: var(--ink); text-decoration: none; }
+
+/* About: words colour in as you scroll */
+.statement { text-align: center; padding: 40px 0 80px; }
+.statement p { font: 400 clamp(28px, 3.8vw, 46px)/1.25 var(--display); letter-spacing: -.015em; max-width: 21em; margin: 22px auto 0; }
+.statement .wd { color: #d9d1c3; transition: color .35s; }
+.statement .wd.on { color: var(--ink); }
+.statement .key.on { color: var(--accent); font-style: italic; }
+
+/* Stats bento */
+.bento { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 16px; margin: 0 0 96px; }
+.bx { border-radius: 24px; background: var(--paper-2); padding: 26px; position: relative; overflow: hidden; }
+.bx .label { font-size: 12px; }
+.bx-photo { padding: 0; min-height: 420px; grid-row: span 2; }
+.bx-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 60%; transition: transform 1.2s cubic-bezier(.2,.8,.2,1); }
+.bx-photo:hover img { transform: scale(1.05); }
+.bx-photo .cap { position: absolute; left: 14px; right: 14px; bottom: 14px; background: rgba(255,255,255,.75); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 16px; padding: 14px 16px; font-size: 14px; }
+.bx-photo .cap b { display: block; font-size: 16px; }
+.bnum { font: 600 clamp(48px, 5vw, 64px)/1 var(--body); letter-spacing: -.04em; margin: 14px 0 8px; font-variant-numeric: tabular-nums; }
+.bx p { margin: 0; color: var(--ink-soft); font-size: 15px; }
+.meters { margin-top: 22px; display: grid; gap: 14px; }
+.meters span { display: block; font: 500 12px var(--mono); color: var(--ink-soft); margin-bottom: 6px; }
+.meter { height: 14px; border-radius: 99px; background: #fff; overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; border-radius: 99px; background: linear-gradient(90deg, var(--hot), var(--accent)); transition: width 1.4s cubic-bezier(.2,.8,.2,1) .3s; }
+.meter i.ok { background: #4f9e6b; }
+.in .meter i { width: var(--w); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+.chips span { background: #fff; border-radius: 99px; padding: 5px 12px; font-size: 13px; font-weight: 600; transform: scale(0); transition: transform .5s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(.4s + var(--i) * .12s); }
+.in .chips span { transform: none; }
+.bx-peach { background: var(--accent-soft); }
+.bx-wide { grid-column: span 2; }
+
+/* Project map (isometric town) */
+.town { margin: 0 0 40px; border-radius: 30px; background: var(--paper-2); padding: 20px 10px 6px; overflow: hidden; }
+.town svg { display: block; width: 100%; height: auto; overflow: visible; }
+.town figcaption { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); text-align: center; padding: 0 0 14px; }
+.town polygon, .town line, .town circle, .town path { stroke: var(--ink); stroke-width: 1.1; stroke-linejoin: round; }
+.ft { fill: #fff; } .fl { fill: #d9d7cf; } .fr { fill: #efede6; }
+.dt { fill: #48463f; } .dl { fill: #1f1e1c; } .dr { fill: #2e2d29; }
+.gt { fill: #ffc9ab; } .gl { fill: #ec9a72; } .gr { fill: #f5b08d; }
+.pt { fill: #fff; } .pl { fill: #cfcdc4; } .pr { fill: #e6e4dc; }
+.win { fill: #34332f; stroke-width: .6 !important; }
+.win.hot { fill: var(--hot); }
+.scr { fill: #2b2a27; } .scr.ok { fill: #6cc287; }
+.soil { fill: #6e5c47; } .water { fill: #9cc8e8; stroke-width: .6 !important; }
+.dash { fill: none; stroke-dasharray: 4 5; stroke-width: 1 !important; opacity: .5; }
+.leaf { fill: #fff; } .trunk { stroke-width: 1.4 !important; }
+.wheel { fill: #fff; }
+.pinbg { fill: #fff; stroke-width: 1.4 !important; }
+.pin text { font: 600 11px var(--mono); fill: var(--ink); stroke: none; text-anchor: middle; }
+.pin .stem { stroke-dasharray: 3 3; }
+.pin .lab rect { fill: var(--ink); stroke: none; }
+.pin .lab text { fill: #fff; font: 600 12px var(--body); }
+.pin .lab { opacity: 0; transition: opacity .2s; pointer-events: none; }
+.pin a:hover .lab, .pin a:focus .lab { opacity: 1; }
+.pin a:hover .pinbg:not(.ring) { fill: var(--hot); }
+
+/* Segmented filter */
+.seg { position: relative; display: inline-flex; background: var(--paper-2); border-radius: 999px; padding: 4px; flex-wrap: wrap; }
+.seg button { position: relative; z-index: 1; border: 0; background: none; padding: 8px 16px; font: 600 14px var(--body); color: var(--ink-soft); cursor: pointer; border-radius: 999px; transition: color .25s; }
+.seg button[aria-selected="true"] { color: #fff; }
+.seg .knob { position: absolute; top: 4px; height: calc(100% - 8px); left: 0; width: 0; background: var(--ink); border-radius: 999px; transition: left .4s cubic-bezier(.3,1.3,.5,1), width .4s cubic-bezier(.3,1.3,.5,1), top .3s; }
+.project, .grid3 .card { transition: opacity .3s, transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
+.fout { opacity: 0 !important; transform: scale(.97) !important; }
+[data-c][hidden] { display: none; }
+
+/* Process: step-by-step tabs */
+.steps { display: grid; grid-template-columns: 230px 1fr 1fr; gap: 20px; align-items: stretch; }
+.tabs { margin: 0; padding: 0; border-left: 1px solid var(--rule); align-self: start; }
+.tabs button { position: relative; display: block; width: 100%; text-align: left; background: none; border: 0; padding: 12px 0 12px 22px; font: 500 15px var(--body); color: var(--ink-soft); cursor: pointer; transition: color .25s; }
+.tabs button::before { content: ""; position: absolute; left: -5px; top: 50%; width: 9px; height: 9px; margin-top: -4.5px; border-radius: 50%; background: var(--hot); transform: scale(0); transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
+.tabs button::after { content: ""; position: absolute; left: 22px; right: 0; bottom: 6px; height: 2px; background: var(--ink); transform: scaleX(0); transform-origin: left; }
+.tabs button[aria-selected="true"] { color: var(--ink); font-weight: 600; }
+.tabs button[aria-selected="true"]::before { transform: scale(1); }
+.auto .tabs button[aria-selected="true"]::after { animation: prog 6s linear forwards; }
+.steps:hover .tabs button::after { animation-play-state: paused; }
+@keyframes prog { to { transform: scaleX(1); } }
+.st-stage { display: grid; }
+.st-stage > * { grid-area: 1 / 1; opacity: 0; transform: translateY(16px); transition: opacity .45s, transform .55s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
+.st-stage > .on { opacity: 1; transform: none; pointer-events: auto; }
+.step-card { background: #fff; border: 1px solid var(--rule); border-radius: 24px; padding: 30px; min-height: 340px; display: flex; flex-direction: column; }
+.step-card .ic { width: 48px; height: 48px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font: 600 14px var(--mono); }
+.step-card h3 { margin: auto 0 10px; }
+.step-card p { margin: 0; color: var(--ink-soft); font-size: 15.5px; }
+.step-img { border-radius: 24px; overflow: hidden; min-height: 340px; background: #222; }
+.step-img img { width: 100%; height: 100%; object-fit: cover; }
+.step-img img.short { transform: scale(1.75); }
+
+/* FAQ */
+.faq { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; }
+.faq h2 { margin-top: 10px; }
+.qa { border-top: 1px solid var(--rule); }
+.qa:last-child { border-bottom: 1px solid var(--rule); }
+.qa button { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 16px; background: none; border: 0; padding: 20px 0; font: 600 17px var(--body); text-align: left; cursor: pointer; color: var(--ink); }
+.qa .plus { width: 30px; height: 30px; border-radius: 50%; background: var(--paper-2); position: relative; flex: none; transition: background .25s, transform .4s; }
+.qa .plus::before, .qa .plus::after { content: ""; position: absolute; left: 9px; right: 9px; top: 14px; height: 2px; background: var(--ink); transition: transform .3s, background .25s; }
+.qa .plus::after { transform: rotate(90deg); }
+.qa.open .plus { background: var(--hot); transform: rotate(180deg); }
+.qa.open .plus::before, .qa.open .plus::after { background: #fff; }
+.qa.open .plus::after { transform: rotate(0); }
+.ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s cubic-bezier(.2,.8,.2,1); }
+.ans > div { overflow: hidden; }
+.ans p { margin: 0 0 20px; color: var(--ink-soft); }
+.qa.open .ans { grid-template-rows: 1fr; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .tile { animation: tileIn .9s cubic-bezier(.2,.8,.2,1) both paused; animation-delay: calc(var(--i) * .1s + .1s); }
+  .town.in .tile, .town.in .drop { animation-play-state: running; }
+  @keyframes tileIn { from { opacity: 0; transform: translateY(50px); } }
+  .tile > g { transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+  .tile:hover > g { transform: translateY(-8px); }
+  .drop { animation: drop .8s cubic-bezier(.3,1.5,.5,1) both paused; animation-delay: calc(var(--i) * .12s + .9s); }
+  @keyframes drop { from { opacity: 0; transform: translateY(-40px); } }
+  .pbob { animation: pinbob 3.5s ease-in-out infinite; animation-delay: calc(var(--i) * -.7s); }
+  @keyframes pinbob { 50% { transform: translateY(-5px); } }
+  .ring { transform-box: fill-box; transform-origin: center; animation: pinring 2.6s ease-out infinite; animation-delay: calc(var(--i) * .4s + 2s); opacity: 0; }
+  @keyframes pinring { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(2); } }
+  .dash { animation: march 1.6s linear infinite; }
+  @keyframes march { to { stroke-dashoffset: -18; } }
+  .lift { animation: lift 5s ease-in-out infinite 2.5s; }
+  @keyframes lift { 0%, 15%, 100% { transform: translateY(0); } 45%, 70% { transform: translateY(-14px); } }
+  .scissor { transform-box: fill-box; transform-origin: bottom; animation: stretch 5s ease-in-out infinite 2.5s; }
+  @keyframes stretch { 0%, 15%, 100% { transform: scaleY(1); } 45%, 70% { transform: scaleY(1.9); } }
+  .blink { animation: blink 3s steps(1) infinite; }
+  @keyframes blink { 50% { fill: #fff; } }
+  .alarm { animation: alarm 4s steps(1) infinite 2s; }
+  @keyframes alarm { 60% { fill: #e25c4a; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .meter i { width: var(--w); transition: none; }
+  .chips span { transform: none; }
+  .panel, .scrim, .st-stage > *, .mlist li, .menu-feat, .panel-foot { transition: none; }
+}
+@media (max-width: 960px) {
+  .bento { grid-template-columns: 1fr 1fr; }
+  .bx-photo { grid-column: span 2; grid-row: auto; min-height: 340px; }
+  .steps { grid-template-columns: 1fr; }
+  .tabs { display: flex; overflow-x: auto; border-left: 0; border-bottom: 1px solid var(--rule); scrollbar-width: none; }
+  .tabs button { white-space: nowrap; padding: 12px 14px; width: auto; }
+  .tabs button::before { display: none; }
+  .tabs button::after { left: 14px; right: 14px; bottom: 0; }
+  .step-img, .step-card { min-height: 260px; }
+  .faq { grid-template-columns: 1fr; gap: 20px; }
+}
+@media (max-width: 600px) {
+  .bento { grid-template-columns: 1fr; }
+  .bx-photo, .bx-wide { grid-column: auto; }
+  .town { margin-inline: -12px; border-radius: 22px; padding: 10px 0 4px; }
+  .town svg { width: 150%; margin-left: -25%; }
+  .nav-end .menu-btn { padding: 9px 14px; }
+}
 </style>
 </head>
 <body>
@@ -426,15 +615,34 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
       <span><b>Jaden Chua</b> / Singapore</span>
     </a>
     <div class="nav-mid">
-      <a href="#work">Projects</a><i aria-hidden="true">.</i><a href="#skills">Toolkit</a><i aria-hidden="true">.</i><a href="#record">Education</a><i aria-hidden="true">.</i><a href="#contact">Contact</a>
+      <a href="#about">About</a><i aria-hidden="true">.</i><a href="#work">Projects</a><i aria-hidden="true">.</i><a href="#process">Process</a><i aria-hidden="true">.</i><a href="#record">Education</a><i aria-hidden="true">.</i><a href="#faq">FAQ</a>
     </div>
     <div class="nav-end">
       <span class="sep" aria-hidden="true"></span>
-      <a class="txt" href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">LinkedIn</a>
-      <a class="btn" href="https://github.com/jadenchua-dot">GitHub <small>— open source</small></a>
+      <a class="txt" href="https://github.com/jadenchua-dot">GitHub</a>
+      <button class="btn menu-btn" type="button" aria-expanded="false" aria-controls="panel"><svg viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.8" fill="none" aria-hidden="true"><path d="M2 5h12M2 11h12"/></svg>Menu</button>
     </div>
   </div>
 </nav>
+
+<!-- Slide-in projects menu -->
+<div class="scrim" data-close></div>
+<aside class="panel" id="panel" aria-label="Projects menu" aria-hidden="true">
+  <div class="panel-head"><h2>My projects</h2><button class="x" type="button" data-close aria-label="Close menu"><svg width="14" height="14" viewBox="0 0 14 14" stroke="#15130f" stroke-width="1.8" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+  <ul class="mlist">
+    <li style="--i:0"><a href="#p-garden" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/DR6Jm-IQAWk/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Self-watering garden monitor</b><small>M5Stack Fire · sensors · servo valve</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:1"><a href="#p-tilt" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Equipment levelling monitor</b><small>IMU tilt alarm · web dashboard · push</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:2"><a href="#p-window" data-close><span class="mthumb"><img src="https://i.ytimg.com/vi/IUG_-EWEwes/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Smart Window Energy Guard</b><small>Arduino · Raspberry Pi · Flask</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:3"><a href="#p-wheelchair" data-close><span class="mthumb"><img src="assets/wheelchair/final-prototype.jpg" alt="" loading="lazy"></span><span><b>Smart elevating wheelchair</b><small>Team of 4 · servo scissor lift</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:4"><a href="#p-safelens" data-close><span class="mthumb">05</span><span><b>SafeLens AI</b><small>Hackathon · online-harm detector</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:5"><a href="#p-small" data-close><span class="mthumb">+3</span><span><b>More builds</b><small>AVR C labs · Python apps</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+  </ul>
+  <a class="menu-feat" href="#p-tilt" data-close style="--i:6">
+    <span class="feat-ph"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span>
+    <span><span class="label">Now building</span><b>TinyML vibration anomaly detector</b><small>Trained in Edge Impulse on IMU data, running on the M5Stack Fire with no internet.</small></span>
+  </a>
+  <div class="panel-foot" style="--i:7"><span>Find me on</span><span><a href="https://github.com/jadenchua-dot">GitHub</a><a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">LinkedIn</a></span></div>
+</aside>
 
 <main id="top">
   <header class="stage">
@@ -493,6 +701,39 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
 
   <div class="wrap">
 
+    <!-- ABOUT -->
+    <section class="statement" id="about" aria-label="About">
+      <span class="label">About</span>
+      <p id="stmt">I build devices that solve small, real problems: <span class="key">a plant that waters itself,</span> <span class="key">a machine that warns you it's tilting,</span> <span class="key">a chair that lifts you to the shelf.</span></p>
+    </section>
+
+    <div class="bento">
+      <div class="bx bx-photo">
+        <img src="assets/wheelchair/final-prototype.jpg" alt="The smart elevating wheelchair prototype built from Lego Technic" loading="lazy">
+        <div class="cap"><b>Smart elevating wheelchair</b>Team of 4 · seat lift + rear obstacle warning</div>
+      </div>
+      <div class="bx">
+        <span class="label">Tilt monitor fix</span>
+        <div class="bnum"><span data-count="0.35" data-dp="2">0.35</span>°</div>
+        <p>Reading swing lying flat, down from 80° after switching to accelerometer-only tilt.</p>
+        <div class="meters">
+          <div><span>Before · gyro at 18 Hz · 80°</span><div class="meter"><i style="--w:100%"></i></div></div>
+          <div><span>After · accelerometer · 0.35°</span><div class="meter"><i class="ok" style="--w:1.5%"></i></div></div>
+        </div>
+      </div>
+      <div class="bx bx-peach">
+        <span class="label">Nanyang Polytechnic</span>
+        <div class="bnum"><span data-count="3.97" data-dp="2">3.97</span></div>
+        <p>Cumulative GPA out of 4.00, Diploma in Electronic &amp; Computer Engineering.</p>
+        <div class="chips"><span style="--i:0">Director's List Y1S1</span><span style="--i:1">Y1S2</span><span style="--i:2">Y2S1</span></div>
+      </div>
+      <div class="bx bx-wide">
+        <span class="label">Projects shipped</span>
+        <div class="bnum"><span data-count="8" data-dp="0">8</span></div>
+        <p>Each one on GitHub with a README, wiring and a list of what broke and how I fixed it.</p>
+      </div>
+    </div>
+
     <div class="now" role="note">
       <span class="label"><span class="dot" aria-hidden="true"></span>Now building</span>
       <span>A TinyML vibration anomaly detector on the M5Stack Fire: trained in Edge Impulse on IMU data, running inference on the device with no internet.</span>
@@ -502,11 +743,22 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
     <section id="work" aria-labelledby="work-h">
       <div class="sec-head">
         <h2 id="work-h">Projects</h2>
-        <span class="label">8 entries · code on GitHub</span>
+        <div class="seg" role="tablist" aria-label="Filter projects">
+          <span class="knob" aria-hidden="true"></span>
+          <button role="tab" aria-selected="true" data-f="all">All 8</button>
+          <button role="tab" aria-selected="false" data-f="emb">Embedded</button>
+          <button role="tab" aria-selected="false" data-f="iot">IoT</button>
+          <button role="tab" aria-selected="false" data-f="sw">Software</button>
+        </div>
       </div>
 
+      <figure class="town">
+        <svg id="city" viewBox="0 80 1120 480" role="img" aria-label="Project map: an isometric town where each block is one of my projects"></svg>
+        <figcaption>Project map · hover a pin, click to jump to it</figcaption>
+      </figure>
+
       <!-- 01 Garden monitor -->
-      <article class="project">
+      <article class="project" id="p-garden" data-c="emb iot">
         <div>
           <span class="p-num">01 / Nov 2026</span>
           <h3>M5Stack self-watering garden monitor</h3>
@@ -592,7 +844,7 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
       </article>
 
       <!-- 02 Tilt sensor -->
-      <article class="project" id="p-tilt">
+      <article class="project" id="p-tilt" data-c="emb iot">
         <div>
           <span class="p-num">02 / Nov 2026</span>
           <h3>Equipment levelling monitor</h3>
@@ -679,7 +931,7 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
       </article>
 
       <!-- 03 Window guard -->
-      <article class="project">
+      <article class="project" id="p-window" data-c="iot">
         <div>
           <span class="p-num">03 / IoT prototype</span>
           <h3>Smart Window Energy Guard</h3>
@@ -738,7 +990,7 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
       </article>
 
       <!-- 04 Smart elevating wheelchair -->
-      <article class="project" id="p-wheelchair">
+      <article class="project" id="p-wheelchair" data-c="emb">
         <div>
           <span class="p-num">04 / Team project</span>
           <h3>Smart elevating wheelchair</h3>
@@ -821,35 +1073,60 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
       </article>
 
       <!-- Smaller projects -->
-      <div class="grid3">
-        <article class="card">
+      <div class="grid3" id="p-small">
+        <article class="card" id="p-safelens" data-c="sw">
           <span class="p-num">05 / Hackathon · Nov 2026</span>
           <h3>SafeLens AI</h3>
           <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Team of 3</li></ul>
           <p>Built at GovTech's Digital4Good hackathon for the "Report Inappropriate Content" problem statement. A browser prototype that helps youths spot online harm: it scores messages across 11 categories with rules plus a Naive Bayes model, blurs risky ones behind a salted SHA-256 password, and builds an evidence file for escalation.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">Code ↗</a></div>
         </article>
-        <article class="card">
+        <article class="card" data-c="emb">
           <span class="p-num">06 / Coursework</span>
           <h3>ATmega328P embedded C labs</h3>
           <ul class="stack"><li>AVR C</li><li>Registers</li><li>Interrupts</li></ul>
           <p>Seven labs of bare-metal C: GPIO, ADC, UART serial and external interrupts (INT0/INT1 with ISRs), written with direct hex register values and no blocking delays. Ends with a temperature monitor that drives a fan.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/MicroController-embedded-system">Code ↗</a></div>
         </article>
-        <article class="card">
+        <article class="card" data-c="sw">
           <span class="p-num">07 / Python</span>
           <h3>Fast food ordering system</h3>
           <ul class="stack"><li>Python 3</li><li>CLI</li></ul>
           <p>A command-line ordering app with category menus, a cart you can edit, student, staff and member discounts, 9% GST, a lucky-draw game at checkout and input validation throughout.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/python-terminal-shop">Code ↗</a></div>
         </article>
-        <article class="card">
+        <article class="card" data-c="sw">
           <span class="p-num">08 / Python · Nov 2026</span>
           <h3>Pokémon card portfolio tracker</h3>
           <ul class="stack"><li>Python 3</li><li>Telegram Bot API</li><li>launchd</li><li>JSON</li></ul>
           <p>A bot that watches my Pokémon card collection on Collectr. Every morning it messages me on Telegram with the 3 cards that rose the most and the 3 that fell the most; every Sunday it sends how much the whole portfolio moved that week. It reads the public showcase page, keeps a daily snapshot history and runs on a macOS schedule, using only the Python standard library.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/collectr-portfolio-tracker">Code ↗</a></div>
         </article>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section id="process" aria-labelledby="process-h">
+      <div class="sec-head"><h2 id="process-h">How I build, <em class="s">step by step</em></h2></div>
+      <div class="steps" id="steps">
+        <div class="tabs" role="tablist" aria-label="Build steps">
+          <button role="tab" aria-selected="true">Find the problem</button>
+          <button role="tab" aria-selected="false">Prototype fast</button>
+          <button role="tab" aria-selected="false">Debug properly</button>
+          <button role="tab" aria-selected="false">Write it up</button>
+        </div>
+        <div class="st-stage">
+          <div class="step-card on" role="tabpanel"><span class="ic">01</span><h3>1. Find the problem</h3><p>Start from a real person's pain. For the wheelchair, that was a user who couldn't reach high supermarket shelves without help. We compared four ideas on a value-effort map before building one.</p></div>
+          <div class="step-card" role="tabpanel"><span class="ic">02</span><h3>2. Prototype fast</h3><p>Get something working early. The garden monitor started as an I2C scan, then one sensor at a time, until 11 milestone sketches added up to a self-watering node.</p></div>
+          <div class="step-card" role="tabpanel"><span class="ic">03</span><h3>3. Debug properly</h3><p>When the tilt reading drifted, I logged the raw axes and sample rate instead of guessing. The loop ran at 18 Hz, too slow for the gyro, so I switched to accelerometer-only tilt.</p></div>
+          <div class="step-card" role="tabpanel"><span class="ic">04</span><h3>4. Write it up</h3><p>Every project ships with a README, a wiring table and the honest list of what broke, so someone else can rebuild it.</p></div>
+        </div>
+        <div class="st-stage" aria-hidden="true">
+          <div class="step-img on"><img src="assets/wheelchair/final-prototype.jpg" alt="" loading="lazy"></div>
+          <div class="step-img"><img class="short" src="https://i.ytimg.com/vi/DR6Jm-IQAWk/hqdefault.jpg" alt="" loading="lazy"></div>
+          <div class="step-img"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></div>
+          <div class="step-img"><img src="https://i.ytimg.com/vi/IUG_-EWEwes/hqdefault.jpg" alt="" loading="lazy"></div>
+        </div>
       </div>
     </section>
 
@@ -910,6 +1187,19 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
         </div>
       </div>
     </section>
+
+    <!-- FAQ -->
+    <section id="faq" aria-labelledby="faq-h">
+      <div class="faq">
+        <div><span class="label">FAQ</span><h2 id="faq-h">Frequently <em class="s">asked</em></h2></div>
+        <div class="faq-list">
+          <div class="qa open"><button aria-expanded="true">What do you build with?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Mostly ESP32 on the M5Stack Fire, Arduino Uno, the ATmega328P in bare-metal C, and a Raspberry Pi with Flask and MariaDB when a project needs a server.</p></div></div></div>
+          <div class="qa"><button aria-expanded="false">Where can I see the code?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Every project is on <a href="https://github.com/jadenchua-dot">GitHub</a>, with a README, wiring and the challenges I hit along the way.</p></div></div></div>
+          <div class="qa"><button aria-expanded="false">Do you work in teams?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. The elevating wheelchair was a team of four, and SafeLens AI was built with a team of three at GovTech's Digital4Good hackathon.</p></div></div></div>
+          <div class="qa"><button aria-expanded="false">What are you building now?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>A TinyML vibration anomaly detector on the M5Stack Fire, trained in Edge Impulse on IMU data and running on the device with no internet.</p></div></div></div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <!-- CONTACT -->
@@ -951,7 +1241,7 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
     });
   });
 
-  var targets = document.querySelectorAll('.sec-head, .project, .card, .skills > div, .entry, .now, .scope, .contact h2');
+  var targets = document.querySelectorAll('.sec-head, .project, .card, .skills > div, .entry, .now, .contact h2, .bento > .bx, .town, .steps, .faq > div');
   targets.forEach(function (el) { el.classList.add('reveal'); });
   document.querySelectorAll('.grid3 .card').forEach(function (c, i) { c.style.transitionDelay = (i % 2) * 0.1 + 's'; });
   root.classList.add('motion');
@@ -999,6 +1289,218 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
     media.style.setProperty('--mx', 0); media.style.setProperty('--my', 0);
   });
 })();
+
+var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---------- Project map: isometric town drawn in SVG ----------
+(function () {
+  var svg = document.getElementById('city');
+  if (!svg) return;
+  var S = 14, C = Math.cos(Math.PI / 6) * S, H = Math.sin(Math.PI / 6) * S, OX = 140, OY = 300;
+  function P(x, y, z) { return [OX + (x - y) * C, OY + (x + y) * H - (z || 0) * S]; }
+  function pts(a) { return a.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '); }
+  function poly(a, c) { return '<polygon class="' + c + '" points="' + pts(a) + '"/>'; }
+  function box(x, y, z, w, d, h, k) {
+    k = k || 'f';
+    return poly([P(x, y + d, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x, y + d, z + h)], k + 'l') +
+           poly([P(x + w, y, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x + w, y, z + h)], k + 'r') +
+           poly([P(x, y, z + h), P(x + w, y, z + h), P(x + w, y + d, z + h), P(x, y + d, z + h)], k + 't');
+  }
+  function faceX(xc, y0, y1, z0, z1, c) { return poly([P(xc, y0, z0), P(xc, y1, z0), P(xc, y1, z1), P(xc, y0, z1)], c); }
+  function faceY(yc, x0, x1, z0, z1, c) { return poly([P(x0, yc, z0), P(x1, yc, z0), P(x1, yc, z1), P(x0, yc, z1)], c); }
+  function tree(x, y, z) {
+    var b = P(x, y, z), t = P(x, y, z + 1.6);
+    return '<line class="trunk" x1="' + b[0] + '" y1="' + b[1] + '" x2="' + t[0] + '" y2="' + t[1] + '"/><circle class="leaf" cx="' + t[0] + '" cy="' + (t[1] - 6) + '" r="8"/>';
+  }
+  var T = 10, PITCH = 11.5, Z = 1.1, pins = [];
+  var grid = [[0, 0], [1, 0], [1, -1], [2, -1], [2, -2], [3, -2], [3, -3]];
+  var builders = [
+    function (x, y) { // ATmega chip + trees
+      var s = tree(x + 1.5, y + 1.5, Z) + tree(x + 8.5, y + 1.2, Z) + box(x + 3, y + 3, Z, 4, 4, .7, 'd');
+      for (var i = 0; i < 4; i++) s += box(x + 3.3 + i, y + 7, Z, .4, .6, .3) + box(x + 7, y + 3.3 + i, Z, .6, .4, .3);
+      pins.push({ x: x + 5, y: y + 5, z: Z + 4, n: '06', t: 'ATmega328P embedded C labs', h: '#p-small' });
+      return s + tree(x + 1.5, y + 8.5, Z) + tree(x + 8.8, y + 8.8, Z);
+    },
+    function (x, y) { // garden
+      var s = box(x + 1.5, y + 1.2, Z, 7, 3.5, 1.4);
+      s += poly([P(x + 1.8, y + 1.5, Z + 1.4), P(x + 8.2, y + 1.5, Z + 1.4), P(x + 8.2, y + 4.4, Z + 1.4), P(x + 1.8, y + 4.4, Z + 1.4)], 'soil');
+      s += tree(x + 3, y + 3, Z + 1.4) + tree(x + 5, y + 3, Z + 1.4) + tree(x + 7, y + 3, Z + 1.4);
+      s += box(x + 1.8, y + 6, Z, 3, 3, 3.4) + faceY(y + 9, x + 2.2, x + 4.4, Z + .3, Z + 2, 'water');
+      s += box(x + 6.4, y + 6.6, Z, 2.2, 2.2, 1.8, 'd') + faceY(y + 8.8, x + 6.7, x + 8.3, Z + .5, Z + 1.5, 'scr ok');
+      pins.push({ x: x + 5, y: y + 3, z: Z + 5.5, n: '01', t: 'Self-watering garden monitor', h: '#p-garden' });
+      return s;
+    },
+    function (x, y) { // tower with window guard
+      var s = box(x + 2, y + 2, Z, 6, 6, 13);
+      for (var z = Z + 1.4; z < Z + 12; z += 1.9) {
+        for (var i = 0; i < 3; i++) {
+          var hot = (z > Z + 7 && z < Z + 9 && i === 1);
+          s += faceX(x + 8, y + 2.6 + i * 1.9, y + 3.6 + i * 1.9, z, z + 1.1, 'win' + (hot ? ' hot blink' : ''));
+          s += faceY(y + 8, x + 2.6 + i * 1.9, x + 3.6 + i * 1.9, z, z + 1.1, 'win');
+        }
+      }
+      s += box(x + 2.6, y + 2.6, Z + 13, 4.8, 4.8, 1.2, 'd') + tree(x + 9.2, y + 9, Z);
+      pins.push({ x: x + 5, y: y + 5, z: Z + 17, n: '03', t: 'Smart Window Energy Guard', h: '#p-window' });
+      return s;
+    },
+    function (x, y) { // workbench + 3D printer + tilt monitor
+      var s = box(x + 1.5, y + 2, Z, .6, .6, 3) + box(x + 8, y + 2, Z, .6, .6, 3) + box(x + 1.5, y + 7.6, Z, .6, .6, 3) + box(x + 8, y + 7.6, Z, .6, .6, 3);
+      s += box(x + 1.2, y + 1.8, Z + 3, 7.6, 6.6, .6) + box(x + 2, y + 2.6, Z + 3.6, 4.4, 4.4, 4.6);
+      s += faceY(y + 7, x + 2.6, x + 5.8, Z + 4.4, Z + 7.6, 'scr');
+      s += box(x + 6.9, y + 5.2, Z + 3.6, 1.6, 1.6, 1.3, 'd') + faceY(y + 6.8, x + 7.1, x + 8.3, Z + 3.9, Z + 4.7, 'scr ok alarm');
+      pins.push({ x: x + 4.5, y: y + 4.5, z: Z + 11, n: '02', t: 'Equipment levelling monitor', h: '#p-tilt' });
+      return s;
+    },
+    function (x, y) { // shop: Python ordering system
+      var s = tree(x + 1.2, y + 1.2, Z) + box(x + 2, y + 2.5, Z, 6.5, 5.5, 4);
+      s += faceY(y + 8, x + 3, x + 4.6, Z, Z + 2.6, 'win') + faceY(y + 8, x + 5.4, x + 7.8, Z + 1, Z + 2.8, 'win') + faceX(x + 8.5, y + 3.4, y + 7, Z + 1, Z + 2.8, 'win');
+      s += box(x + 1.6, y + 2.1, Z + 4, 7.3, 6.3, .9, 'd');
+      pins.push({ x: x + 5.2, y: y + 5.2, z: Z + 7.5, n: '07', t: 'Fast food ordering system', h: '#p-small' });
+      return s + tree(x + 9.3, y + 9.2, Z);
+    },
+    function (x, y) { // wheelchair with scissor lift
+      var s = box(x + 2, y + 3, Z, 6, 4, .8, 'd');
+      var a = P(x + 3, y + 7, Z + .8), b = P(x + 7, y + 7, Z + .8), c = P(x + 3, y + 7, Z + 2.6), d = P(x + 7, y + 7, Z + 2.6);
+      s += '<g class="scissor"><line x1="' + a[0] + '" y1="' + a[1] + '" x2="' + d[0] + '" y2="' + d[1] + '"/><line x1="' + c[0] + '" y1="' + c[1] + '" x2="' + b[0] + '" y2="' + b[1] + '"/></g>';
+      s += '<g class="lift">' + box(x + 2.4, y + 3.4, Z + 2.6, 5.2, 3.2, .7) + box(x + 2.4, y + 3.4, Z + 3.3, .6, 3.2, 3) + '</g>';
+      [[3, 7], [7, 7]].forEach(function (w) { var p = P(x + w[0], y + w[1], Z + .4); s += '<circle class="wheel" cx="' + p[0] + '" cy="' + p[1] + '" r="9"/><circle cx="' + p[0] + '" cy="' + p[1] + '" r="2" fill="#15130f"/>'; });
+      s += tree(x + 9, y + 1.2, Z);
+      pins.push({ x: x + 5, y: y + 5, z: Z + 8.5, n: '04', t: 'Smart elevating wheelchair', h: '#p-wheelchair' });
+      return s;
+    },
+    function (x, y) { // laptop: SafeLens
+      var s = tree(x + 1.3, y + 1.3, Z) + tree(x + 4, y + 1, Z);
+      s += box(x + 2.5, y + 3.2, Z, 5.5, 4.5, .4) + box(x + 2.5, y + 3.2, Z + .4, 5.5, .4, 3.6);
+      s += faceY(y + 3.6, x + 2.9, x + 7.6, Z + .8, Z + 3.6, 'scr') + tree(x + 9, y + 8.8, Z);
+      pins.push({ x: x + 5.2, y: y + 3.4, z: Z + 7, n: '05', t: 'SafeLens AI', h: '#p-safelens' });
+      return s;
+    }
+  ];
+  var html = '';
+  [0, 2, 4, 6, 1, 3, 5].forEach(function (k) {
+    var gx = grid[k][0] * PITCH, gy = grid[k][1] * PITCH;
+    var g = poly([P(gx - 1.4, gy - 1.4), P(gx + T + 1.4, gy - 1.4), P(gx + T + 1.4, gy + T + 1.4), P(gx - 1.4, gy + T + 1.4)], 'dash');
+    g += box(gx - .5, gy - .5, 0, T + 1, T + 1, .5, 'g') + box(gx, gy, .5, T, T, .6, 'p') + builders[k](gx, gy);
+    html += '<g class="tile" style="--i:' + k + '"><g>' + g + '</g></g>';
+  });
+  pins.sort(function (a, b) { return a.n < b.n ? -1 : 1; }).forEach(function (p, i) {
+    var top = P(p.x, p.y, p.z), base = P(p.x, p.y, p.z - 3.2), w = p.t.length * 7 + 22;
+    html += '<g class="pin"><a href="' + p.h + '" aria-label="' + p.n + ' ' + p.t + '"><g class="drop" style="--i:' + i + '">' +
+      '<line class="stem" x1="' + top[0] + '" y1="' + (top[1] + 18) + '" x2="' + base[0] + '" y2="' + base[1] + '"/>' +
+      '<g class="pbob" style="--i:' + i + '"><circle class="ring pinbg" cx="' + top[0] + '" cy="' + top[1] + '" r="15" style="fill:none"/>' +
+      '<path class="pinbg" d="M' + (top[0] - 6) + ' ' + (top[1] + 13) + ' L' + top[0] + ' ' + (top[1] + 21) + ' L' + (top[0] + 6) + ' ' + (top[1] + 13) + 'z"/>' +
+      '<circle class="pinbg" cx="' + top[0] + '" cy="' + top[1] + '" r="15"/><text x="' + top[0] + '" y="' + (top[1] + 4) + '">' + p.n + '</text>' +
+      '<g class="lab"><rect x="' + (top[0] - w / 2) + '" y="' + (top[1] - 48) + '" width="' + w + '" height="26" rx="13"/><text x="' + top[0] + '" y="' + (top[1] - 31) + '">' + p.t + '</text></g>' +
+      '</g></g></a></g>';
+  });
+  svg.innerHTML = html;
+})();
+
+// ---------- Slide-in projects menu ----------
+(function () {
+  var btn = document.querySelector('.menu-btn'), panel = document.getElementById('panel');
+  function set(open) {
+    document.body.classList.toggle('menu-open', open);
+    btn.setAttribute('aria-expanded', open); panel.setAttribute('aria-hidden', !open);
+    if (open) panel.querySelector('.x').focus();
+  }
+  btn.addEventListener('click', function () { set(true); });
+  document.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', function () { set(false); }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('menu-open')) { set(false); btn.focus(); } });
+})();
+
+// ---------- About: words colour in as you scroll ----------
+(function () {
+  var p = document.getElementById('stmt'), words = [];
+  function wrap(node) {
+    Array.from(node.childNodes).forEach(function (n) {
+      if (n.nodeType === 3) {
+        var frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(function (t) {
+          if (!t) return;
+          if (/^\s+$/.test(t)) { frag.appendChild(document.createTextNode(t)); return; }
+          var s = document.createElement('span'); s.className = 'wd' + (node.classList && node.classList.contains('key') ? ' key' : ''); s.textContent = t;
+          words.push(s); frag.appendChild(s);
+        });
+        n.replaceWith(frag);
+      } else wrap(n);
+    });
+  }
+  wrap(p);
+  function update() {
+    var r = p.getBoundingClientRect(), vh = innerHeight;
+    var prog = reduceMotion ? 1 : (vh * .85 - r.top) / (r.height + vh * .35);
+    var on = Math.round(Math.max(0, Math.min(1, prog)) * words.length);
+    words.forEach(function (w, i) { w.classList.toggle('on', i < on); });
+  }
+  addEventListener('scroll', update, { passive: true }); update();
+})();
+
+// ---------- Count-up numbers in the stats ----------
+(function () {
+  if (reduceMotion || !('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var el = e.target, end = parseFloat(el.dataset.count), dp = +el.dataset.dp, t0 = null;
+      io.unobserve(el);
+      (function step(t) {
+        if (!t0) t0 = t;
+        var k = Math.min((t - t0) / 1400, 1);
+        el.textContent = (end * (1 - Math.pow(1 - k, 3))).toFixed(dp);
+        if (k < 1) requestAnimationFrame(step);
+      })(performance.now());
+    });
+  });
+  document.querySelectorAll('.bento [data-count]').forEach(function (el) { io.observe(el); });
+})();
+
+// ---------- Step-by-step tabs ----------
+(function () {
+  var root = document.getElementById('steps'), tabs = root.querySelectorAll('.tabs button');
+  var stages = root.querySelectorAll('.st-stage');
+  function go(i) {
+    tabs.forEach(function (t, j) { t.setAttribute('aria-selected', i === j); });
+    stages.forEach(function (s) { Array.from(s.children).forEach(function (c, j) { c.classList.toggle('on', i === j); }); });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { root.classList.remove('auto'); go(i); });
+    t.addEventListener('animationend', function () { if (root.classList.contains('auto')) go((i + 1) % tabs.length); });
+  });
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { root.classList.add('auto'); o.disconnect(); } }, { threshold: .4 }).observe(root);
+  }
+})();
+
+// ---------- Project filter ----------
+(function () {
+  var seg = document.querySelector('.seg'), knob = seg.querySelector('.knob'), btns = seg.querySelectorAll('button');
+  var items = document.querySelectorAll('#work [data-c]');
+  function place(b) { knob.style.left = b.offsetLeft + 'px'; knob.style.top = b.offsetTop + 'px'; knob.style.width = b.offsetWidth + 'px'; knob.style.height = b.offsetHeight + 'px'; }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      btns.forEach(function (o) { o.setAttribute('aria-selected', o === b); });
+      place(b);
+      var f = b.dataset.f;
+      items.forEach(function (c) {
+        var show = f === 'all' || c.dataset.c.split(' ').indexOf(f) > -1;
+        if (show) { c.hidden = false; c.classList.add('in'); requestAnimationFrame(function () { c.classList.remove('fout'); }); }
+        else { c.classList.add('fout'); setTimeout(function () { if (c.classList.contains('fout')) c.hidden = true; }, reduceMotion ? 0 : 300); }
+      });
+    });
+  });
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () { place(btns[0]); });
+  addEventListener('resize', function () { place(seg.querySelector('[aria-selected="true"]')); });
+})();
+
+// ---------- FAQ accordion ----------
+document.querySelectorAll('.qa button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var qa = b.parentNode, open = !qa.classList.contains('open');
+    document.querySelectorAll('.qa').forEach(function (o) { o.classList.remove('open'); o.querySelector('button').setAttribute('aria-expanded', 'false'); });
+    qa.classList.toggle('open', open); b.setAttribute('aria-expanded', open);
+  });
+});
 
 // Click a video thumbnail to swap in the YouTube player (privacy-enhanced
 // youtube-nocookie domain). Without JavaScript the thumbnail is a plain link.
