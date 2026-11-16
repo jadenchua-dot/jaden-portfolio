@@ -181,6 +181,11 @@ p { margin: 0 0 14px; max-width: 65ch; }
 .video .play svg { width: 22px; height: 22px; margin-left: 4px; fill: #fff; }
 .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .video-cap { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin: 7px 0 0; line-height: 1.4; }
+.demo-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 520px; }
+video.video { width: 100%; height: auto; object-fit: contain; }
+.photo { margin: 16px 0 0; }
+.photo img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center 62%; border-radius: 6px; border: 1px solid var(--rule); }
+.photo figcaption { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-top: 8px; }
 @media (prefers-reduced-motion: reduce) { .video img, .video .play { transition: none; } .video:hover img, .video:hover .play { transform: none; } }
 
 /* Smaller projects */
@@ -275,7 +280,7 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
     <section id="work" aria-labelledby="work-h">
       <div class="sec-head">
         <h2 id="work-h">Projects</h2>
-        <span class="label">7 entries · code on GitHub</span>
+        <span class="label">8 entries · code on GitHub</span>
       </div>
 
       <!-- 01 Garden monitor -->
@@ -510,31 +515,114 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
         </div>
       </article>
 
+      <!-- 04 Smart elevating wheelchair -->
+      <article class="project">
+        <div>
+          <span class="p-num">04 / Team project</span>
+          <h3>Smart elevating wheelchair</h3>
+          <ul class="stack"><li>Arduino Uno</li><li>C++ · Tinkercad blocks</li><li>HC-SR04 ultrasonic</li><li>Servo + gears</li><li>Lego Technic</li><li>Team of 4</li></ul>
+          <p>Wheelchair users often can't reach items on high supermarket shelves without asking for help, and reaching up from a low seat strains the shoulders, neck and back. We compared four ideas on a value-effort map and built the one that gave users the most independence: a wheelchair whose seat rises at the press of a button.</p>
+          <p>A servo turns a Lego gear that drives a scissor lift under the seat, with one button for up and one for down. Because users can't easily see behind them once raised, a rear-facing ultrasonic sensor turns on an LED and beeps a buzzer when anything comes within 25&nbsp;cm.</p>
+
+          <div class="demo">
+            <div class="demo-grid three">
+              <div>
+                <video class="video short" src="assets/wheelchair/demo-1.mp4#t=0.1" controls preload="metadata" playsinline aria-label="Demo: buttons on the breadboard driving the lift"></video>
+                <p class="video-cap">Button control</p>
+              </div>
+              <div>
+                <video class="video short" src="assets/wheelchair/demo-2.mp4#t=0.1" controls preload="metadata" playsinline aria-label="Demo: the scissor lift moving"></video>
+                <p class="video-cap">Scissor lift</p>
+              </div>
+              <div>
+                <video class="video short" src="assets/wheelchair/demo-3.mp4#t=0.1" controls preload="metadata" playsinline aria-label="Demo: seat rising, side view"></video>
+                <p class="video-cap">Seat rising</p>
+              </div>
+            </div>
+          </div>
+
+          <h4>What broke, and the fix</h4>
+          <ul class="fixes">
+            <li><b>The scissor lift stopped midway.</b> The linkage was too stiff for the servo. Realigning the joints made it run smoothly to the top every time.</li>
+            <li><b>The sensor reacted to things far away.</b> Added a software filter so only obstacles under 25&nbsp;cm trigger the warning, which made detection consistent.</li>
+          </ul>
+
+          <div class="links">
+            <a class="btn primary" href="https://github.com/jadenchua-dot/smart-elevating-wheelchair">Code &amp; write-up ↗</a>
+          </div>
+        </div>
+
+        <div>
+          <figure class="figure" style="margin:0">
+            <svg class="diagram" viewBox="0 0 520 240" role="img" aria-labelledby="e-title">
+              <title id="e-title">Wiring: up and down buttons and an HC-SR04 ultrasonic sensor into an Arduino Uno, which drives a servo and gear for the scissor-lift seat, and an LED and buzzer for the obstacle warning</title>
+              <defs><marker id="ah4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10z"/></marker></defs>
+              <rect class="box" x="10" y="30" width="140" height="56" rx="5"/>
+              <text class="t" x="80" y="53" text-anchor="middle">2 push buttons</text>
+              <text class="s" x="80" y="70" text-anchor="middle">seat up · seat down</text>
+              <rect class="box" x="10" y="150" width="140" height="56" rx="5"/>
+              <text class="t" x="80" y="173" text-anchor="middle">HC-SR04</text>
+              <text class="s" x="80" y="190" text-anchor="middle">rear obstacle sensor</text>
+              <rect class="core" x="196" y="54" width="128" height="128" rx="8"/>
+              <text class="tc" x="260" y="104" text-anchor="middle">Arduino Uno</text>
+              <text class="s" x="260" y="124" text-anchor="middle">read · decide</text>
+              <text class="s" x="260" y="140" text-anchor="middle">lift · warn</text>
+              <rect class="box" x="370" y="30" width="140" height="56" rx="5"/>
+              <text class="t" x="440" y="53" text-anchor="middle">Servo + gear</text>
+              <text class="s" x="440" y="70" text-anchor="middle">drives the scissor lift</text>
+              <rect class="box" x="370" y="150" width="140" height="56" rx="5"/>
+              <text class="t" x="440" y="173" text-anchor="middle">LED + buzzer</text>
+              <text class="s" x="440" y="190" text-anchor="middle">obstacle under 25 cm</text>
+              <path class="wire" d="M150 58 H172 V90 H194" marker-end="url(#ah4)"/>
+              <text class="pin" x="154" y="50">D2 · D3</text>
+              <path class="wire" d="M150 178 H172 V146 H194" marker-end="url(#ah4)"/>
+              <text class="pin" x="154" y="222">D10 · D12</text>
+              <path class="wire" d="M324 90 H346 V58 H368" marker-end="url(#ah4)"/>
+              <text class="pin" x="350" y="50">D9</text>
+              <path class="wire" d="M324 146 H346 V178 H368" marker-end="url(#ah4)"/>
+              <text class="pin" x="336" y="222">D6 · D7</text>
+            </svg>
+            <figcaption>Fig. 4 · Pin map, from the Tinkercad circuit</figcaption>
+          </figure>
+
+          <div class="readout" aria-label="Key values">
+            <div><span>Warning range</span><b>&lt; 25 cm</b></div>
+            <div><span>Seat servo</span><b>0° · 90°</b></div>
+            <div><span>Ideas compared</span><b>4</b></div>
+          </div>
+
+          <figure class="photo">
+            <img src="assets/wheelchair/final-prototype.jpg" alt="The finished Lego wheelchair prototype: wheeled base, scissor lift under the seat, black backrest, and the servo with a large gear at the side" loading="lazy" width="1200" height="1600">
+            <figcaption>Final prototype: base, scissor lift, leg rest and gear drive</figcaption>
+          </figure>
+        </div>
+      </article>
+
       <!-- Smaller projects -->
       <div class="grid3">
         <article class="card">
-          <span class="p-num">04 / Hackathon · Nov 2026</span>
+          <span class="p-num">05 / Hackathon · Nov 2026</span>
           <h3>SafeLens AI</h3>
           <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Team of 3</li></ul>
           <p>Built at GovTech's Digital4Good hackathon for the "Report Inappropriate Content" problem statement. A browser prototype that helps youths spot online harm: it scores messages across 11 categories with rules plus a Naive Bayes model, blurs risky ones behind a salted SHA-256 password, and builds an evidence file for escalation.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">Code ↗</a></div>
         </article>
         <article class="card">
-          <span class="p-num">05 / Coursework</span>
+          <span class="p-num">06 / Coursework</span>
           <h3>ATmega328P embedded C labs</h3>
           <ul class="stack"><li>AVR C</li><li>Registers</li><li>Interrupts</li></ul>
           <p>Seven labs of bare-metal C: GPIO, ADC, UART serial and external interrupts (INT0/INT1 with ISRs), written with direct hex register values and no blocking delays. Ends with a temperature monitor that drives a fan.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/MicroController-embedded-system">Code ↗</a></div>
         </article>
         <article class="card">
-          <span class="p-num">06 / Python</span>
+          <span class="p-num">07 / Python</span>
           <h3>Fast food ordering system</h3>
           <ul class="stack"><li>Python 3</li><li>CLI</li></ul>
           <p>A command-line ordering app with category menus, a cart you can edit, student, staff and member discounts, 9% GST, a lucky-draw game at checkout and input validation throughout.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/python-terminal-shop">Code ↗</a></div>
         </article>
         <article class="card">
-          <span class="p-num">07 / Python · Nov 2026</span>
+          <span class="p-num">08 / Python · Nov 2026</span>
           <h3>Pokémon card portfolio tracker</h3>
           <ul class="stack"><li>Python 3</li><li>Telegram Bot API</li><li>launchd</li><li>JSON</li></ul>
           <p>A bot that watches my Pokémon card collection on Collectr. Every morning it messages me on Telegram with the 3 cards that rose the most and the 3 that fell the most; every Sunday it sends how much the whole portfolio moved that week. It reads the public showcase page, keeps a daily snapshot history and runs on a macOS schedule, using only the Python standard library.</p>
