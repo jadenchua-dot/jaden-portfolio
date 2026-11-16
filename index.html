@@ -24,37 +24,21 @@
   --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #1a1714;
-    --paper-2: #24201b;
-    --ink: #eee6d8;
-    --ink-soft: #b3a998;
-    --rule: #3b352d;
-    --accent: #e08a62;
-    --accent-soft: #3a2519;
-    --circuit: #8fc2b0;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #1a1714;
-  --paper-2: #24201b;
-  --ink: #eee6d8;
-  --ink-soft: #b3a998;
-  --rule: #3b352d;
-  --accent: #e08a62;
-  --accent-soft: #3a2519;
-  --circuit: #8fc2b0;
-  color-scheme: dark;
-}
+/* Always the cream "paper" theme, even when the visitor's device is in dark mode. */
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0;
-  background: var(--paper);
+  background-color: var(--paper);
+  /* graph paper: 120px major + 24px minor grid in faint teal ink */
+  background-image:
+    linear-gradient(rgba(47,93,80,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47,93,80,.07) 1px, transparent 1px),
+    linear-gradient(rgba(47,93,80,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47,93,80,.03) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
   color: var(--ink);
   font-family: var(--body);
   font-size: 17px;
@@ -106,6 +90,71 @@ h1 em { font-style: italic; color: var(--accent); }
 .facts dt { color: var(--ink-soft); font-size: 15px; }
 .facts dd { margin: 0; font-family: var(--mono); font-size: 15px; font-variant-numeric: tabular-nums; text-align: right; }
 .facts dd strong { font-family: var(--display); font-size: 30px; font-weight: 600; color: var(--accent); }
+
+/* Paper grain over everything (behind content) */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .35;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Faint PCB traces behind the hero */
+.hero { position: relative; isolation: isolate; }
+.hero::before {
+  content: ""; position: absolute; z-index: -1; top: 10px; bottom: 0; right: -40px; width: 62%;
+  pointer-events: none; opacity: .13;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' fill='none' stroke='%232f5d50' stroke-width='2'%3E%3Cpath d='M0 40h60l20 20h80l20-20h60M40 0v30M120 60v60l30 30h90M0 160h50l30-30v-30M200 240v-50l-20-20h-60M100 240v-40l20-20'/%3E%3Cg fill='%232f5d50' stroke='none'%3E%3Ccircle cx='40' cy='30' r='4'/%3E%3Ccircle cx='120' cy='120' r='4'/%3E%3Ccircle cx='80' cy='100' r='4'/%3E%3Ccircle cx='200' cy='190' r='4'/%3E%3Ccircle cx='120' cy='180' r='4'/%3E%3Ccircle cx='100' cy='200' r='4'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-image: radial-gradient(closest-side, #000 30%, transparent);
+          mask-image: radial-gradient(closest-side, #000 30%, transparent);
+}
+
+/* Oscilloscope strip under the hero */
+.scope {
+  position: relative; height: 64px; margin: -16px 0 36px; overflow: hidden;
+  border: 1px solid var(--rule); border-radius: 6px; background-color: var(--paper-2);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='64' fill='none'%3E%3Cpath d='M0 32C20 6 60 6 80 32S140 58 160 32' stroke='%232f5d50' stroke-width='2'/%3E%3C/svg%3E"),
+    linear-gradient(rgba(47,93,80,.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47,93,80,.1) 1px, transparent 1px);
+  background-size: 160px 64px, 16px 16px, 16px 16px;
+  background-repeat: repeat-x, repeat, repeat;
+  background-position: 0 center, 0 0, 0 0;
+}
+.scope::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 70px;
+  background: linear-gradient(90deg, transparent, rgba(163,64,28,.16), transparent);
+  transform: translateX(-80px);
+}
+.scope-label { position: absolute; top: 6px; left: 10px; font-family: var(--mono); font-size: 11px; color: var(--ink-soft); background: var(--paper-2); padding: 0 4px; }
+.scope-label b { color: var(--accent); font-weight: 500; }
+
+/* Card hover lift */
+.card { transition: transform .2s ease, box-shadow .2s ease; }
+.card:hover { transform: translateY(-3px) rotate(-.3deg); box-shadow: 0 12px 26px -14px rgba(70,45,20,.45); }
+
+/* Wire "current" overlay (added by script) */
+.diagram .flow { stroke: var(--accent); stroke-width: 3; stroke-linecap: round; fill: none; stroke-dasharray: 7 13; opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero::before { animation: drift 60s linear infinite; }
+  @keyframes drift { to { background-position: 240px 120px; } }
+  .scope { animation: scope 3s linear infinite; }
+  @keyframes scope { to { background-position: -160px center, 0 0, 0 0; } }
+  .scope::after { animation: sweep 4.5s linear infinite; }
+  @keyframes sweep { to { transform: translateX(1100px); } }
+
+  /* Scroll reveal: only once the script has run, so content never stays hidden without JS */
+  .motion .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease-out, transform .6s ease-out; }
+  .motion .reveal.in { opacity: 1; transform: none; }
+
+  /* Wiring diagrams draw themselves in, then current flows along the wires */
+  .motion .diagram .wire { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .9s ease-out; }
+  .motion .diagram rect, .motion .diagram text { opacity: 0; transition: opacity .5s ease-out; }
+  .motion .diagram.in .wire { stroke-dashoffset: 0; }
+  .motion .diagram.in rect, .motion .diagram.in text { opacity: 1; }
+  .motion .diagram.in .flow { opacity: .85; transition: opacity .4s 1.4s; animation: flow .9s linear infinite paused; }
+  .motion .diagram.live .flow { animation-play-state: running; }
+  @keyframes flow { to { stroke-dashoffset: -20; } }
+}
 
 /* Now building */
 .now {
@@ -271,6 +320,8 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
       </dl>
     </header>
 
+    <div class="scope" aria-hidden="true"><span class="scope-label">CH1 · <b>live</b> · 3.3&nbsp;V</span></div>
+
     <div class="now" role="note">
       <span class="label"><span class="dot" aria-hidden="true"></span>Now building</span>
       <span>A TinyML vibration anomaly detector on the M5Stack Fire: trained in Edge Impulse on IMU data, running inference on the device with no internet.</span>
@@ -388,11 +439,11 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
                 <p class="video-cap">Main demo</p>
               </div>
               <div>
-                <a class="video short" href="https://youtu.be/x5wJCI2qH80" data-yt="x5wJCI2qH80" aria-label="Play video: alarm limit and web dashboard controls">
-                  <img src="https://i.ytimg.com/vi/x5wJCI2qH80/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
+                <a class="video short" href="https://youtube.com/shorts/2QPIpD7vjOg" data-yt="2QPIpD7vjOg" aria-label="Play video: alarm limit and web dashboard controls">
+                  <img src="https://i.ytimg.com/vi/2QPIpD7vjOg/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
                   <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z"/></svg></span>
                 </a>
-                <p class="video-cap">Limit test, plus mute, set limit and re-zero from the website</p>
+                <p class="video-cap">Limit test, with the website tracking it live</p>
               </div>
             </div>
           </div>
@@ -710,6 +761,44 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
 </footer>
 
 <script>
+// Scroll reveal + diagram draw-in. Skipped entirely for reduced-motion users.
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var root = document.documentElement;
+
+  // Diagrams: normalise wire lengths for the draw-in, add the "current" overlay
+  document.querySelectorAll('.diagram').forEach(function (svg) {
+    svg.querySelectorAll('.wire').forEach(function (w, i) {
+      var flow = w.cloneNode(false);
+      flow.removeAttribute('marker-end');
+      flow.setAttribute('class', 'flow');
+      w.setAttribute('pathLength', '1');
+      w.style.transitionDelay = (0.25 + i * 0.15) + 's';
+      w.parentNode.insertBefore(flow, w.nextSibling);
+    });
+  });
+
+  var targets = document.querySelectorAll('.sec-head, .project, .card, .skills > div, .entry, .now, .scope, .contact h2');
+  targets.forEach(function (el) { el.classList.add('reveal'); });
+  document.querySelectorAll('.grid3 .card').forEach(function (c, i) { c.style.transitionDelay = (i % 2) * 0.1 + 's'; });
+  root.classList.add('motion');
+
+  var once = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); once.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  targets.forEach(function (el) { once.observe(el); });
+  document.querySelectorAll('.diagram').forEach(function (d) { once.observe(d); });
+
+  // Only animate the current while a diagram is on screen
+  var live = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { e.target.classList.toggle('live', e.isIntersecting); });
+  });
+  document.querySelectorAll('.diagram').forEach(function (d) { live.observe(d); });
+})();
+
 // Click a video thumbnail to swap in the YouTube player (privacy-enhanced
 // youtube-nocookie domain). Without JavaScript the thumbnail is a plain link.
 document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
