@@ -424,15 +424,15 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
       <article class="project">
         <div>
           <span class="p-num">02 / Nov 2026</span>
-          <h3>M5Stack tilt alarm with web dashboard</h3>
+          <h3>Equipment levelling monitor</h3>
           <ul class="stack"><li>ESP32 · M5Stack Fire</li><li>C++ / PlatformIO</li><li>MPU6886 IMU</li><li>Web server + JSON API</li><li>ntfy push</li></ul>
-          <p>A tilt alarm for anything that has to stay level. The Fire's IMU measures how far the device has tilted from a level position you set with one button. Past the limit, the screen and LED bars turn red, the speaker beeps, and a push notification goes to your phone. Straighten it and everything goes back to green.</p>
-          <p>The Fire also serves its own dashboard over WiFi, where you can watch the angle live, mute the beeper, change the limit and reset the level position. The screen rotates itself to however the device is mounted.</p>
+          <p>A 3D printer knocked off level prints failed parts, a tripod that shifts ruins the shot, and a machine that leans on a bench can give wrong results or tip over. Usually nobody notices until the damage is done, because a spirit level only tells you it was level when you looked.</p>
+          <p>This monitor sits on the equipment and watches continuously. Set "level" with one button; it warns in amber as the tilt nears your limit, then turns red, beeps and pushes an alert to your phone if it goes past. A dashboard served over WiFi shows the live angle and lets you change the limit, mute the beeper or re-zero from anywhere on the network. A 0.5&nbsp;s delay and hysteresis ignore brief bumps.</p>
 
           <div class="demo">
             <div class="demo-grid">
               <div>
-                <a class="video short" href="https://youtube.com/shorts/oyhKpcI64IE" data-yt="oyhKpcI64IE" aria-label="Play video: tilt alarm main demo">
+                <a class="video short" href="https://youtube.com/shorts/oyhKpcI64IE" data-yt="oyhKpcI64IE" aria-label="Play video: levelling monitor main demo">
                   <img src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy" width="480" height="360">
                   <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z"/></svg></span>
                 </a>
