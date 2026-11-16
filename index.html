@@ -649,7 +649,9 @@ html, body { overflow-x: clip; }
 /* The browser itself pins the device (sticky) for the length of the spacer after it, so there's no
    script fighting the phone's scrolling, and the page is full length from the start (no iOS bounce). */
 #intro-wrap { position: relative; overflow-y: clip; overflow-clip-margin: 0px; }
-#device { position: sticky; top: 0; z-index: 1; display: flow-root; transform-origin: 50% calc(var(--vh, 100vh) / 2); will-change: transform; }
+#device { position: sticky; top: 0; z-index: 1; display: flow-root; transform-origin: 50% calc(var(--vh, 100vh) / 2); }
+/* Only hint the GPU while the intro animates: will-change:transform would otherwise trap fixed-position children */
+html:not(.intro-done) #device { will-change: transform; }
 #device > .shell { position: relative; z-index: 2; }
 .screen-bg { position: absolute; z-index: 1; left: 0; right: 0; top: 0; height: var(--vh, 100vh); background: var(--bg); border-radius: 1.2vw; }
 .bezel {
@@ -789,24 +791,6 @@ html, body { overflow-x: clip; }
   </div>
 </nav>
 
-<!-- Slide-in projects menu -->
-<div class="scrim" data-close></div>
-<aside class="panel" id="panel" aria-label="Projects menu" aria-hidden="true">
-  <div class="panel-head"><h2>My projects</h2><button class="x" type="button" data-close aria-label="Close menu"><svg width="14" height="14" viewBox="0 0 14 14" stroke="#15130f" stroke-width="1.8" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
-  <ul class="mlist">
-    <li style="--i:0"><a href="#p-garden" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/DR6Jm-IQAWk/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Self-watering garden monitor</b><small>M5Stack Fire · sensors · servo valve</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:1"><a href="#p-tilt" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Equipment levelling monitor</b><small>IMU tilt alarm · web dashboard · push</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:2"><a href="#p-window" data-close><span class="mthumb"><img src="https://i.ytimg.com/vi/IUG_-EWEwes/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Smart Window Energy Guard</b><small>Arduino · Raspberry Pi · Flask</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:3"><a href="#p-wheelchair" data-close><span class="mthumb"><img src="assets/wheelchair/final-prototype.jpg" alt="" loading="lazy"></span><span><b>Smart elevating wheelchair</b><small>Team of 4 · servo scissor lift</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:4"><a href="#p-safelens" data-close><span class="mthumb">05</span><span><b>SafeLens AI</b><small>Hackathon · online-harm detector</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:5"><a href="#p-small" data-close><span class="mthumb">+3</span><span><b>More builds</b><small>AVR C labs · Python apps</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-  </ul>
-  <a class="menu-feat" href="#p-tilt" data-close style="--i:6">
-    <span class="feat-ph"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span>
-    <span><span class="label">Now building</span><b>TinyML vibration anomaly detector</b><small>Trained in Edge Impulse on IMU data, running on the M5Stack Fire with no internet.</small></span>
-  </a>
-  <div class="panel-foot" style="--i:7"><span>Find me on</span><span><a href="https://github.com/jadenchua-dot">GitHub</a><a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">LinkedIn</a></span></div>
-</aside>
 
 <main id="top">
   <header class="stage">
@@ -1388,6 +1372,24 @@ html, body { overflow-x: clip; }
 </div>
 <div class="intro-spacer" aria-hidden="true"></div>
 </div>
+<!-- Slide-in projects menu -->
+<div class="scrim" data-close></div>
+<aside class="panel" id="panel" aria-label="Projects menu" aria-hidden="true">
+  <div class="panel-head"><h2>My projects</h2><button class="x" type="button" data-close aria-label="Close menu"><svg width="14" height="14" viewBox="0 0 14 14" stroke="#15130f" stroke-width="1.8" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+  <ul class="mlist">
+    <li style="--i:0"><a href="#p-garden" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/DR6Jm-IQAWk/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Self-watering garden monitor</b><small>M5Stack Fire · sensors · servo valve</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:1"><a href="#p-tilt" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Equipment levelling monitor</b><small>IMU tilt alarm · web dashboard · push</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:2"><a href="#p-window" data-close><span class="mthumb"><img src="https://i.ytimg.com/vi/IUG_-EWEwes/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Smart Window Energy Guard</b><small>Arduino · Raspberry Pi · Flask</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:3"><a href="#p-wheelchair" data-close><span class="mthumb"><img src="assets/wheelchair/final-prototype.jpg" alt="" loading="lazy"></span><span><b>Smart elevating wheelchair</b><small>Team of 4 · servo scissor lift</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:4"><a href="#p-safelens" data-close><span class="mthumb">05</span><span><b>SafeLens AI</b><small>Hackathon · online-harm detector</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:5"><a href="#p-small" data-close><span class="mthumb">+3</span><span><b>More builds</b><small>AVR C labs · Python apps</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+  </ul>
+  <a class="menu-feat" href="#p-tilt" data-close style="--i:6">
+    <span class="feat-ph"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span>
+    <span><span class="label">Now building</span><b>TinyML vibration anomaly detector</b><small>Trained in Edge Impulse on IMU data, running on the M5Stack Fire with no internet.</small></span>
+  </a>
+  <div class="panel-foot" style="--i:7"><span>Find me on</span><span><a href="https://github.com/jadenchua-dot">GitHub</a><a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">LinkedIn</a></span></div>
+</aside>
 <div class="progress" aria-hidden="true"></div>
 <button class="to-top" type="button" aria-label="Back to top"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg></button>
 
