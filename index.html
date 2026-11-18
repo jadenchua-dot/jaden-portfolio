@@ -771,7 +771,7 @@ html:not(.intro-done) #device { will-change: transform; }
 <div class="intro-ui" aria-hidden="true">
   <div class="iu-top"><span>JADEN CHUA</span><span>PORTFOLIO <i>2026</i></span></div>
   <div class="iu-h"><span class="l">Jaden Chua builds</span><span class="r">hardware that</span><span class="r r2">actually works</span></div>
-  <p class="iu-sub">Wired, coded, <em>debugged</em> and written up, from a bag of sensors to <em>a working device.</em></p>
+  <p class="iu-sub">Embedded and IoT projects, <em>built, tested</em> and <em>documented.</em></p>
 </div>
 <div class="scroll-hint" aria-hidden="true"><i></i>Scroll to enter</div>
 <a class="skip" href="#top">Skip intro ↓</a>
@@ -810,7 +810,7 @@ html:not(.intro-done) #device { will-change: transform; }
         </div>
         <h1><span class="vh">Jaden Chua </span><span class="line"><span>Builds<sup>+</sup></span></span></h1>
         <hr class="rule grow" style="--d:.45s">
-        <p class="lede rise" style="--d:.55s">Electronic &amp; Computer Engineering student at Nanyang Polytechnic. I turn a bag of sensors into a working device, then write it up well enough for someone else to rebuild it.</p>
+        <p class="lede rise" style="--d:.55s">I study Electronic &amp; Computer Engineering at Nanyang Polytechnic, where I build small devices that solve everyday problems and document each one so others can rebuild it.</p>
         <div class="proof rise" style="--d:.65s">
           <span class="av" aria-hidden="true">JC</span>
           <span>Diploma, Year 2 of 3<br>Graduating 2028</span>
@@ -871,9 +871,9 @@ html:not(.intro-done) #device { will-change: transform; }
       <div class="bx">
         <span class="label">Tilt monitor fix</span>
         <div class="bnum"><span data-count="0.35" data-dp="2">0.35</span>°</div>
-        <p>Reading swing lying flat, down from 80° after switching to accelerometer-only tilt.</p>
+        <p>Reading swing when lying flat, down from 80° after I switched to the accelerometer.</p>
         <div class="meters">
-          <div><span>Before · gyro at 18 Hz · 80°</span><div class="meter"><i style="--w:100%"></i></div></div>
+          <div><span>Before · gyro · 80°</span><div class="meter"><i style="--w:100%"></i></div></div>
           <div><span>After · accelerometer · 0.35°</span><div class="meter"><i class="ok" style="--w:1.5%"></i></div></div>
         </div>
       </div>
@@ -886,13 +886,13 @@ html:not(.intro-done) #device { will-change: transform; }
       <div class="bx bx-wide">
         <span class="label">Projects shipped</span>
         <div class="bnum"><span data-count="8" data-dp="0">8</span></div>
-        <p>Each one on GitHub with a README, wiring and a list of what broke and how I fixed it.</p>
+        <p>Each one is on GitHub with a README, the wiring, and what went wrong along the way.</p>
       </div>
     </div>
 
     <div class="now" role="note">
       <span class="label"><span class="dot" aria-hidden="true"></span>Now building</span>
-      <span>A TinyML vibration anomaly detector on the M5Stack Fire: trained in Edge Impulse on IMU data, running inference on the device with no internet.</span>
+      <span>A TinyML vibration anomaly detector on the M5Stack Fire, which spots unusual vibration on the device itself without needing the internet.</span>
     </div>
 
     <!-- PROJECTS -->
@@ -919,8 +919,8 @@ html:not(.intro-done) #device { will-change: transform; }
           <span class="p-num">01 / Nov 2026</span>
           <h3>M5Stack self-watering garden monitor</h3>
           <ul class="stack"><li>ESP32 · M5Stack Fire</li><li>C++ / Arduino</li><li>I2C</li><li>M5GFX</li><li>WiFi web server</li></ul>
-          <p>Singapore imports around 90% of its food, and community garden plots often fail for a simple reason: uneven watering. This node reads soil moisture, air conditions and tank level, then releases water through a servo-pinched tube only when the soil has stayed dry across five readings in a row.</p>
-          <p>It skips a cycle when the tank is under 20% or the air is above 90% humidity, waits through a cooldown before it can water again, and serves a live dashboard over WiFi from the Fire itself.</p>
+          <p>Singapore imports around 90% of its food, yet community garden plots often fail simply because they are watered unevenly. To fix this, the monitor checks soil moisture, air conditions and tank level, and only waters the plants once the soil has stayed dry for a while.</p>
+          <p>It also holds off when the tank is nearly empty or the air is already very humid. Meanwhile, a live dashboard over WiFi lets you check on the garden from your phone.</p>
 
           <div class="demo">
             <a class="video short" href="https://youtube.com/shorts/DR6Jm-IQAWk" data-yt="DR6Jm-IQAWk" aria-label="Play video: garden monitor prototype demo">
@@ -932,9 +932,9 @@ html:not(.intro-done) #device { will-change: transform; }
 
           <h4>What broke, and the fix</h4>
           <ul class="fixes">
-            <li><b>Fire reset mid-cycle and watered again.</b> The servo arm stalled against the Lego frame and its current spike browned out the board. Fixed with arm clearance, 1° stepping and a reset-reason log.</li>
-            <li><b>Screen blinked when the servo moved.</b> Traced to the laptop's USB port sagging under load; running from battery or a 1&nbsp;A supply cured it.</li>
-            <li><b>Display and ToF sensor fought over I2C.</b> Moved screen drawing to M5GFX so display code stays off the sensor bus.</li>
+            <li><b>The board restarted mid-watering.</b> The servo arm jammed against the Lego frame and drew too much power, so I gave it more room and made it move more gently.</li>
+            <li><b>The screen flickered whenever the servo moved.</b> The laptop's USB port could not supply enough power, so running it from a battery solved the problem.</li>
+            <li><b>The screen and a sensor interfered with each other.</b> Switching to a different display library kept them apart.</li>
           </ul>
 
           <div class="links">
@@ -978,23 +978,23 @@ html:not(.intro-done) #device { will-change: transform; }
               <path class="wire" d="M324 190 H346 V236 H368" marker-end="url(#ah1)"/>
               <text class="pin" x="350" y="200">Port C · G17</text>
             </svg>
-            <figcaption>Fig. 1 · Port map, from the I2C scan and M5Stack Fire pinout</figcaption>
+            <figcaption>Fig. 1 · How the sensors and valve connect to the Fire</figcaption>
           </figure>
 
           <div class="readout" aria-label="Measured values">
-            <div><span>ToF addr</span><b>0x29</b></div>
-            <div><span>SHT30 / BMP280</span><b>0x44 · 0x76</b></div>
-            <div><span>Dry threshold</span><b>raw 3300</b></div>
-            <div><span>Air · water</span><b>4095 · ~2020</b></div>
+            <div><span>Waters after</span><b>5 dry checks</b></div>
+            <div><span>Skips if tank</span><b>&lt; 20%</b></div>
+            <div><span>Skips if humidity</span><b>&gt; 90%</b></div>
+            <div><span>Sensors</span><b>3</b></div>
             <div><span>Valve shut · open</span><b>25° · 130°</b></div>
             <div><span>Milestone sketches</span><b>11</b></div>
           </div>
 
           <h4>Build log</h4>
           <ol class="log">
-            <li><time datetime="2026-11-12">12 Nov</time>Toolchain set up, I2C scan finds ToF and ENV II</li>
-            <li><time datetime="2026-11-13">13 Nov</time>Sensors calibrated, servo valve, watering logic, tank warning</li>
-            <li><time datetime="2026-11-14">14 Nov</time>Valve angles tuned, prototype built, demo recorded</li>
+            <li><time datetime="2026-11-12">12 Nov</time>Set up the board and got the first sensors working</li>
+            <li><time datetime="2026-11-13">13 Nov</time>Calibrated the sensors, then added the valve, watering logic and tank warning</li>
+            <li><time datetime="2026-11-14">14 Nov</time>Tuned the valve, finished the prototype and recorded the demo</li>
           </ol>
         </div>
       </article>
@@ -1005,8 +1005,8 @@ html:not(.intro-done) #device { will-change: transform; }
           <span class="p-num">02 / Nov 2026</span>
           <h3>Equipment levelling monitor</h3>
           <ul class="stack"><li>ESP32 · M5Stack Fire</li><li>C++ / PlatformIO</li><li>MPU6886 IMU</li><li>Web server + JSON API</li><li>ntfy push</li></ul>
-          <p>A 3D printer knocked off level prints failed parts, a tripod that shifts ruins the shot, and a machine that leans on a bench can give wrong results or tip over. Usually nobody notices until the damage is done, because a spirit level only tells you it was level when you looked.</p>
-          <p>This monitor sits on the equipment and watches continuously. Set "level" with one button; it warns in amber as the tilt nears your limit, then turns red, beeps and pushes an alert to your phone if it goes past. A dashboard served over WiFi shows the live angle and lets you change the limit, mute the beeper or re-zero from anywhere on the network. A 0.5&nbsp;s delay and hysteresis ignore brief bumps.</p>
+          <p>When a 3D printer, tripod or bench machine gets knocked off level, it can ruin the work or even tip over. However, nobody usually notices until it is too late, since a spirit level only tells you it was level when you last checked.</p>
+          <p>This monitor sits on the equipment and keeps watch the whole time. You set "level" with one button, and as the tilt nears your limit it turns amber. If it goes past, it turns red, beeps and sends an alert to your phone. On top of that, a WiFi dashboard shows the live angle and lets you change the limit or mute the alarm, while brief bumps are ignored.</p>
 
           <div class="demo">
             <div class="demo-grid">
@@ -1029,9 +1029,9 @@ html:not(.intro-done) #device { will-change: transform; }
 
           <h4>What broke, and the fix</h4>
           <ul class="fixes">
-            <li><b>Screen auto-rotate was wrong, twice.</b> The IMU sits rotated 90° inside the Fire, so every orientation was a quarter turn out. Worked out the real axes from photos of the screen and remapped them.</li>
-            <li><b>Reading drifted while lying still.</b> Screen redraws held the loop to about 18 IMU reads a second, too slow for gyro integration. Switched to an accelerometer-only low-pass filter: lying flat it now jitters 0.1–0.35° instead of swinging tens of degrees.</li>
-            <li><b>Router rejected the first WiFi attempts.</b> Added retries, a hotspot fallback, and a background retry that switches back to home WiFi on its own.</li>
+            <li><b>The screen rotated the wrong way.</b> The motion sensor sits turned 90° inside the Fire, so I worked out its real orientation and corrected for it.</li>
+            <li><b>The reading drifted while lying still.</b> The gyro could not keep up, so I switched to the accelerometer instead. As a result, the reading now stays within 0.35° rather than swinging by tens of degrees.</li>
+            <li><b>The WiFi kept failing to connect.</b> I added automatic retries and a phone hotspot backup, so it now reconnects on its own.</li>
           </ul>
 
           <div class="links">
@@ -1092,8 +1092,8 @@ html:not(.intro-done) #device { will-change: transform; }
           <span class="p-num">03 / IoT prototype</span>
           <h3>Smart Window Energy Guard</h3>
           <ul class="stack"><li>Arduino Uno</li><li>Raspberry Pi</li><li>Python · pySerial</li><li>Flask</li><li>MariaDB</li></ul>
-          <p>Air-conditioning is one of the largest loads in Singapore buildings, and an open window lets the cooled air walk out. This system acts as a smart timer for the window: you get a grace period for ventilation, then a red LED and buzzer go off if it's still open.</p>
-          <p>The Arduino reads an IR reflective sensor for window state and a rotary knob that sets the grace period from 5 to 60 seconds. It streams both to a Raspberry Pi over USB serial. The Pi runs the timing logic, sends the alarm command back, logs every event to MariaDB and shows live status and history on a Flask dashboard.</p>
+          <p>Air-conditioning is one of the biggest energy users in Singapore buildings, and an open window lets the cool air escape. This system therefore acts as a smart timer for the window, giving you time to air the room before a red light and buzzer remind you to close it.</p>
+          <p>An Arduino senses whether the window is open, and a knob sets how long you get, from 5 to 60 seconds. A Raspberry Pi then decides when to sound the alarm, logs every event, and shows the live status and history on a web dashboard.</p>
 
           <div class="demo">
             <a class="video" href="https://youtu.be/IUG_-EWEwes" data-yt="IUG_-EWEwes" aria-label="Play video: Smart Window Energy Guard demo">
@@ -1140,7 +1140,7 @@ html:not(.intro-done) #device { will-change: transform; }
               <path class="wire" d="M403 82 V148" marker-end="url(#ah2)"/>
               <path class="wire" d="M477 82 V148" marker-end="url(#ah2)"/>
             </svg>
-            <figcaption>Fig. 3 · Four-step loop: sense, transmit, decide, alert and log</figcaption>
+            <figcaption>Fig. 3 · Sense, decide, then alert and log</figcaption>
           </figure>
         </div>
       </article>
@@ -1151,8 +1151,8 @@ html:not(.intro-done) #device { will-change: transform; }
           <span class="p-num">04 / Team project</span>
           <h3>Smart elevating wheelchair</h3>
           <ul class="stack"><li>Arduino Uno</li><li>C++ · Tinkercad blocks</li><li>HC-SR04 ultrasonic</li><li>Servo + gears</li><li>Lego Technic</li><li>Team of 4</li></ul>
-          <p>Wheelchair users often can't reach items on high supermarket shelves without asking for help, and reaching up from a low seat strains the shoulders, neck and back. We compared four ideas on a value-effort map and built the one that gave users the most independence: a wheelchair whose seat rises at the press of a button.</p>
-          <p>A servo turns a Lego gear that drives a scissor lift under the seat, with one button for up and one for down. Because users can't easily see behind them once raised, a rear-facing ultrasonic sensor turns on an LED and beeps a buzzer when anything comes within 25&nbsp;cm.</p>
+          <p>Wheelchair users often can't reach high supermarket shelves without help, and stretching up from a low seat strains the shoulders, neck and back. After comparing four ideas, we built the one that gave users the most independence: a wheelchair whose seat rises at the press of a button.</p>
+          <p>One button raises the seat and another lowers it. Since it is hard to see behind you once raised, a rear sensor also lights an LED and sounds a buzzer when anything comes within 25&nbsp;cm.</p>
 
           <div class="demo">
             <div class="demo-grid three">
@@ -1173,8 +1173,8 @@ html:not(.intro-done) #device { will-change: transform; }
 
           <h4>What broke, and the fix</h4>
           <ul class="fixes">
-            <li><b>The scissor lift stopped midway.</b> The linkage was too stiff for the servo. Realigning the joints made it run smoothly to the top every time.</li>
-            <li><b>The sensor reacted to things far away.</b> Added a software filter so only obstacles under 25&nbsp;cm trigger the warning, which made detection consistent.</li>
+            <li><b>The lift stopped halfway up.</b> The joints were too stiff for the motor, so we realigned them and it now runs smoothly to the top.</li>
+            <li><b>The sensor reacted to things far away.</b> We made it respond only to obstacles within 25&nbsp;cm, which made the warning reliable.</li>
           </ul>
 
           <div class="links">
@@ -1212,7 +1212,7 @@ html:not(.intro-done) #device { will-change: transform; }
               <path class="wire" d="M324 146 H346 V178 H368" marker-end="url(#ah4)"/>
               <text class="pin" x="336" y="222">D6 · D7</text>
             </svg>
-            <figcaption>Fig. 4 · Pin map, from the Tinkercad circuit</figcaption>
+            <figcaption>Fig. 4 · How the buttons, sensor and motor connect</figcaption>
           </figure>
 
           <div class="readout" aria-label="Key values">
@@ -1234,28 +1234,28 @@ html:not(.intro-done) #device { will-change: transform; }
           <span class="p-num">05 / Hackathon · Nov 2026</span>
           <h3>SafeLens AI</h3>
           <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Team of 3</li></ul>
-          <p>Built at GovTech's Digital4Good hackathon for the "Report Inappropriate Content" problem statement. A browser prototype that helps youths spot online harm: it scores messages across 11 categories with rules plus a Naive Bayes model, blurs risky ones behind a salted SHA-256 password, and builds an evidence file for escalation.</p>
+          <p>Built at GovTech's Digital4Good hackathon, this browser prototype helps young people spot harmful messages online. It blurs risky messages, explains why they are harmful, and then helps the user report them.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">Code ↗</a></div>
         </article>
         <article class="card" data-c="emb">
           <span class="p-num">06 / Coursework</span>
           <h3>ATmega328P embedded C labs</h3>
           <ul class="stack"><li>AVR C</li><li>Registers</li><li>Interrupts</li></ul>
-          <p>Seven labs of bare-metal C: GPIO, ADC, UART serial and external interrupts (INT0/INT1 with ISRs), written with direct hex register values and no blocking delays. Ends with a temperature monitor that drives a fan.</p>
+          <p>Seven labs that program a microcontroller directly in C, covering inputs, outputs, sensors and interrupts. They build up to a temperature monitor that switches on a fan.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/MicroController-embedded-system">Code ↗</a></div>
         </article>
         <article class="card" data-c="sw">
           <span class="p-num">07 / Python</span>
           <h3>Fast food ordering system</h3>
           <ul class="stack"><li>Python 3</li><li>CLI</li></ul>
-          <p>A command-line ordering app with category menus, a cart you can edit, student, staff and member discounts, 9% GST, a lucky-draw game at checkout and input validation throughout.</p>
+          <p>A terminal ordering app with menus, an editable cart and automatic discounts and GST, plus a lucky-draw game at checkout.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/python-terminal-shop">Code ↗</a></div>
         </article>
         <article class="card" data-c="sw">
           <span class="p-num">08 / Python · Nov 2026</span>
           <h3>Pokémon card portfolio tracker</h3>
           <ul class="stack"><li>Python 3</li><li>Telegram Bot API</li><li>launchd</li><li>JSON</li></ul>
-          <p>A bot that watches my Pokémon card collection on Collectr. Every morning it messages me on Telegram with the 3 cards that rose the most and the 3 that fell the most; every Sunday it sends how much the whole portfolio moved that week. It reads the public showcase page, keeps a daily snapshot history and runs on a macOS schedule, using only the Python standard library.</p>
+          <p>A bot that tracks my Pokémon card collection on Collectr. Every morning it messages me on Telegram with the three biggest risers and fallers, and every Sunday it sums up how the whole portfolio moved that week.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/collectr-portfolio-tracker">Code ↗</a></div>
         </article>
       </div>
@@ -1272,10 +1272,10 @@ html:not(.intro-done) #device { will-change: transform; }
           <button role="tab" aria-selected="false">Write it up</button>
         </div>
         <div class="st-stage">
-          <div class="step-card on" role="tabpanel"><span class="ic">01</span><h3>1. Find the problem</h3><p>Start from a real person's pain. For the wheelchair, that was a user who couldn't reach high supermarket shelves without help. We compared four ideas on a value-effort map before building one.</p></div>
-          <div class="step-card" role="tabpanel"><span class="ic">02</span><h3>2. Prototype fast</h3><p>Get something working early. The garden monitor started as an I2C scan, then one sensor at a time, until 11 milestone sketches added up to a self-watering node.</p></div>
-          <div class="step-card" role="tabpanel"><span class="ic">03</span><h3>3. Debug properly</h3><p>When the tilt reading drifted, I logged the raw axes and sample rate instead of guessing. The loop ran at 18 Hz, too slow for the gyro, so I switched to accelerometer-only tilt.</p></div>
-          <div class="step-card" role="tabpanel"><span class="ic">04</span><h3>4. Write it up</h3><p>Every project ships with a README, a wiring table and the honest list of what broke, so someone else can rebuild it.</p></div>
+          <div class="step-card on" role="tabpanel"><span class="ic">01</span><h3>1. Find the problem</h3><p>I start from a real problem someone faces. For the wheelchair, that was a user who couldn't reach high shelves without help, so we compared four ideas before building one.</p></div>
+          <div class="step-card" role="tabpanel"><span class="ic">02</span><h3>2. Prototype fast</h3><p>Next, I get something working early. The garden monitor began with a single sensor, and I added one part at a time until it could water itself.</p></div>
+          <div class="step-card" role="tabpanel"><span class="ic">03</span><h3>3. Debug properly</h3><p>When something breaks, I measure instead of guessing. For example, when the tilt reading drifted, the data showed the gyro was too slow, so I switched to the accelerometer.</p></div>
+          <div class="step-card" role="tabpanel"><span class="ic">04</span><h3>4. Write it up</h3><p>Finally, every project comes with a README, the wiring and a list of what went wrong, so someone else can rebuild it.</p></div>
         </div>
         <div class="st-stage" aria-hidden="true">
           <div class="step-img on"><img src="assets/wheelchair/final-prototype.jpg" alt="" loading="lazy"></div>
@@ -1317,7 +1317,7 @@ html:not(.intro-done) #device { will-change: transform; }
           <div class="entry">
             <div class="when">2025 – 2028 (expected)</div>
             <h3>Nanyang Polytechnic</h3>
-            <p>Diploma in Electronic and Computer Engineering (C89). GPA 3.97 / 4.00. Director's List in Year 1 Semester 1, Year 1 Semester 2 and Year 2 Semester 1.</p>
+            <p>Diploma in Electronic and Computer Engineering, with a GPA of 3.97 out of 4.00 and a place on the Director's List for three semesters in a row.</p>
           </div>
           <div class="entry">
             <div class="when">Relevant modules</div>
@@ -1349,10 +1349,10 @@ html:not(.intro-done) #device { will-change: transform; }
       <div class="faq">
         <div><span class="label">FAQ</span><h2 id="faq-h">Frequently <em class="s">asked</em></h2></div>
         <div class="faq-list">
-          <div class="qa open"><button aria-expanded="true">What do you build with?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Mostly ESP32 on the M5Stack Fire, Arduino Uno, the ATmega328P in bare-metal C, and a Raspberry Pi with Flask and MariaDB when a project needs a server.</p></div></div></div>
-          <div class="qa"><button aria-expanded="false">Where can I see the code?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Every project is on <a href="https://github.com/jadenchua-dot">GitHub</a>, with a README, wiring and the challenges I hit along the way.</p></div></div></div>
+          <div class="qa open"><button aria-expanded="true">What do you build with?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Mostly the M5Stack Fire, Arduino Uno and ATmega328P, along with a Raspberry Pi whenever a project needs a server.</p></div></div></div>
+          <div class="qa"><button aria-expanded="false">Where can I see the code?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Every project is on <a href="https://github.com/jadenchua-dot">GitHub</a>, together with a README, the wiring and the problems I solved along the way.</p></div></div></div>
           <div class="qa"><button aria-expanded="false">Do you work in teams?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. The elevating wheelchair was a team of four, and SafeLens AI was built with a team of three at GovTech's Digital4Good hackathon.</p></div></div></div>
-          <div class="qa"><button aria-expanded="false">What are you building now?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>A TinyML vibration anomaly detector on the M5Stack Fire, trained in Edge Impulse on IMU data and running on the device with no internet.</p></div></div></div>
+          <div class="qa"><button aria-expanded="false">What are you building now?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>A TinyML vibration anomaly detector on the M5Stack Fire, which spots unusual vibration on the device itself without needing the internet.</p></div></div></div>
         </div>
       </div>
     </section>
@@ -1394,7 +1394,7 @@ html:not(.intro-done) #device { will-change: transform; }
   </ul>
   <a class="menu-feat" href="#p-tilt" data-close style="--i:6">
     <span class="feat-ph"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span>
-    <span><span class="label">Now building</span><b>TinyML vibration anomaly detector</b><small>Trained in Edge Impulse on IMU data, running on the M5Stack Fire with no internet.</small></span>
+    <span><span class="label">Now building</span><b>TinyML vibration anomaly detector</b><small>Spots unusual vibration on the M5Stack Fire, no internet needed.</small></span>
   </a>
   <div class="panel-foot" style="--i:7"><span>Find me on</span><span><a href="https://github.com/jadenchua-dot">GitHub</a><a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">LinkedIn</a></span></div>
 </aside>
