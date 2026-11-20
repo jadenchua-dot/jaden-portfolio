@@ -2,6 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>
+// Always open at the top. Phones (iOS Safari especially, and anyone with Reduce Motion on)
+// otherwise restore the last scroll position, which drops visitors at the bottom of the page.
+(function () {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  var touched = false;
+  ['touchstart', 'wheel', 'keydown', 'mousedown'].forEach(function (ev) {
+    addEventListener(ev, function () { touched = true; }, { passive: true, once: true });
+  });
+  function toTop() { if (location.hash.length < 2 && !touched) scrollTo(0, 0); }
+  addEventListener('DOMContentLoaded', toTop);
+  addEventListener('load', function () { toTop(); setTimeout(toTop, 60); });
+  // Back/forward cache and reopened tabs show the old page as it was: start it at the top again
+  addEventListener('pageshow', function (e) { if (e.persisted && location.hash.length < 2) { touched = false; scrollTo(0, 0); } });
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jaden Chua Portfolio</title>
 <meta name="description" content="Jaden Chua, Electronic and Computer Engineering student at Nanyang Polytechnic. Embedded systems and IoT projects on M5Stack, Arduino, ATmega328P and Raspberry Pi.">
