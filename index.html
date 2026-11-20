@@ -446,6 +446,32 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
   .cta { gap: 22px; }
 }
 /* ================= Added from the demo ================= */
+
+/* Awards + hackathon */
+.awards { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.45fr); gap: 48px; align-items: start; }
+.medals { list-style: none; padding: 0; margin: 0; }
+.medals li { display: grid; grid-template-columns: 7.2em minmax(0,1fr); gap: 14px; padding: 14px 0; border-top: 1px solid var(--rule); }
+.medals li:first-child { border-top: 2px solid var(--ink); }
+.medals time { font-family: var(--mono); font-size: 13px; color: var(--circuit); padding-top: 4px; }
+.medals b { display: block; font-family: var(--display); font-weight: 600; font-size: 19px; line-height: 1.25; }
+.medals span { font-size: 15px; color: var(--ink-soft); }
+.gallery { display: grid; grid-template-columns: minmax(0,1.3fr) minmax(0,1fr); gap: 14px; }
+.ph { margin: 0; border: 1px solid var(--rule); border-radius: 22px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+.ph img { width: 100%; flex: 1; object-fit: cover; display: block; }
+.ph figcaption { font-size: 13.5px; color: var(--ink-soft); padding: 9px 14px; border-top: 1px solid var(--rule); }
+.gallery .lead { grid-row: span 2; }
+.gallery .lead img { aspect-ratio: 4/3; }
+.gallery .wide { grid-column: 1 / -1; }
+.gallery .wide img { aspect-ratio: 1400/658; }
+.gallery .cert img { aspect-ratio: 990/1400; object-fit: contain; }
+.hack { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 48px; }
+.hack h3 { font-family: var(--display); font-weight: 600; font-size: 26px; line-height: 1.15; margin: 0 0 12px; }
+.learn { list-style: none; padding: 0; margin: 0; counter-reset: l; }
+.learn li { padding: 12px 0 12px 36px; border-top: 1px solid var(--rule); position: relative; font-size: 15.5px; }
+.learn li::before { counter-increment: l; content: counter(l); position: absolute; left: 0; top: 12px; width: 24px; height: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font: 600 12px/24px var(--mono); text-align: center; }
+@media (max-width: 860px) { .awards, .hack { grid-template-columns: 1fr; gap: 32px; } }
+@media (max-width: 520px) { .gallery { grid-template-columns: 1fr; } .gallery .lead { grid-row: auto; } }
+
 em.s { font-family: var(--display); font-style: italic; font-weight: 400; color: var(--accent); }
 .nav-end .menu-btn { display: inline-flex; align-items: center; gap: 8px; background: none; cursor: pointer; font-family: inherit; }
 .menu-btn svg { width: 16px; height: 16px; }
@@ -789,7 +815,7 @@ html:not(.intro-done) #device { will-change: transform; }
       <span><b>Jaden Chua</b> / Singapore</span>
     </a>
     <div class="nav-mid">
-      <a href="#about">About</a><i aria-hidden="true">.</i><a href="#work">Projects</a><i aria-hidden="true">.</i><a href="#process">Process</a><i aria-hidden="true">.</i><a href="#record">Education</a><i aria-hidden="true">.</i><a href="#faq">FAQ</a>
+      <a href="#about">About</a><i aria-hidden="true">.</i><a href="#work">Projects</a><i aria-hidden="true">.</i><a href="#awards">Awards</a><i aria-hidden="true">.</i><a href="#process">Process</a><i aria-hidden="true">.</i><a href="#record">Education</a><i aria-hidden="true">.</i><a href="#faq">FAQ</a>
     </div>
     <div class="nav-end">
       <span class="sep" aria-hidden="true"></span>
@@ -881,7 +907,7 @@ html:not(.intro-done) #device { will-change: transform; }
         <span class="label">Nanyang Polytechnic</span>
         <div class="bnum"><span data-count="3.97" data-dp="2">3.97</span></div>
         <p>Cumulative GPA out of 4.00, Diploma in Electronic &amp; Computer Engineering.</p>
-        <div class="chips"><span style="--i:0">Director's List Y1S1</span><span style="--i:1">Y1S2</span><span style="--i:2">Y2S1</span></div>
+        <div class="chips"><span style="--i:0">Director's List Y1S1</span><span style="--i:1">Y1S2</span><span style="--i:2">Y2S1</span><span style="--i:3">Edusave 2026</span></div>
       </div>
       <div class="bx bx-wide">
         <span class="label">Projects shipped</span>
@@ -1231,7 +1257,7 @@ html:not(.intro-done) #device { will-change: transform; }
       <!-- Smaller projects -->
       <div class="grid3" id="p-small">
         <article class="card" id="p-safelens" data-c="sw">
-          <span class="p-num">05 / Hackathon · Nov 2026</span>
+          <span class="p-num">05 / Hackathon · 6 Nov 2026</span>
           <h3>SafeLens AI</h3>
           <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Team of 3</li></ul>
           <p>Built at GovTech's Digital4Good hackathon, this browser prototype helps young people spot harmful messages online. It blurs risky messages, explains why they are harmful, and then helps the user report them.</p>
@@ -1258,6 +1284,51 @@ html:not(.intro-done) #device { will-change: transform; }
           <p>A bot that tracks my Pokémon card collection on Collectr. Every morning it messages me on Telegram with the three biggest risers and fallers, and every Sunday it sums up how the whole portfolio moved that week.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/collectr-portfolio-tracker">Code ↗</a></div>
         </article>
+      </div>
+    </section>
+
+    <!-- AWARDS -->
+    <section id="awards" aria-labelledby="awards-h">
+      <div class="sec-head"><h2 id="awards-h">Awards, <em class="s">every semester</em></h2><span class="label">Director's List ×3 · Edusave 2026</span></div>
+      <div class="awards">
+        <div>
+          <p>Nanyang Polytechnic puts its top students in each course on the Director's List every semester. I've been on it every semester so far, and in November 2026 I went up on stage to receive my Year 2 award.</p>
+          <ul class="medals">
+            <li><time>Nov 2026</time><div><b>Director's List, Year 2 Semester 1</b><span>AY2026 · Electronic &amp; Computer Engineering</span></div></li>
+            <li><time>2026</time><div><b>Edusave Certificate of Academic Achievement</b><span>From MOE and the People's Association, for students in the top 25% of their level and course with good conduct</span></div></li>
+            <li><time>AY2025 S2</time><div><b>Director's List, Year 1 Semester 2</b><span>Electronic &amp; Computer Engineering</span></div></li>
+            <li><time>AY2025 S1</time><div><b>Director's List, Year 1 Semester 1</b><span>Electronic &amp; Computer Engineering</span></div></li>
+          </ul>
+        </div>
+        <div class="gallery">
+          <figure class="ph lead"><img src="assets/awards/dl-closeup.jpg" alt="Jaden receiving the Director's List certificate folder on stage" loading="lazy"><figcaption>Receiving the Year 2 award</figcaption></figure>
+          <figure class="ph"><img src="assets/awards/dl-stage.jpg" alt="Jaden on stage under screens reading Year 2 Director's List, AY2026 Semester 1" loading="lazy" style="aspect-ratio:4/3"><figcaption>Year 2 Director's List, AY2026 S1</figcaption></figure>
+          <figure class="ph cert"><img src="assets/awards/edusave-cert.jpg" alt="Edusave Certificate of Academic Achievement 2026 presented to Jaden Chua" loading="lazy"><figcaption>Edusave Certificate 2026</figcaption></figure>
+          <figure class="ph wide"><img src="assets/awards/dl-group.jpg" alt="Director's List awardees and lecturers on stage after the ceremony" loading="lazy"><figcaption>Awardees and lecturers after the ceremony</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACKATHON -->
+    <section id="hackathon" aria-labelledby="hack-h">
+      <div class="sec-head"><h2 id="hack-h">GovTech Digital4Good <em class="s">hackathon</em></h2><span class="label">6 Nov 2026 · team of 3</span></div>
+      <div class="hack">
+        <div>
+          <h3>SafeLens AI: helping youths spot online harm</h3>
+          <p>With teammates Justin and Hong Sen, I took on problem statement 3, "Report Inappropriate Content": how might we help youths recognise online harm when it happens?</p>
+          <p>Our first version didn't work. It checked messages against a fixed list of inputs, so anything a user typed that wasn't on the list slipped through. We rebuilt the core so AI reads what the user actually typed and judges whether it's harmful, then blurs risky messages and helps the user report them.</p>
+          <p>For the pitch, I used ElevenLabs for voiceover and Sora for video for the first time, and we made an AI demo video on the day.</p>
+          <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">SafeLens AI code ↗</a> <a class="btn" href="#p-safelens">Project card</a></div>
+        </div>
+        <div>
+          <h4 style="margin-top:0">What I took away</h4>
+          <ol class="learn">
+            <li><b>Prompting is design work.</b> How we worded and structured prompts shaped how well the model flagged harmful messages.</li>
+            <li><b>AI needs safety nets.</b> Rules and fallbacks around the model catch the cases it gets wrong.</li>
+            <li><b>Give AI only what it needs.</b> Feeding it too much information made results worse and adds privacy risk, which matters for a tool built for youths.</li>
+            <li><b>Test with real input early.</b> Our fixed-list version looked fine in a demo and failed the moment someone typed something new.</li>
+          </ol>
+        </div>
       </div>
     </section>
 
@@ -1317,7 +1388,7 @@ html:not(.intro-done) #device { will-change: transform; }
           <div class="entry">
             <div class="when">2025 – 2028 (expected)</div>
             <h3>Nanyang Polytechnic</h3>
-            <p>Diploma in Electronic and Computer Engineering, with a GPA of 3.97 out of 4.00 and a place on the Director's List for three semesters in a row.</p>
+            <p>Diploma in Electronic and Computer Engineering, with a GPA of 3.97 out of 4.00 and a place on the Director's List for three semesters in a row. Received the Edusave Certificate of Academic Achievement 2026. <a href="#awards">See awards ↑</a></p>
           </div>
           <div class="entry">
             <div class="when">Relevant modules</div>
@@ -1336,9 +1407,9 @@ html:not(.intro-done) #device { will-change: transform; }
             <p>Represented Nanyang Polytechnic.</p>
           </div>
           <div class="entry">
-            <div class="when">Nov 2026</div>
+            <div class="when">6 Nov 2026</div>
             <h3>GovTech Digital4Good Hackathon</h3>
-            <p>Built SafeLens AI with a team of three.</p>
+            <p>Built SafeLens AI with Justin and Hong Sen. <a href="#hackathon">Read more ↑</a></p>
           </div>
         </div>
       </div>
