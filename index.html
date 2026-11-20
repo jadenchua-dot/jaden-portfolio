@@ -464,6 +464,13 @@ footer { padding: 24px 0; font-family: var(--mono); font-size: 12.5px; color: va
 .gallery .wide { grid-column: 1 / -1; }
 .gallery .wide img { aspect-ratio: 1400/658; }
 .gallery .cert img { aspect-ratio: 990/1400; object-fit: contain; }
+.y1 { margin-top: 40px; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 28px; }
+.y1 h3 { font-family: var(--display); font-weight: 600; font-size: 22px; margin: 0 0 4px; }
+.y1 .when { font-family: var(--mono); font-size: 13px; color: var(--circuit); margin-bottom: 12px; }
+.pair { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(0,1fr); gap: 12px; }
+.pair .ph img { aspect-ratio: 3/2; }
+.pair .ph.c img { aspect-ratio: 586/800; object-fit: contain; }
+@media (max-width: 860px) { .y1 { grid-template-columns: 1fr; } }
 .hack { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 48px; }
 .hack h3 { font-family: var(--display); font-weight: 600; font-size: 26px; line-height: 1.15; margin: 0 0 12px; }
 .learn { list-style: none; padding: 0; margin: 0; counter-reset: l; }
@@ -1292,12 +1299,12 @@ html:not(.intro-done) #device { will-change: transform; }
       <div class="sec-head"><h2 id="awards-h">Awards, <em class="s">every semester</em></h2><span class="label">Director's List ×3 · Edusave 2026</span></div>
       <div class="awards">
         <div>
-          <p>Nanyang Polytechnic puts its top students in each course on the Director's List every semester. I've been on it every semester so far, and in November 2026 I went up on stage to receive my Year 2 award.</p>
+          <p>Nanyang Polytechnic places the top 15% of each cohort on the Director's List every semester. I've been on it every semester so far, and in November 2026 I went up on stage to receive my Year 2 award.</p>
           <ul class="medals">
             <li><time>Nov 2026</time><div><b>Director's List, Year 2 Semester 1</b><span>AY2026 · Electronic &amp; Computer Engineering</span></div></li>
             <li><time>2026</time><div><b>Edusave Certificate of Academic Achievement</b><span>From MOE and the People's Association, for students in the top 25% of their level and course with good conduct</span></div></li>
-            <li><time>AY2025 S2</time><div><b>Director's List, Year 1 Semester 2</b><span>Electronic &amp; Computer Engineering</span></div></li>
-            <li><time>AY2025 S1</time><div><b>Director's List, Year 1 Semester 1</b><span>Electronic &amp; Computer Engineering</span></div></li>
+            <li><time>Aug 2026</time><div><b>Director's List, Year 1 Semester 2</b><span>AY2025/26 · Electronic &amp; Computer Engineering</span></div></li>
+            <li><time>Dec 2025</time><div><b>Director's List, Year 1 Semester 1</b><span>AY2025/26 · Electronic &amp; Computer Engineering</span></div></li>
           </ul>
         </div>
         <div class="gallery">
@@ -1305,6 +1312,24 @@ html:not(.intro-done) #device { will-change: transform; }
           <figure class="ph"><img src="assets/awards/dl-stage.jpg" alt="Jaden on stage under screens reading Year 2 Director's List, AY2026 Semester 1" loading="lazy" style="aspect-ratio:4/3"><figcaption>Year 2 Director's List, AY2026 S1</figcaption></figure>
           <figure class="ph cert"><img src="assets/awards/edusave-cert.jpg" alt="Edusave Certificate of Academic Achievement 2026 presented to Jaden Chua" loading="lazy"><figcaption>Edusave Certificate 2026</figcaption></figure>
           <figure class="ph wide"><img src="assets/awards/dl-group.jpg" alt="Director's List awardees and lecturers on stage after the ceremony" loading="lazy"><figcaption>Awardees and lecturers after the ceremony</figcaption></figure>
+        </div>
+      </div>
+      <div class="y1">
+        <div>
+          <h3>Year 1, Semester 2</h3>
+          <div class="when">Aug 2026 · AY2025/26 Semester 2</div>
+          <div class="pair">
+            <figure class="ph"><img src="assets/awards/y1s2-photo.jpg" alt="Jaden receiving his Year 1 Semester 2 Director's List certificate" loading="lazy"><figcaption>On stage, Year 1 Semester 2</figcaption></figure>
+            <figure class="ph c"><img src="assets/awards/y1s2-cert.jpg" alt="Director's List certificate, AY2025/26 Semester 2, School of Engineering" loading="lazy"><figcaption>Certificate</figcaption></figure>
+          </div>
+        </div>
+        <div>
+          <h3>Year 1, Semester 1</h3>
+          <div class="when">Dec 2025 · AY2025/26 Semester 1</div>
+          <div class="pair">
+            <figure class="ph"><img src="assets/awards/y1s1-photo.jpg" alt="Jaden receiving his Year 1 Semester 1 Director's List certificate" loading="lazy"><figcaption>On stage, Year 1 Semester 1</figcaption></figure>
+            <figure class="ph c"><img src="assets/awards/y1s1-cert.jpg" alt="Director's List certificate, AY2025/26 Semester 1, School of Engineering" loading="lazy"><figcaption>Certificate</figcaption></figure>
+          </div>
         </div>
       </div>
     </section>
