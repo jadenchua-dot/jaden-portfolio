@@ -11,11 +11,35 @@
   ['touchstart', 'wheel', 'keydown', 'mousedown'].forEach(function (ev) {
     addEventListener(ev, function () { touched = true; }, { passive: true, once: true });
   });
-  function toTop() { if (location.hash.length < 2 && !touched) scrollTo(0, 0); }
+  var hadHash = location.hash.length > 1;   // a #section link should still land on its section
+  function toTop() { if (!hadHash && !touched && scrollY !== 0) scrollTo(0, 0); }
   addEventListener('DOMContentLoaded', toTop);
-  addEventListener('load', function () { toTop(); setTimeout(toTop, 60); });
+  // iOS Safari can apply its own restore a little after "load", so keep holding the top
+  // for the first 1.5 s unless the visitor starts scrolling.
+  addEventListener('load', function () {
+    var t0 = performance.now();
+    (function hold() { toTop(); if (!touched && performance.now() - t0 < 1500) requestAnimationFrame(hold); })();
+  });
+  // Visit the site with ?debug to see live scroll numbers (for troubleshooting on a phone)
+  if (/[?&]debug\b/.test(location.search)) addEventListener('DOMContentLoaded', function () {
+    var d = document.createElement('pre'), log = [];
+    d.style.cssText = 'position:fixed;left:6px;right:6px;bottom:6px;z-index:2147483647;margin:0;padding:8px;font:11px/1.35 ui-monospace,monospace;background:rgba(0,0,0,.85);color:#7CFC7C;border-radius:8px;white-space:pre-wrap;pointer-events:none';
+    document.body.appendChild(d);
+    var t0 = performance.now();
+    function line(tag) { log.push(Math.round(performance.now() - t0) + 'ms ' + tag + ' y=' + Math.round(scrollY)); if (log.length > 8) log.shift(); }
+    addEventListener('scroll', function () { if (performance.now() - t0 < 4000) line('scroll'); }, { passive: true });
+    addEventListener('load', function () { line('load'); });
+    addEventListener('pageshow', function (e) { line('pageshow persisted=' + e.persisted); });
+    (function show() {
+      d.textContent = 'y=' + Math.round(scrollY) + ' / ' + document.documentElement.scrollHeight + '  vh=' + innerHeight +
+        '\nrestore=' + history.scrollRestoration + ' reduceMotion=' + matchMedia('(prefers-reduced-motion: reduce)').matches +
+        ' introDone=' + document.documentElement.classList.contains('intro-done') + ' hash=' + location.hash +
+        '\n' + navigator.userAgent.replace(/^Mozilla\/5.0 /, '').slice(0, 110) + '\n' + log.join('\n');
+      requestAnimationFrame(show);
+    })();
+  });
   // Back/forward cache and reopened tabs show the old page as it was: start it at the top again
-  addEventListener('pageshow', function (e) { if (e.persisted && location.hash.length < 2) { touched = false; scrollTo(0, 0); } });
+  addEventListener('pageshow', function (e) { if (e.persisted) { hadHash = location.hash.length > 1; touched = false; toTop(); } });
 })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
