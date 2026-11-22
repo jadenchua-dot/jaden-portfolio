@@ -959,14 +959,14 @@ html:not(.intro-done) #device { will-change: transform; }
       </div>
       <div class="bx bx-wide">
         <span class="label">Projects shipped</span>
-        <div class="bnum"><span data-count="8" data-dp="0">8</span></div>
+        <div class="bnum"><span data-count="9" data-dp="0">9</span></div>
         <p>Each one is on GitHub with a README, the wiring, and what went wrong along the way.</p>
       </div>
     </div>
 
     <div class="now" role="note">
-      <span class="label"><span class="dot" aria-hidden="true"></span>Now building</span>
-      <span>A TinyML vibration anomaly detector on the M5Stack Fire, which spots unusual vibration on the device itself without needing the internet.</span>
+      <span class="label"><span class="dot" aria-hidden="true"></span>Just shipped</span>
+      <span><a href="#p-vibration">A TinyML vibration anomaly detector on the M5Stack Fire</a>, which learns how a machine normally vibrates and flags anything unusual, all on the device without needing the internet.</span>
     </div>
 
     <!-- PROJECTS -->
@@ -975,7 +975,7 @@ html:not(.intro-done) #device { will-change: transform; }
         <h2 id="work-h">Projects</h2>
         <div class="seg" role="tablist" aria-label="Filter projects">
           <span class="knob" aria-hidden="true"></span>
-          <button role="tab" aria-selected="true" data-f="all">All 8</button>
+          <button role="tab" aria-selected="true" data-f="all">All 9</button>
           <button role="tab" aria-selected="false" data-f="emb">Embedded</button>
           <button role="tab" aria-selected="false" data-f="iot">IoT</button>
           <button role="tab" aria-selected="false" data-f="sw">Software</button>
@@ -983,7 +983,7 @@ html:not(.intro-done) #device { will-change: transform; }
       </div>
 
       <figure class="town">
-        <svg id="city" viewBox="0 80 1262 480" role="img" aria-label="Project map: an isometric town where each block is one of my eight projects"></svg>
+        <svg id="city" viewBox="0 80 1262 480" role="img" aria-label="Project map: an isometric town where each block is one of my nine projects"></svg>
         <figcaption>Project map · tap or click a pin to jump to that project</figcaption>
       </figure>
 
@@ -1160,10 +1160,81 @@ html:not(.intro-done) #device { will-change: transform; }
         </div>
       </article>
 
-      <!-- 03 Window guard -->
+      <!-- 03 TinyML vibration anomaly detector -->
+      <article class="project" id="p-vibration" data-c="emb">
+        <div>
+          <span class="p-num">03 / Nov 2026</span>
+          <h3>TinyML vibration anomaly detector</h3>
+          <ul class="stack"><li>ESP32 · M5Stack Fire</li><li>C++ / PlatformIO</li><li>MPU6886 IMU</li><li>FFT</li><li>On-device autoencoder</li><li>GitHub Actions</li></ul>
+          <p>Motors, pumps and fans usually start to vibrate differently well before they break. However, nobody stands next to a machine listening for it, and cloud monitoring needs WiFi and a subscription that many workshops and plant rooms don't have.</p>
+          <p>So this detector learns each machine for itself. You stick the Fire on, press one button, and it records 30 seconds of normal running. It then trains a small neural network on the device in about three seconds. From then on, if the vibration stops looking normal, the screen and LED bars turn red, it beeps and names what changed, such as a new rattle in one frequency band. Everything runs on the device, with no internet at all.</p>
+
+          <div class="demo">
+            <video class="video" src="assets/vibration/how-to-use.mp4" poster="assets/vibration/poster.jpg" controls preload="none" playsinline aria-label="Animation: how to use the vibration anomaly detector" style="max-width:560px"></video>
+            <p class="video-cap">How to use it, in one animation</p>
+          </div>
+
+          <h4>What broke, and the fix</h4>
+          <ul class="fixes">
+            <li><b>The alarm could keep itself going.</b> The Fire's own beeper and button presses shake the case, so the moments around them are now left out of the alarm decision.</li>
+            <li><b>The sensor ran slower than expected.</b> It measured about 219 readings a second instead of 250, so the device now measures the real rate and labels the frequencies from that.</li>
+            <li><b>Quiet machines gave false alarms.</b> On a very still machine, tiny changes looked huge, so I set a minimum spread for every measurement.</li>
+          </ul>
+
+          <div class="links">
+            <a class="btn primary" href="https://github.com/jadenchua-dot/m5stack-tinyml-vibration">Code &amp; write-up ↗</a>
+            <a class="btn" href="https://github.com/jadenchua-dot/m5stack-tinyml-vibration/releases/tag/latest">Latest firmware ↗</a>
+          </div>
+        </div>
+
+        <div>
+          <figure class="figure" style="margin:0">
+            <svg class="diagram" viewBox="0 0 520 280" role="img" aria-labelledby="v-title">
+              <title id="v-title">Data flow: the IMU's accelerometer feeds the M5Stack Fire, which turns each half-second into frequency features, scores them with an autoencoder trained on the device, and drives the screen and LED bars, the speaker, and a model saved in flash</title>
+              <defs><marker id="ah5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10z"/></marker></defs>
+              <rect class="box" x="10" y="112" width="140" height="56" rx="5"/>
+              <text class="t" x="80" y="135" text-anchor="middle">MPU6886 IMU</text>
+              <text class="s" x="80" y="152" text-anchor="middle">accelerometer · 219 Hz</text>
+              <rect class="core" x="196" y="60" width="128" height="160" rx="8"/>
+              <text class="tc" x="260" y="96" text-anchor="middle">M5Stack Fire</text>
+              <text class="s" x="260" y="114" text-anchor="middle">ESP32</text>
+              <text class="s" x="260" y="142" text-anchor="middle">FFT · 16 features</text>
+              <text class="s" x="260" y="158" text-anchor="middle">autoencoder</text>
+              <text class="s" x="260" y="174" text-anchor="middle">trained on-device</text>
+              <text class="s" x="260" y="190" text-anchor="middle">anomaly score</text>
+              <rect class="box" x="370" y="30" width="140" height="50" rx="5"/>
+              <text class="t" x="440" y="51" text-anchor="middle">Screen + LEDs</text>
+              <text class="s" x="440" y="68" text-anchor="middle">green · amber · red</text>
+              <rect class="box" x="370" y="115" width="140" height="50" rx="5"/>
+              <text class="t" x="440" y="136" text-anchor="middle">Speaker</text>
+              <text class="s" x="440" y="153" text-anchor="middle">beeps on anomaly</text>
+              <rect class="box" x="370" y="200" width="140" height="50" rx="5"/>
+              <text class="t" x="440" y="221" text-anchor="middle">Flash (NVS)</text>
+              <text class="s" x="440" y="238" text-anchor="middle">model survives power-off</text>
+              <path class="wire" d="M150 140 H194" marker-end="url(#ah5)"/>
+              <text class="pin" x="152" y="132">I2C</text>
+              <path class="wire" d="M324 100 H346 V55 H368" marker-end="url(#ah5)"/>
+              <path class="wire" d="M324 140 H368" marker-end="url(#ah5)"/>
+              <path class="wire" d="M324 180 H346 V225 H368" marker-end="url(#ah5)"/>
+            </svg>
+            <figcaption>Fig. 3 · Learns, trains and detects on the device, with no internet</figcaption>
+          </figure>
+
+          <div class="readout" aria-label="Measured values">
+            <div><span>Learning time</span><b>30 s</b></div>
+            <div><span>Training on ESP32</span><b>3.2 s</b></div>
+            <div><span>Network</span><b>16-8-4-8-16</b></div>
+            <div><span>Model size</span><b>1.4 KB</b></div>
+            <div><span>Normal score</span><b>0.05–0.34</b></div>
+            <div><span>Internet needed</span><b>None</b></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 04 Window guard -->
       <article class="project" id="p-window" data-c="iot">
         <div>
-          <span class="p-num">03 / IoT prototype</span>
+          <span class="p-num">04 / IoT prototype</span>
           <h3>Smart Window Energy Guard</h3>
           <ul class="stack"><li>Arduino Uno</li><li>Raspberry Pi</li><li>Python · pySerial</li><li>Flask</li><li>MariaDB</li></ul>
           <p>Air-conditioning is one of the biggest energy users in Singapore buildings, and an open window lets the cool air escape. This system therefore acts as a smart timer for the window, giving you time to air the room before a red light and buzzer remind you to close it.</p>
@@ -1214,15 +1285,15 @@ html:not(.intro-done) #device { will-change: transform; }
               <path class="wire" d="M403 82 V148" marker-end="url(#ah2)"/>
               <path class="wire" d="M477 82 V148" marker-end="url(#ah2)"/>
             </svg>
-            <figcaption>Fig. 3 · Sense, decide, then alert and log</figcaption>
+            <figcaption>Fig. 4 · Sense, decide, then alert and log</figcaption>
           </figure>
         </div>
       </article>
 
-      <!-- 04 Smart elevating wheelchair -->
+      <!-- 05 Smart elevating wheelchair -->
       <article class="project" id="p-wheelchair" data-c="emb">
         <div>
-          <span class="p-num">04 / Team project</span>
+          <span class="p-num">05 / Team project</span>
           <h3>Smart elevating wheelchair</h3>
           <ul class="stack"><li>Arduino Uno</li><li>C++ · Tinkercad blocks</li><li>HC-SR04 ultrasonic</li><li>Servo + gears</li><li>Lego Technic</li><li>Team of 4</li></ul>
           <p>Wheelchair users often can't reach high supermarket shelves without help, and stretching up from a low seat strains the shoulders, neck and back. After comparing four ideas, we built the one that gave users the most independence: a wheelchair whose seat rises at the press of a button.</p>
@@ -1286,7 +1357,7 @@ html:not(.intro-done) #device { will-change: transform; }
               <path class="wire" d="M324 146 H346 V178 H368" marker-end="url(#ah4)"/>
               <text class="pin" x="336" y="222">D6 · D7</text>
             </svg>
-            <figcaption>Fig. 4 · How the buttons, sensor and motor connect</figcaption>
+            <figcaption>Fig. 5 · How the buttons, sensor and motor connect</figcaption>
           </figure>
 
           <div class="readout" aria-label="Key values">
@@ -1305,28 +1376,28 @@ html:not(.intro-done) #device { will-change: transform; }
       <!-- Smaller projects -->
       <div class="grid3" id="p-small">
         <article class="card" id="p-safelens" data-c="sw">
-          <span class="p-num">05 / Hackathon · 6 Nov 2026</span>
+          <span class="p-num">06 / Hackathon · 6 Nov 2026</span>
           <h3>SafeLens AI</h3>
           <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Team of 3</li></ul>
           <p>Built at GovTech's Digital4Good hackathon, this browser prototype helps young people spot harmful messages online. It blurs risky messages, explains why they are harmful, and then helps the user report them.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">Code ↗</a></div>
         </article>
         <article class="card" data-c="emb">
-          <span class="p-num">06 / Coursework</span>
+          <span class="p-num">07 / Coursework</span>
           <h3>ATmega328P embedded C labs</h3>
           <ul class="stack"><li>AVR C</li><li>Registers</li><li>Interrupts</li></ul>
           <p>Seven labs that program a microcontroller directly in C, covering inputs, outputs, sensors and interrupts. They build up to a temperature monitor that switches on a fan.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/MicroController-embedded-system">Code ↗</a></div>
         </article>
         <article class="card" data-c="sw">
-          <span class="p-num">07 / Python</span>
+          <span class="p-num">08 / Python</span>
           <h3>Fast food ordering system</h3>
           <ul class="stack"><li>Python 3</li><li>CLI</li></ul>
           <p>A terminal ordering app with menus, an editable cart and automatic discounts and GST, plus a lucky-draw game at checkout.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/python-terminal-shop">Code ↗</a></div>
         </article>
         <article class="card" data-c="sw">
-          <span class="p-num">08 / Python · Nov 2026</span>
+          <span class="p-num">09 / Python · Nov 2026</span>
           <h3>Pokémon card portfolio tracker</h3>
           <ul class="stack"><li>Python 3</li><li>Telegram Bot API</li><li>launchd</li><li>JSON</li></ul>
           <p>A bot that tracks my Pokémon card collection on Collectr. Every morning it messages me on Telegram with the three biggest risers and fallers, and every Sunday it sums up how the whole portfolio moved that week.</p>
@@ -1524,9 +1595,10 @@ html:not(.intro-done) #device { will-change: transform; }
   <ul class="mlist">
     <li style="--i:0"><a href="#p-garden" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/DR6Jm-IQAWk/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Self-watering garden monitor</b><small>M5Stack Fire · sensors · servo valve</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
     <li style="--i:1"><a href="#p-tilt" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Equipment levelling monitor</b><small>IMU tilt alarm · web dashboard · push</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:2"><a href="#p-vibration" data-close><span class="mthumb"><img src="assets/vibration/poster.jpg" alt="" loading="lazy"></span><span><b>TinyML vibration detector</b><small>M5Stack Fire · on-device ML</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
     <li style="--i:2"><a href="#p-window" data-close><span class="mthumb"><img src="https://i.ytimg.com/vi/IUG_-EWEwes/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Smart Window Energy Guard</b><small>Arduino · Raspberry Pi · Flask</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
     <li style="--i:3"><a href="#p-wheelchair" data-close><span class="mthumb"><img src="assets/wheelchair/final-prototype.jpg" alt="" loading="lazy"></span><span><b>Smart elevating wheelchair</b><small>Team of 4 · servo scissor lift</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:4"><a href="#p-safelens" data-close><span class="mthumb">05</span><span><b>SafeLens AI</b><small>Hackathon · online-harm detector</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:4"><a href="#p-safelens" data-close><span class="mthumb">06</span><span><b>SafeLens AI</b><small>Hackathon · online-harm detector</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
     <li style="--i:5"><a href="#p-small" data-close><span class="mthumb">+3</span><span><b>More builds</b><small>AVR C labs · Python apps</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
   </ul>
   <a class="menu-feat" href="#p-tilt" data-close style="--i:6">
@@ -1662,12 +1734,12 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
     return '<line class="trunk" x1="' + b[0] + '" y1="' + b[1] + '" x2="' + t[0] + '" y2="' + t[1] + '"/><circle class="leaf" cx="' + t[0] + '" cy="' + (t[1] - 6) + '" r="8"/>';
   }
   var T = 10, PITCH = 11.5, Z = 1.1, pins = [];
-  var grid = [[0, 0], [1, 0], [1, -1], [2, -1], [2, -2], [3, -2], [3, -3], [4, -3]];
+  var grid = [[0, 0], [1, 0], [1, -1], [2, -1], [2, -2], [3, -2], [3, -3], [4, -3], [0, -1]];
   var builders = [
     function (x, y) { // ATmega chip + trees
       var s = tree(x + 1.5, y + 1.5, Z) + tree(x + 8.5, y + 1.2, Z) + box(x + 3, y + 3, Z, 4, 4, .7, 'd');
       for (var i = 0; i < 4; i++) s += box(x + 3.3 + i, y + 7, Z, .4, .6, .3) + box(x + 7, y + 3.3 + i, Z, .6, .4, .3);
-      pins.push({ x: x + 5, y: y + 5, z: Z + 4, n: '06', t: 'ATmega328P embedded C labs', h: '#p-small' });
+      pins.push({ x: x + 5, y: y + 5, z: Z + 4, n: '07', t: 'ATmega328P embedded C labs', h: '#p-small' });
       return s + tree(x + 1.5, y + 8.5, Z) + tree(x + 8.8, y + 8.8, Z);
     },
     function (x, y) { // garden
@@ -1689,7 +1761,7 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
         }
       }
       s += box(x + 2.6, y + 2.6, Z + 13, 4.8, 4.8, 1.2, 'd') + tree(x + 9.2, y + 9, Z);
-      pins.push({ x: x + 5, y: y + 5, z: Z + 17, n: '03', t: 'Smart Window Energy Guard', h: '#p-window' });
+      pins.push({ x: x + 5, y: y + 5, z: Z + 17, n: '04', t: 'Smart Window Energy Guard', h: '#p-window' });
       return s;
     },
     function (x, y) { // workbench + 3D printer + tilt monitor
@@ -1704,7 +1776,7 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
       var s = tree(x + 1.2, y + 1.2, Z) + box(x + 2, y + 2.5, Z, 6.5, 5.5, 4);
       s += faceY(y + 8, x + 3, x + 4.6, Z, Z + 2.6, 'win') + faceY(y + 8, x + 5.4, x + 7.8, Z + 1, Z + 2.8, 'win') + faceX(x + 8.5, y + 3.4, y + 7, Z + 1, Z + 2.8, 'win');
       s += box(x + 1.6, y + 2.1, Z + 4, 7.3, 6.3, .9, 'd');
-      pins.push({ x: x + 5.2, y: y + 5.2, z: Z + 7.5, n: '07', t: 'Fast food ordering system', h: '#p-small' });
+      pins.push({ x: x + 5.2, y: y + 5.2, z: Z + 7.5, n: '08', t: 'Fast food ordering system', h: '#p-small' });
       return s + tree(x + 9.3, y + 9.2, Z);
     },
     function (x, y) { // wheelchair with scissor lift
@@ -1714,26 +1786,33 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
       s += '<g class="lift">' + box(x + 2.4, y + 3.4, Z + 2.6, 5.2, 3.2, .7) + box(x + 2.4, y + 3.4, Z + 3.3, .6, 3.2, 3) + '</g>';
       [[3, 7], [7, 7]].forEach(function (w) { var p = P(x + w[0], y + w[1], Z + .4); s += '<circle class="wheel" cx="' + p[0] + '" cy="' + p[1] + '" r="9"/><circle cx="' + p[0] + '" cy="' + p[1] + '" r="2" fill="#15130f"/>'; });
       s += tree(x + 9, y + 1.2, Z);
-      pins.push({ x: x + 5, y: y + 5, z: Z + 8.5, n: '04', t: 'Smart elevating wheelchair', h: '#p-wheelchair' });
+      pins.push({ x: x + 5, y: y + 5, z: Z + 8.5, n: '05', t: 'Smart elevating wheelchair', h: '#p-wheelchair' });
       return s;
     },
     function (x, y) { // laptop: SafeLens
       var s = tree(x + 1.3, y + 1.3, Z) + tree(x + 4, y + 1, Z);
       s += box(x + 2.5, y + 3.2, Z, 5.5, 4.5, .4) + box(x + 2.5, y + 3.2, Z + .4, 5.5, .4, 3.6);
       s += faceY(y + 3.6, x + 2.9, x + 7.6, Z + .8, Z + 3.6, 'scr') + tree(x + 9, y + 8.8, Z);
-      pins.push({ x: x + 5.2, y: y + 3.4, z: Z + 7, n: '05', t: 'SafeLens AI', h: '#p-safelens' });
+      pins.push({ x: x + 5.2, y: y + 3.4, z: Z + 7, n: '06', t: 'SafeLens AI', h: '#p-safelens' });
       return s;
     },
     function (x, y) { // Pokémon card tracker: a stack of cards and a phone with the daily message
       var s = tree(x + 1.4, y + 1.4, Z);
       for (var i = 0; i < 4; i++) s += box(x + 2 + i * .25, y + 4.6 - i * .25, Z + i * .3, 2.8, 3.8, .3, i === 3 ? 'd' : 'f');
       s += box(x + 6.2, y + 3, Z, 2.4, .5, 4.6, 'd') + faceY(y + 3.5, x + 6.45, x + 8.35, Z + .5, Z + 4.1, 'scr ok');
-      pins.push({ x: x + 5.6, y: y + 4.4, z: Z + 8, n: '08', t: 'Pokemon card portfolio tracker', h: '#p-small' });
+      pins.push({ x: x + 5.6, y: y + 4.4, z: Z + 8, n: '09', t: 'Pokemon card portfolio tracker', h: '#p-small' });
       return s + tree(x + 8.8, y + 8.8, Z);
+    },
+    function (x, y) { // motor on a base with the vibration monitor on top
+      var s = tree(x + 1.4, y + 8.6, Z) + box(x + 2, y + 3, Z, 6.4, 4, .7, 'd');
+      s += box(x + 2.6, y + 3.6, Z + .7, 4.6, 2.8, 2.6) + box(x + 7.2, y + 4.6, Z + 1.6, 1.4, .8, .8, 'd');
+      s += box(x + 3.6, y + 4.2, Z + 3.3, 1.8, 1.8, 1.2, 'd') + faceY(y + 6, x + 3.8, x + 5.2, Z + 3.5, Z + 4.3, 'scr ok alarm');
+      pins.push({ x: x + 4.5, y: y + 5, z: Z + 8, n: '03', t: 'TinyML vibration anomaly detector', h: '#p-vibration' });
+      return s + tree(x + 8.8, y + 1.4, Z);
     }
   ];
   var html = '';
-  [0, 2, 4, 6, 1, 3, 5, 7].forEach(function (k) {
+  [8, 0, 2, 4, 6, 1, 3, 5, 7].forEach(function (k) {
     var gx = grid[k][0] * PITCH, gy = grid[k][1] * PITCH;
     var g = poly([P(gx - 1.4, gy - 1.4), P(gx + T + 1.4, gy - 1.4), P(gx + T + 1.4, gy + T + 1.4), P(gx - 1.4, gy + T + 1.4)], 'dash');
     g += box(gx - .5, gy - .5, 0, T + 1, T + 1, .5, 'g') + box(gx, gy, .5, T, T, .6, 'p') + builders[k](gx, gy);
