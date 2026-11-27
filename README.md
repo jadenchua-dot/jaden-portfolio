@@ -6,6 +6,7 @@ It showcases embedded systems and IoT projects:
 
 - [M5Stack self-watering garden monitor](https://github.com/jadenchua-dot/m5stack-garden-monitor)
 - [TinyML vibration anomaly detector](https://github.com/jadenchua-dot/m5stack-tinyml-vibration)
+- [ExitPilot: when to leave for the bus](https://github.com/jadenchua-dot/m5stack-exitpilot)
 - [Smart Window Energy Guard](https://github.com/jadenchua-dot/iot-window-energy-monitor)
 - [SafeLens AI](https://github.com/jadenchua-dot/Safe-Lens-AI)
 - [ATmega328P embedded C labs](https://github.com/jadenchua-dot/MicroController-embedded-system)

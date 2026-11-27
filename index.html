@@ -1108,14 +1108,14 @@ html:not(.intro-done) #device { will-change: transform; }
       </div>
       <div class="bx bx-wide">
         <span class="label">Projects shipped</span>
-        <div class="bnum"><span data-count="9" data-dp="0">9</span></div>
+        <div class="bnum"><span data-count="10" data-dp="0">10</span></div>
         <p>Each one is on GitHub with a README, the wiring, and what went wrong along the way.</p>
       </div>
     </div>
 
     <div class="now" role="note">
       <span class="label"><span class="dot" aria-hidden="true"></span>Just shipped</span>
-      <span><a href="#p-vibration">A TinyML vibration anomaly detector on the M5Stack Fire</a>, which learns how a machine normally vibrates and flags anything unusual, all on the device without needing the internet.</span>
+      <span><a href="#p-exitpilot">ExitPilot, an M5Stack Fire by the front door</a> that tells you exactly when to leave for your bus, warns you to take an umbrella, and messages your family when you tap out and back in.</span>
     </div>
 
     <!-- PROJECTS -->
@@ -1124,7 +1124,7 @@ html:not(.intro-done) #device { will-change: transform; }
         <h2 id="work-h">Projects</h2>
         <div class="seg" role="tablist" aria-label="Filter projects">
           <span class="knob" aria-hidden="true"></span>
-          <button role="tab" aria-selected="true" data-f="all">All 9</button>
+          <button role="tab" aria-selected="true" data-f="all">All 10</button>
           <button role="tab" aria-selected="false" data-f="emb">Embedded</button>
           <button role="tab" aria-selected="false" data-f="iot">IoT</button>
           <button role="tab" aria-selected="false" data-f="sw">Software</button>
@@ -1132,7 +1132,7 @@ html:not(.intro-done) #device { will-change: transform; }
       </div>
 
       <figure class="town">
-        <svg id="city" viewBox="0 80 1262 480" role="img" aria-label="Project map: an isometric town where each block is one of my nine projects"></svg>
+        <svg id="city" viewBox="0 80 1262 480" role="img" aria-label="Project map: an isometric town where each block is one of my ten projects"></svg>
         <figcaption>Project map · tap or click a pin to jump to that project</figcaption>
       </figure>
 
@@ -1380,10 +1380,99 @@ html:not(.intro-done) #device { will-change: transform; }
         </div>
       </article>
 
-      <!-- 04 Window guard -->
+      <!-- 04 ExitPilot -->
+      <article class="project" id="p-exitpilot" data-c="emb iot">
+        <div>
+          <span class="p-num">04 / Nov 2026</span>
+          <h3>ExitPilot: when to leave for the bus</h3>
+          <ul class="stack"><li>ESP32 · M5Stack Fire</li><li>C++ / PlatformIO</li><li>LTA DataMall API</li><li>NEA forecast API</li><li>ToF · Light · RFID · ENV II</li><li>Telegram Bot API</li><li>FreeRTOS, 2 cores</li></ul>
+          <p>Every morning in Singapore goes the same way: you check the bus app, guess how long the walk takes, and either wait ten minutes at the stop or run for the bus. Then it rains, and the umbrella is still at home. And your parents text &ldquo;reach already?&rdquo;</p>
+          <p>ExitPilot sits inside the flat, next to the front door. Walk up and its ToF sensor wakes the screen with live arrivals for my stop. It works out the next bus I can still catch after my 5-minute walk and shows one big line: &ldquo;Leave in 3 min&rdquo;, then &ldquo;LEAVE NOW&rdquo; in red. If NEA's 2-hour forecast says rain, the bar turns blue, the LEDs breathe blue and it beeps, right next to the umbrella stand. Tapping my card on the way out sends my family a Telegram with the time and the bus I'm catching; tapping back in says I'm home. Nobody around? The screen sleeps after 60 seconds, and at night the Light unit dims it.</p>
+
+          <div class="demo">
+            <video class="video" src="assets/exitpilot/exitpilot-demo.mp4" poster="assets/exitpilot/poster.jpg" controls preload="none" playsinline aria-label="3D animation: how ExitPilot works at home, from checking the bus time to tapping out and coming home at night" style="max-width:560px"></video>
+            <p class="video-cap">How it works at home, as a 56-second 3D animation</p>
+          </div>
+
+          <h4>What broke, and the fix</h4>
+          <ul class="fixes">
+            <li><b>The bus API answered &ldquo;401 Unauthorized&rdquo;.</b> LTA sent two emails, and I had pasted the SDK key from one instead of the API key from the other. The serial log made it obvious once the right key went in.</li>
+            <li><b>Night mode never turned on.</b> I assumed the Light unit reads lower in the dark, but this one reads higher: about 2,150 with the lights on and 4,095 when covered. I flipped the logic and made it hold for 3 seconds so a passing shadow can't flicker the screen.</li>
+            <li><b>The screen never went to sleep.</b> A fixed wake distance didn't work, because the desk was already inside it. The ToF now learns the empty background and only wakes when something comes 25 cm closer than that, so it works wherever it's mounted.</li>
+            <li><b>Card taps were slow and sometimes counted twice.</b> The reader was only checked between downloads that block for seconds. I moved all internet work to the ESP32's second core and made a tap count only when a card arrives, with a lockout, so one tap can't log &ldquo;left&rdquo; and &ldquo;home&rdquo; together.</li>
+          </ul>
+
+          <div class="links">
+            <a class="btn primary" href="https://github.com/jadenchua-dot/m5stack-exitpilot">Code &amp; write-up ↗</a>
+          </div>
+        </div>
+
+        <div>
+          <figure class="figure" style="margin:0">
+            <svg class="diagram" viewBox="0 0 520 300" role="img" aria-labelledby="x-title">
+              <title id="x-title">Data flow: ToF, Light, RFID and ENV II units feed the M5Stack Fire; a network task on core 0 talks to LTA DataMall, the NEA forecast and Telegram, while core 1 drives the screen, LED bars and speaker</title>
+              <defs><marker id="ah6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0 L10 5 L0 10z"/></marker></defs>
+              <rect class="box" x="10" y="20" width="130" height="50" rx="5"/>
+              <text class="t" x="75" y="41" text-anchor="middle">ToF + Light</text>
+              <text class="s" x="75" y="58" text-anchor="middle">wake · night dim</text>
+              <rect class="box" x="10" y="90" width="130" height="50" rx="5"/>
+              <text class="t" x="75" y="111" text-anchor="middle">RFID unit</text>
+              <text class="s" x="75" y="128" text-anchor="middle">tap in / out</text>
+              <rect class="box" x="10" y="160" width="130" height="50" rx="5"/>
+              <text class="t" x="75" y="181" text-anchor="middle">ENV II</text>
+              <text class="s" x="75" y="198" text-anchor="middle">indoor temp + RH</text>
+              <rect class="core" x="186" y="40" width="148" height="200" rx="8"/>
+              <text class="tc" x="260" y="74" text-anchor="middle">M5Stack Fire</text>
+              <text class="s" x="260" y="92" text-anchor="middle">ESP32 · 2 cores</text>
+              <text class="s" x="260" y="122" text-anchor="middle">core 1: screen,</text>
+              <text class="s" x="260" y="138" text-anchor="middle">sensors, RFID</text>
+              <text class="s" x="260" y="168" text-anchor="middle">core 0: Wi-Fi,</text>
+              <text class="s" x="260" y="184" text-anchor="middle">LTA, NEA, Telegram</text>
+              <text class="s" x="260" y="214" text-anchor="middle">leave = bus &#8722; 5 min</text>
+              <rect class="box" x="380" y="14" width="130" height="50" rx="5"/>
+              <text class="t" x="445" y="35" text-anchor="middle">LTA DataMall</text>
+              <text class="s" x="445" y="52" text-anchor="middle">bus arrivals v3</text>
+              <rect class="box" x="380" y="80" width="130" height="50" rx="5"/>
+              <text class="t" x="445" y="101" text-anchor="middle">NEA forecast</text>
+              <text class="s" x="445" y="118" text-anchor="middle">2-hour, by area</text>
+              <rect class="box" x="380" y="146" width="130" height="50" rx="5"/>
+              <text class="t" x="445" y="167" text-anchor="middle">Telegram bot</text>
+              <text class="s" x="445" y="184" text-anchor="middle">left / home alerts</text>
+              <rect class="box" x="380" y="212" width="130" height="50" rx="5"/>
+              <text class="t" x="445" y="233" text-anchor="middle">Screen + LEDs</text>
+              <text class="s" x="445" y="250" text-anchor="middle">colour = when to leave</text>
+              <path class="wire" d="M140 45 H162 V90 H184" marker-end="url(#ah6)"/>
+              <path class="wire" d="M140 115 H184" marker-end="url(#ah6)"/>
+              <path class="wire" d="M140 185 H162 V150 H184" marker-end="url(#ah6)"/>
+              <text class="pin" x="146" y="108">I2C</text>
+              <path class="wire" d="M378 39 H356 V80 H336" marker-end="url(#ah6)"/>
+              <path class="wire" d="M378 105 H336" marker-end="url(#ah6)"/>
+              <path class="wire" d="M336 170 H378" marker-end="url(#ah6)"/>
+              <path class="wire" d="M336 210 H356 V237 H378" marker-end="url(#ah6)"/>
+            </svg>
+            <figcaption>Fig. 4 · Four units, three web services, two cores</figcaption>
+          </figure>
+
+          <figure class="figure" style="margin:16px 0 0">
+            <img src="assets/exitpilot/real-screen.jpg" alt="The real M5Stack Fire showing Leave in 3 min for bus 169, with arrivals for 117, 861, 169 and 883 at Yishun Emerald" loading="lazy" style="width:100%;max-width:360px;border-radius:10px;display:block">
+            <figcaption>The real screen: &ldquo;Leave in 3 min&rdquo; for bus 169 at Yishun Emerald</figcaption>
+          </figure>
+
+          <div class="readout" aria-label="Measured values">
+            <div><span>Wakes when</span><b>25 cm closer</b></div>
+            <div><span>Sleeps after</span><b>60 s</b></div>
+            <div><span>Bus refresh</span><b>30 s / 2 min</b></div>
+            <div><span>Screen on</span><b>when near</b></div>
+            <div><span>Night backlight</span><b>25 of 180</b></div>
+            <div><span>RFID check</span><b>every 50 ms</b></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 05 Window guard -->
       <article class="project" id="p-window" data-c="iot">
         <div>
-          <span class="p-num">04 / IoT prototype</span>
+          <span class="p-num">05 / IoT prototype</span>
           <h3>Smart Window Energy Guard</h3>
           <ul class="stack"><li>Arduino Uno</li><li>Raspberry Pi</li><li>Python · pySerial</li><li>Flask</li><li>MariaDB</li></ul>
           <p>Air-conditioning is one of the biggest energy users in Singapore buildings, and an open window lets the cool air escape. This system therefore acts as a smart timer for the window, giving you time to air the room before a red light and buzzer remind you to close it.</p>
@@ -1442,7 +1531,7 @@ html:not(.intro-done) #device { will-change: transform; }
       <!-- 05 Smart elevating wheelchair -->
       <article class="project" id="p-wheelchair" data-c="emb">
         <div>
-          <span class="p-num">05 / Team project</span>
+          <span class="p-num">06 / Team project</span>
           <h3>Smart elevating wheelchair</h3>
           <ul class="stack"><li>Arduino Uno</li><li>C++ · Tinkercad blocks</li><li>HC-SR04 ultrasonic</li><li>Servo + gears</li><li>Lego Technic</li><li>Team of 4</li></ul>
           <p>Wheelchair users often can't reach high supermarket shelves without help, and stretching up from a low seat strains the shoulders, neck and back. After comparing four ideas, we built the one that gave users the most independence: a wheelchair whose seat rises at the press of a button.</p>
@@ -1525,28 +1614,28 @@ html:not(.intro-done) #device { will-change: transform; }
       <!-- Smaller projects -->
       <div class="grid3" id="p-small">
         <article class="card" id="p-safelens" data-c="sw">
-          <span class="p-num">06 / Hackathon · 6 Nov 2026</span>
+          <span class="p-num">07 / Hackathon · 6 Nov 2026</span>
           <h3>SafeLens AI</h3>
           <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Team of 3</li></ul>
           <p>Built at GovTech's Digital4Good hackathon, this browser prototype helps young people spot harmful messages online. It blurs risky messages, explains why they are harmful, and then helps the user report them.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">Code ↗</a></div>
         </article>
         <article class="card" data-c="emb">
-          <span class="p-num">07 / Coursework</span>
+          <span class="p-num">08 / Coursework</span>
           <h3>ATmega328P embedded C labs</h3>
           <ul class="stack"><li>AVR C</li><li>Registers</li><li>Interrupts</li></ul>
           <p>Seven labs that program a microcontroller directly in C, covering inputs, outputs, sensors and interrupts. They build up to a temperature monitor that switches on a fan.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/MicroController-embedded-system">Code ↗</a></div>
         </article>
         <article class="card" data-c="sw">
-          <span class="p-num">08 / Python</span>
+          <span class="p-num">09 / Python</span>
           <h3>Fast food ordering system</h3>
           <ul class="stack"><li>Python 3</li><li>CLI</li></ul>
           <p>A terminal ordering app with menus, an editable cart and automatic discounts and GST, plus a lucky-draw game at checkout.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/python-terminal-shop">Code ↗</a></div>
         </article>
         <article class="card" data-c="sw">
-          <span class="p-num">09 / Python · Nov 2026</span>
+          <span class="p-num">10 / Python · Nov 2026</span>
           <h3>Pokémon card portfolio tracker</h3>
           <ul class="stack"><li>Python 3</li><li>Telegram Bot API</li><li>launchd</li><li>JSON</li></ul>
           <p>A bot that tracks my Pokémon card collection on Collectr. Every morning it messages me on Telegram with the three biggest risers and fallers, and every Sunday it sums up how the whole portfolio moved that week.</p>
@@ -1709,7 +1798,7 @@ html:not(.intro-done) #device { will-change: transform; }
           <div class="qa open"><button aria-expanded="true">What do you build with?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Mostly the M5Stack Fire, Arduino Uno and ATmega328P, along with a Raspberry Pi whenever a project needs a server.</p></div></div></div>
           <div class="qa"><button aria-expanded="false">Where can I see the code?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Every project is on <a href="https://github.com/jadenchua-dot">GitHub</a>, together with a README, the wiring and the problems I solved along the way.</p></div></div></div>
           <div class="qa"><button aria-expanded="false">Do you work in teams?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. The elevating wheelchair was a team of four, and SafeLens AI was built with a team of three at GovTech's Digital4Good hackathon.</p></div></div></div>
-          <div class="qa"><button aria-expanded="false">What are you building now?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>A TinyML vibration anomaly detector on the M5Stack Fire, which spots unusual vibration on the device itself without needing the internet.</p></div></div></div>
+          <div class="qa"><button aria-expanded="false">What are you building now?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>ExitPilot, an M5Stack Fire that sits by the front door. It shows live bus arrivals for my stop, tells me when to leave, warns me about rain, and sends my family a Telegram message when I tap my card on the way out and back in.</p></div></div></div>
         </div>
       </div>
     </section>
@@ -1751,14 +1840,15 @@ html:not(.intro-done) #device { will-change: transform; }
     <li style="--i:0"><a href="#p-garden" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/DR6Jm-IQAWk/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Self-watering garden monitor</b><small>M5Stack Fire · sensors · servo valve</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
     <li style="--i:1"><a href="#p-tilt" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Equipment levelling monitor</b><small>IMU tilt alarm · web dashboard · push</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
     <li style="--i:2"><a href="#p-vibration" data-close><span class="mthumb"><img src="assets/vibration/poster.jpg" alt="" loading="lazy"></span><span><b>TinyML vibration detector</b><small>M5Stack Fire · on-device ML</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:2"><a href="#p-window" data-close><span class="mthumb"><img src="https://i.ytimg.com/vi/IUG_-EWEwes/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Smart Window Energy Guard</b><small>Arduino · Raspberry Pi · Flask</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:2"><a href="#p-exitpilot" data-close><span class="mthumb"><img src="assets/exitpilot/poster.jpg" alt="" loading="lazy"></span><span><b>ExitPilot</b><small>M5Stack Fire · live buses · RFID + Telegram</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:3"><a href="#p-window" data-close><span class="mthumb"><img src="https://i.ytimg.com/vi/IUG_-EWEwes/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Smart Window Energy Guard</b><small>Arduino · Raspberry Pi · Flask</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
     <li style="--i:3"><a href="#p-wheelchair" data-close><span class="mthumb"><img src="assets/wheelchair/final-prototype.jpg" alt="" loading="lazy"></span><span><b>Smart elevating wheelchair</b><small>Team of 4 · servo scissor lift</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:4"><a href="#p-safelens" data-close><span class="mthumb">06</span><span><b>SafeLens AI</b><small>Hackathon · online-harm detector</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:4"><a href="#p-safelens" data-close><span class="mthumb">07</span><span><b>SafeLens AI</b><small>Hackathon · online-harm detector</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
     <li style="--i:5"><a href="#p-small" data-close><span class="mthumb">+3</span><span><b>More builds</b><small>AVR C labs · Python apps</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
   </ul>
-  <a class="menu-feat" href="#p-tilt" data-close style="--i:6">
-    <span class="feat-ph"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span>
-    <span><span class="label">Now building</span><b>TinyML vibration anomaly detector</b><small>Spots unusual vibration on the M5Stack Fire, no internet needed.</small></span>
+  <a class="menu-feat" href="#p-exitpilot" data-close style="--i:6">
+    <span class="feat-ph"><img src="assets/exitpilot/poster.jpg" alt="" loading="lazy"></span>
+    <span><span class="label">Just shipped</span><b>ExitPilot</b><small>Tells you when to leave for the bus, from beside your front door.</small></span>
   </a>
   <div class="panel-foot" style="--i:7"><span>Find me on</span><span><a href="https://github.com/jadenchua-dot">GitHub</a><a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">LinkedIn</a></span></div>
 </aside>
@@ -1907,12 +1997,12 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
     return '<line class="trunk" x1="' + b[0] + '" y1="' + b[1] + '" x2="' + t[0] + '" y2="' + t[1] + '"/><circle class="leaf" cx="' + t[0] + '" cy="' + (t[1] - 6) + '" r="8"/>';
   }
   var T = 10, PITCH = 11.5, Z = 1.1, pins = [];
-  var grid = [[0, 0], [1, 0], [1, -1], [2, -1], [2, -2], [3, -2], [3, -3], [4, -3], [0, -1]];
+  var grid = [[0, 0], [1, 0], [1, -1], [2, -1], [2, -2], [3, -2], [3, -3], [4, -3], [0, -1], [1, -2]];
   var builders = [
     function (x, y) { // ATmega chip + trees
       var s = tree(x + 1.5, y + 1.5, Z) + tree(x + 8.5, y + 1.2, Z) + box(x + 3, y + 3, Z, 4, 4, .7, 'd');
       for (var i = 0; i < 4; i++) s += box(x + 3.3 + i, y + 7, Z, .4, .6, .3) + box(x + 7, y + 3.3 + i, Z, .6, .4, .3);
-      pins.push({ x: x + 5, y: y + 5, z: Z + 4, n: '07', t: 'ATmega328P embedded C labs', h: '#p-small' });
+      pins.push({ x: x + 5, y: y + 5, z: Z + 4, n: '08', t: 'ATmega328P embedded C labs', h: '#p-small' });
       return s + tree(x + 1.5, y + 8.5, Z) + tree(x + 8.8, y + 8.8, Z);
     },
     function (x, y) { // garden
@@ -1934,7 +2024,7 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
         }
       }
       s += box(x + 2.6, y + 2.6, Z + 13, 4.8, 4.8, 1.2, 'd') + tree(x + 9.2, y + 9, Z);
-      pins.push({ x: x + 5, y: y + 5, z: Z + 17, n: '04', t: 'Smart Window Energy Guard', h: '#p-window' });
+      pins.push({ x: x + 5, y: y + 5, z: Z + 17, n: '05', t: 'Smart Window Energy Guard', h: '#p-window' });
       return s;
     },
     function (x, y) { // workbench + 3D printer + tilt monitor
@@ -1949,7 +2039,7 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
       var s = tree(x + 1.2, y + 1.2, Z) + box(x + 2, y + 2.5, Z, 6.5, 5.5, 4);
       s += faceY(y + 8, x + 3, x + 4.6, Z, Z + 2.6, 'win') + faceY(y + 8, x + 5.4, x + 7.8, Z + 1, Z + 2.8, 'win') + faceX(x + 8.5, y + 3.4, y + 7, Z + 1, Z + 2.8, 'win');
       s += box(x + 1.6, y + 2.1, Z + 4, 7.3, 6.3, .9, 'd');
-      pins.push({ x: x + 5.2, y: y + 5.2, z: Z + 7.5, n: '08', t: 'Fast food ordering system', h: '#p-small' });
+      pins.push({ x: x + 5.2, y: y + 5.2, z: Z + 7.5, n: '09', t: 'Fast food ordering system', h: '#p-small' });
       return s + tree(x + 9.3, y + 9.2, Z);
     },
     function (x, y) { // wheelchair with scissor lift
@@ -1959,21 +2049,21 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
       s += '<g class="lift">' + box(x + 2.4, y + 3.4, Z + 2.6, 5.2, 3.2, .7) + box(x + 2.4, y + 3.4, Z + 3.3, .6, 3.2, 3) + '</g>';
       [[3, 7], [7, 7]].forEach(function (w) { var p = P(x + w[0], y + w[1], Z + .4); s += '<circle class="wheel" cx="' + p[0] + '" cy="' + p[1] + '" r="9"/><circle cx="' + p[0] + '" cy="' + p[1] + '" r="2" class="hub"/>'; });
       s += tree(x + 9, y + 1.2, Z);
-      pins.push({ x: x + 5, y: y + 5, z: Z + 8.5, n: '05', t: 'Smart elevating wheelchair', h: '#p-wheelchair' });
+      pins.push({ x: x + 5, y: y + 5, z: Z + 8.5, n: '06', t: 'Smart elevating wheelchair', h: '#p-wheelchair' });
       return s;
     },
     function (x, y) { // laptop: SafeLens
       var s = tree(x + 1.3, y + 1.3, Z) + tree(x + 4, y + 1, Z);
       s += box(x + 2.5, y + 3.2, Z, 5.5, 4.5, .4) + box(x + 2.5, y + 3.2, Z + .4, 5.5, .4, 3.6);
       s += faceY(y + 3.6, x + 2.9, x + 7.6, Z + .8, Z + 3.6, 'scr') + tree(x + 9, y + 8.8, Z);
-      pins.push({ x: x + 5.2, y: y + 3.4, z: Z + 7, n: '06', t: 'SafeLens AI', h: '#p-safelens' });
+      pins.push({ x: x + 5.2, y: y + 3.4, z: Z + 7, n: '07', t: 'SafeLens AI', h: '#p-safelens' });
       return s;
     },
     function (x, y) { // Pokémon card tracker: a stack of cards and a phone with the daily message
       var s = tree(x + 1.4, y + 1.4, Z);
       for (var i = 0; i < 4; i++) s += box(x + 2 + i * .25, y + 4.6 - i * .25, Z + i * .3, 2.8, 3.8, .3, i === 3 ? 'd' : 'f');
       s += box(x + 6.2, y + 3, Z, 2.4, .5, 4.6, 'd') + faceY(y + 3.5, x + 6.45, x + 8.35, Z + .5, Z + 4.1, 'scr ok');
-      pins.push({ x: x + 5.6, y: y + 4.4, z: Z + 8, n: '09', t: 'Pokemon card portfolio tracker', h: '#p-small' });
+      pins.push({ x: x + 5.6, y: y + 4.4, z: Z + 8, n: '10', t: 'Pokemon card portfolio tracker', h: '#p-small' });
       return s + tree(x + 8.8, y + 8.8, Z);
     },
     function (x, y) { // motor on a base with the vibration monitor on top
@@ -1982,10 +2072,21 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
       s += box(x + 3.6, y + 4.2, Z + 3.3, 1.8, 1.8, 1.2, 'd') + faceY(y + 6, x + 3.8, x + 5.2, Z + 3.5, Z + 4.3, 'scr ok alarm');
       pins.push({ x: x + 4.5, y: y + 5, z: Z + 8, n: '03', t: 'TinyML vibration anomaly detector', h: '#p-vibration' });
       return s + tree(x + 8.8, y + 1.4, Z);
+    },
+    function (x, y) { // ExitPilot: a home with the Fire by the door, a bus stop and a bus
+      var s = box(x + 1.2, y + 1.2, Z, 4.6, 4.2, 4.2) + box(x + 1, y + 1, Z + 4.2, 5, 4.6, .6, 'd');
+      s += faceY(y + 5.4, x + 2, x + 3.4, Z, Z + 2.6, 'd') + faceY(y + 5.4, x + 3.9, x + 4.6, Z + 1.3, Z + 1.95, 'scr ok');
+      s += faceX(x + 5.8, y + 2, y + 3.4, Z + 1.6, Z + 3, 'win');
+      s += box(x + 6.8, y + 1.4, Z, .3, .3, 3.4, 'd') + box(x + 6.3, y + 1.2, Z + 3.4, 1.3, .7, .6);
+      s += box(x + 2, y + 7, Z, 6.6, 2.2, 2.3) + box(x + 2, y + 7, Z + 2.3, 6.6, 2.2, .3, 'd');
+      for (var i = 0; i < 4; i++) s += faceY(y + 9.2, x + 2.5 + i * 1.5, x + 3.6 + i * 1.5, Z + 1.1, Z + 2, 'win');
+      [[3, 9.2], [7.4, 9.2]].forEach(function (w) { var p = P(x + w[0], y + w[1], Z + .35); s += '<circle class="wheel" cx="' + p[0] + '" cy="' + p[1] + '" r="6"/>'; });
+      pins.push({ x: x + 3.5, y: y + 3.2, z: Z + 8.4, n: '04', t: 'ExitPilot: when to leave for the bus', h: '#p-exitpilot' });
+      return s + tree(x + 9, y + 1.4, Z);
     }
   ];
   var html = '';
-  [8, 0, 2, 4, 6, 1, 3, 5, 7].forEach(function (k) {
+  [9, 8, 0, 2, 4, 6, 1, 3, 5, 7].forEach(function (k) {
     var gx = grid[k][0] * PITCH, gy = grid[k][1] * PITCH;
     var g = poly([P(gx - 1.4, gy - 1.4), P(gx + T + 1.4, gy - 1.4), P(gx + T + 1.4, gy + T + 1.4), P(gx - 1.4, gy + T + 1.4)], 'dash');
     g += box(gx - .5, gy - .5, 0, T + 1, T + 1, .5, 'g') + box(gx, gy, .5, T, T, .6, 'p') + builders[k](gx, gy);
