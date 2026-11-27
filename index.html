@@ -5,14 +5,18 @@
 <script>
 // Always open at the top. Phones (iOS Safari especially, and anyone with Reduce Motion on)
 // otherwise restore the last scroll position, which drops visitors at the bottom of the page.
+// That includes old links and saved tabs ending in a #section (e.g. /#contact): the hash is
+// dropped from the address and the visit still starts at the top.
 (function () {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  var firstUrl = location.href, firstY = scrollY, ref = document.referrer;
+  function dropHash() { if (location.hash && history.replaceState) history.replaceState(history.state, '', location.pathname + location.search); }
+  dropHash();
   var touched = false;
   ['touchstart', 'wheel', 'keydown', 'mousedown'].forEach(function (ev) {
     addEventListener(ev, function () { touched = true; }, { passive: true, once: true });
   });
-  var hadHash = location.hash.length > 1, firstUrl = location.href, firstY = scrollY, ref = document.referrer;   // a #section link should still land on its section
-  function toTop() { if (!hadHash && !touched && scrollY !== 0) scrollTo(0, 0); }
+  function toTop() { if (!touched && scrollY !== 0) scrollTo(0, 0); }
   addEventListener('DOMContentLoaded', toTop);
   // iOS Safari can apply its own restore a little after "load", so keep holding the top
   // for the first 1.5 s unless the visitor starts scrolling.
@@ -40,7 +44,7 @@
     })();
   });
   // Back/forward cache and reopened tabs show the old page as it was: start it at the top again
-  addEventListener('pageshow', function (e) { if (e.persisted) { hadHash = location.hash.length > 1; touched = false; toTop(); } });
+  addEventListener('pageshow', function (e) { if (e.persisted) { dropHash(); touched = false; toTop(); } });
 })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -893,7 +897,7 @@ html:not(.intro-done) #device { will-change: transform; }
         </div>
         <hr class="rule grow" style="--d:.75s">
         <div class="cta rise" style="--d:.85s">
-          <a class="btn primary big" href="#work">See projects <small>— 8 builds</small></a>
+          <a class="btn primary big" href="#work">See projects <small>— 9 builds</small></a>
           <a class="link-arrow" href="https://github.com/jadenchua-dot">My GitHub <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6"/></svg></a>
         </div>
       </div>
@@ -2067,23 +2071,7 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
   }, true);
 
   size();
-  // Opened with a #link in the address bar: go straight to it
-  if (location.hash.length > 1 && document.getElementById(location.hash.slice(1))) {
-    var h = document.getElementById(location.hash.slice(1));
-    var jump = function () { release(); scrollTo({ top: targetY(h, location.hash), behavior: 'instant' }); };
-    // Turn the browser's own smooth scroll off for a moment so it can't fight these jumps
-    root.style.scrollBehavior = 'auto';
-    release(); hold(2500); setTimeout(jump, 0);
-    addEventListener('load', function () {
-      hold(1200);
-      setTimeout(jump, 50); setTimeout(jump, 400);
-      setTimeout(function () {
-        root.style.scrollBehavior = '';
-        // A shared #link takes you there once; after that the address is clean, so refresh starts at the top
-        if (history.replaceState) history.replaceState(null, '', location.pathname + location.search);
-      }, 900);
-    });
-  }
+  // Every visit starts on the intro, even from an old /#section link (the <head> script drops the hash)
 })();
 
 // ---------- Custom cursor: a dot exactly on the pointer, a ring that trails it ----------
