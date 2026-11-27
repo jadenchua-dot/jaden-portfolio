@@ -58,16 +58,47 @@
 <title>Jaden Chua Portfolio</title>
 <meta name="description" content="Jaden Chua, Electronic and Computer Engineering student at Nanyang Polytechnic. Embedded systems and IoT projects on M5Stack, Arduino, ATmega328P and Raspberry Pi.">
 <meta name="theme-color" content="#fbf8f2">
+<link rel="canonical" href="https://jaden-portfolio-psi.vercel.app/">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Jaden Chua">
 <meta property="og:title" content="Jaden Chua · Embedded systems portfolio">
 <meta property="og:description" content="Electronic and Computer Engineering student at Nanyang Polytechnic. Embedded and IoT projects on M5Stack, Arduino, ATmega328P and Raspberry Pi, each with code and a write-up.">
 <meta property="og:url" content="https://jaden-portfolio-psi.vercel.app/">
-<meta property="og:image" content="https://jaden-portfolio-psi.vercel.app/assets/wheelchair/final-prototype.jpg">
+<meta property="og:image" content="https://jaden-portfolio-psi.vercel.app/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jaden Chua builds hardware that actually works: photos of the elevating wheelchair, the ExitPilot bus board and the vibration detector">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Jaden Chua · Embedded systems portfolio">
+<meta name="twitter:description" content="Embedded and IoT projects on M5Stack, Arduino, ATmega328P and Raspberry Pi, each with code and a write-up.">
+<meta name="twitter:image" content="https://jaden-portfolio-psi.vercel.app/assets/og-image.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2315130f'/%3E%3Cg fill='%23ff6b3d' transform='translate(1 5)'%3E%3Crect x='0' y='4' width='17' height='10' rx='5' transform='rotate(-35 8.5 9)'/%3E%3Crect x='12' y='8' width='17' height='10' rx='5' transform='rotate(-35 20.5 13)'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "url": "https://jaden-portfolio-psi.vercel.app/",
+  "mainEntity": {
+    "@type": "Person",
+    "name": "Jaden Chua",
+    "url": "https://jaden-portfolio-psi.vercel.app/",
+    "image": "https://jaden-portfolio-psi.vercel.app/assets/og-image.jpg",
+    "jobTitle": "Electronic and Computer Engineering student",
+    "description": "Builds embedded and IoT devices on M5Stack (ESP32), Arduino, ATmega328P and Raspberry Pi, and documents each one so others can rebuild it.",
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "Nanyang Polytechnic" },
+    "address": { "@type": "PostalAddress", "addressCountry": "SG" },
+    "knowsLanguage": ["English", "Chinese"],
+    "knowsAbout": ["Embedded systems", "Internet of Things", "ESP32", "Arduino", "ATmega328P", "Raspberry Pi", "TinyML", "C++", "Python"],
+    "award": ["Director's List, Nanyang Polytechnic (Y1S1, Y1S2, Y2S1)", "Edusave Certificate of Academic Achievement 2026"],
+    "sameAs": ["https://github.com/jadenchua-dot", "https://www.linkedin.com/in/jaden-chua-9177aa3b8/"]
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500;62..125,600&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* Layout idea: a lab notebook. Narrow reading column, numbered project entries, each with its own wiring diagram and spec readouts. */
 :root {
@@ -749,7 +780,7 @@ em.s { font-family: var(--display); font-style: italic; font-weight: 400; color:
 /* Segmented filter */
 .seg { position: relative; display: inline-flex; background: var(--paper-2); border-radius: 999px; padding: 4px; flex-wrap: wrap; }
 .seg button { position: relative; z-index: 1; border: 0; background: none; padding: 8px 16px; font: 600 14px var(--body); color: var(--ink-soft); cursor: pointer; border-radius: 999px; transition: color .25s; }
-.seg button[aria-selected="true"] { color: var(--on-ink); }
+.seg button[aria-pressed="true"] { color: var(--on-ink); }
 .seg .knob { position: absolute; top: 4px; height: calc(100% - 8px); left: 0; width: 0; background: var(--ink); border-radius: 999px; transition: left .4s cubic-bezier(.3,1.3,.5,1), width .4s cubic-bezier(.3,1.3,.5,1), top .3s; }
 .project, .grid3 .card { transition: opacity .3s, transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
 .fout { opacity: 0 !important; transform: scale(.97) !important; }
@@ -959,8 +990,110 @@ html:not(.intro-done) #device { will-change: transform; }
   .skip, .scroll-hint { bottom: 4vh; }
 }
 
+/* ================= Search (⌘K / Ctrl K) ================= */
+.search-btn {
+  display: inline-flex; align-items: center; gap: 9px; height: 44px; padding: 0 7px 0 14px; flex: none; border-radius: 999px; cursor: pointer;
+  border: 1.5px solid var(--rule-strong); background: none; color: var(--ink-soft); font: 500 14px var(--body);
+  transition: border-color .2s, color .2s;
+}
+.search-btn:hover { border-color: var(--ink); color: var(--ink); }
+.search-btn svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2.2; fill: none; stroke-linecap: round; }
+kbd { font: 500 11.5px var(--mono); padding: 3px 7px; border-radius: 7px; background: var(--paper-2); color: var(--ink-soft); border: 1px solid var(--rule); }
+/* The top bar gives up extras as the window narrows (it used to push Menu off-screen between 860 and 1060px) */
+@media (max-width: 1360px) { .brand .loc { display: none; } .nav-mid i { padding: 0 11px; } }
+@media (max-width: 1200px) { .nav-end .sep { display: none; } .nav-end .txt.gh { display: none; } .search-btn kbd { display: none; } .search-btn { width: 44px; padding: 0; justify-content: center; } }
+@media (max-width: 1080px) { .nav-end .txt { display: none; } .nav-end { gap: 12px; } }
+@media (max-width: 1000px) {
+  .bar { flex-wrap: wrap; padding: 16px 20px 12px; row-gap: 10px; }
+  .nav-mid { order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .nav-mid::-webkit-scrollbar { display: none; }
+  .nav-mid.more-r { -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent); mask-image: linear-gradient(90deg, #000 82%, transparent); }
+  .nav-mid.more-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%); mask-image: linear-gradient(90deg, transparent, #000 18%); }
+  .nav-mid.more-l.more-r { -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+}
+@media (max-width: 860px) { .search-btn { width: 40px; height: 40px; } }
+@media (max-width: 370px) { .search-btn { display: none; } }
+
+.cmdk { position: fixed; inset: 0; z-index: 120; display: grid; justify-items: center; align-items: start; padding: 12vh 16px 16px; visibility: hidden; }
+.cmdk.open { visibility: visible; }
+.cmdk-scrim { position: absolute; inset: 0; background: rgba(21,19,15,.34); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); opacity: 0; transition: opacity .25s; }
+.cmdk.open .cmdk-scrim { opacity: 1; }
+.cmdk-box {
+  position: relative; width: min(620px, 100%); max-height: min(560px, 78vh); display: flex; flex-direction: column; overflow: hidden;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 22px; box-shadow: 0 40px 90px -30px rgba(0,0,0,.5);
+  opacity: 0; transform: translateY(-12px) scale(.98); transition: opacity .2s, transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.cmdk.open .cmdk-box { opacity: 1; transform: none; }
+.cmdk-in { display: flex; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--rule); }
+.cmdk-in svg { width: 18px; height: 18px; stroke: var(--ink-soft); stroke-width: 2; fill: none; stroke-linecap: round; flex: none; }
+.cmdk-in input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--ink); font: 400 18px var(--body); }
+.cmdk-in input::placeholder { color: var(--ink-soft); }
+.cmdk-list { list-style: none; margin: 0; padding: 6px 8px 10px; overflow-y: auto; overscroll-behavior: contain; }
+.cmdk-group { font: 500 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); padding: 12px 10px 6px; }
+.cmdk-item { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px; cursor: pointer; }
+.cmdk-item[aria-selected="true"] { background: var(--paper-2); }
+.cmdk-item .ci { width: 32px; height: 32px; border-radius: 10px; flex: none; display: grid; place-items: center; overflow: hidden; background: var(--accent-soft); color: var(--accent); font: 600 11px var(--mono); }
+.cmdk-item .ci svg { width: 15px; height: 15px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.cmdk-item b { display: block; font-weight: 500; font-size: 15px; line-height: 1.3; }
+.cmdk-item small { display: block; color: var(--ink-soft); font-size: 12.5px; line-height: 1.35; }
+.cmdk-item .go { margin-left: auto; flex: none; font: 500 11px var(--mono); color: var(--ink-soft); opacity: 0; }
+.cmdk-item[aria-selected="true"] .go { opacity: 1; }
+.cmdk-empty { padding: 28px 12px; text-align: center; color: var(--ink-soft); font-size: 15px; }
+.cmdk-foot { display: flex; gap: 18px; padding: 10px 16px; border-top: 1px solid var(--rule); font-size: 12.5px; color: var(--ink-soft); }
+.cmdk-foot span { display: inline-flex; align-items: center; gap: 6px; }
+@media (max-width: 600px) { .cmdk { padding-top: 12px; } .cmdk-foot { display: none; } }
+@media (prefers-reduced-motion: reduce) { .cmdk-box, .cmdk-scrim { transition: none; } }
+
+/* ================= Projects: live demos, ExitPilot photos ================= */
+.btn.live { gap: 9px; }
+.btn.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #3fb96b; flex: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .btn.live::before { animation: livepulse 2.2s ease-out infinite; }
+  @keyframes livepulse { 0% { box-shadow: 0 0 0 0 rgba(63,185,107,.55); } 70%, 100% { box-shadow: 0 0 0 8px rgba(63,185,107,0); } }
+}
+.feat .thumb img.pic { transform: scale(1.4); object-position: 50% 46%; }
+
+/* ================= Contact: résumé and quick topics ================= */
+.contact-cta { display: flex; align-items: center; gap: 12px 14px; flex-wrap: wrap; margin-top: 22px; }
+.contact .btn { color: var(--contact-fg); border-color: color-mix(in srgb, var(--contact-fg) 45%, transparent); }
+.contact .btn:hover { background: var(--contact-fg); color: var(--contact-bg); border-color: var(--contact-fg); }
+.contact .btn.solid { background: var(--hot); border-color: var(--hot); color: #15130f; }
+.contact .btn.solid:hover { background: var(--contact-fg); border-color: var(--contact-fg); }
+.contact .topics { font-size: 14.5px; color: color-mix(in srgb, var(--contact-fg) 70%, var(--contact-bg)); }
+.contact .topics a { color: var(--contact-fg); }
+
+/* ================= Sign-off footer: local time, latest commit, links, big name ================= */
+.signoff { padding: 64px 0 26px; }
+.so-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; padding-bottom: 36px; border-bottom: 1px solid var(--rule); }
+.so-grid .label { display: block; margin-bottom: 10px; font-size: 12px; }
+.so-time { font: 400 clamp(32px, 3.4vw, 42px)/1 var(--display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.so-time small { font: 500 13px var(--mono); letter-spacing: 0; color: var(--ink-soft); margin-left: 8px; }
+.so-note { margin: 10px 0 0; font-size: 14.5px; color: var(--ink-soft); }
+.so-gh a { display: block; color: var(--ink); text-decoration: none; }
+.so-gh a:hover b { color: var(--accent); }
+.so-gh b { display: block; font-weight: 600; font-size: 15.5px; transition: color .2s; }
+.so-gh q { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 4px 0 6px; color: var(--ink-soft); font-size: 14.5px; line-height: 1.45; }
+.so-gh .when { font: 500 12px var(--mono); color: var(--circuit); }
+.so-links { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
+.so-links a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 15.5px; }
+.so-links a:hover { color: var(--accent); }
+.so-mark {
+  margin: 34px 0 10px; text-align: center; white-space: nowrap; user-select: none; color: var(--ink);
+  font: 400 clamp(64px, 15vw, 196px)/.9 var(--display); letter-spacing: -.055em;
+}
+.so-mark em { font-style: italic; color: var(--accent); }
+.so-base { display: flex; justify-content: space-between; gap: 10px 24px; flex-wrap: wrap; font: 400 12.5px var(--mono); color: var(--ink-soft); }
+.so-base a { color: inherit; }
+footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
+.search-inline { display: inline-flex; align-items: center; gap: 8px; padding: 0; border: 0; background: none; cursor: pointer; font: 600 13px var(--body); color: var(--ink); }
+.search-inline:hover { color: var(--accent); }
+@media (max-width: 860px) { .so-grid { grid-template-columns: 1fr; gap: 28px; } }
+@media (prefers-reduced-motion: no-preference) {
+  .motion .so-mark { clip-path: inset(0 0 100% 0); transform: translateY(30px); transition: clip-path 1.1s cubic-bezier(.7,0,.2,1), transform 1.1s cubic-bezier(.2,.8,.2,1), opacity .6s ease-out; }
+  .motion .so-mark.in { clip-path: inset(0 0 -10% 0); transform: none; }
+}
+
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500;62..125,600&display=swap" rel="stylesheet">
 </head>
 <body>
 <script>
@@ -1015,7 +1148,9 @@ html:not(.intro-done) #device { will-change: transform; }
     </div>
     <div class="nav-end">
       <span class="sep" aria-hidden="true"></span>
-      <a class="txt" href="https://github.com/jadenchua-dot">GitHub</a>
+      <a class="txt" href="resume.html">Résumé</a>
+      <a class="txt gh" href="https://github.com/jadenchua-dot">GitHub</a>
+      <button class="search-btn" type="button" aria-label="Search projects and sections" aria-keyshortcuts="Control+K Meta+K" aria-haspopup="dialog" aria-controls="cmdk" aria-expanded="false"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg><kbd class="kb">Ctrl K</kbd></button>
       <button class="theme-btn" type="button" aria-label="Switch to dark mode" aria-pressed="false"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg></button>
       <button class="btn menu-btn" type="button" aria-expanded="false" aria-controls="panel"><svg viewBox="0 0 16 16" stroke="currentColor" stroke-width="1.8" fill="none" aria-hidden="true"><path d="M2 5h12M2 11h12"/></svg>Menu</button>
     </div>
@@ -1042,7 +1177,7 @@ html:not(.intro-done) #device { will-change: transform; }
         </div>
         <hr class="rule grow" style="--d:.75s">
         <div class="cta rise" style="--d:.85s">
-          <a class="btn primary big" href="#work">See projects <small>— 9 builds</small></a>
+          <a class="btn primary big" href="#work">See projects <small>— 10 builds</small></a>
           <a class="link-arrow" href="https://github.com/jadenchua-dot">My GitHub <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6"/></svg></a>
         </div>
       </div>
@@ -1062,9 +1197,9 @@ html:not(.intro-done) #device { will-change: transform; }
           <div class="glass stat float" style="--d:1.3s"><span class="k">GPA</span><b data-count="3.97">3.97</b><p>out of 4.00, cumulative</p></div>
         </div>
         <div class="layer feat-layer" style="--depth:-10">
-          <a class="glass feat float" href="#p-tilt" style="--d:1.45s">
-            <span class="thumb"><img src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" width="480" height="360"></span>
-            <span><strong>Equipment levelling monitor</strong><span class="sub">M5Stack Fire · IMU</span><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 6.9 7.5.7-5.7 5 1.7 7.4L12 18.3 5.5 22l1.7-7.4-5.7-5 7.5-.7z"/></svg>Latest build</span></span>
+          <a class="glass feat float" href="#p-exitpilot" style="--d:1.45s">
+            <span class="thumb"><img class="pic" src="assets/exitpilot/poster.jpg" alt="" width="1280" height="720"></span>
+            <span><strong>ExitPilot: when to leave for the bus</strong><span class="sub">M5Stack Fire · LTA + NEA</span><span class="pill"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 6.9 7.5.7-5.7 5 1.7 7.4L12 18.3 5.5 22l1.7-7.4-5.7-5 7.5-.7z"/></svg>Latest build</span></span>
           </a>
         </div>
       </div>
@@ -1122,12 +1257,12 @@ html:not(.intro-done) #device { will-change: transform; }
     <section id="work" aria-labelledby="work-h">
       <div class="sec-head">
         <h2 id="work-h">Projects</h2>
-        <div class="seg" role="tablist" aria-label="Filter projects">
+        <div class="seg" role="group" aria-label="Filter projects">
           <span class="knob" aria-hidden="true"></span>
-          <button role="tab" aria-selected="true" data-f="all">All 10</button>
-          <button role="tab" aria-selected="false" data-f="emb">Embedded</button>
-          <button role="tab" aria-selected="false" data-f="iot">IoT</button>
-          <button role="tab" aria-selected="false" data-f="sw">Software</button>
+          <button type="button" aria-pressed="true" data-f="all">All 10</button>
+          <button type="button" aria-pressed="false" data-f="emb">Embedded</button>
+          <button type="button" aria-pressed="false" data-f="iot">IoT</button>
+          <button type="button" aria-pressed="false" data-f="sw">Software</button>
         </div>
       </div>
 
@@ -1162,6 +1297,7 @@ html:not(.intro-done) #device { will-change: transform; }
 
           <div class="links">
             <a class="btn primary" href="https://github.com/jadenchua-dot/m5stack-garden-monitor">Code &amp; build log ↗</a>
+            <a class="btn live" href="demos/garden/">Try its dashboard</a>
             <a class="btn" href="https://youtube.com/shorts/DR6Jm-IQAWk">YouTube ↗</a>
           </div>
         </div>
@@ -1259,6 +1395,7 @@ html:not(.intro-done) #device { will-change: transform; }
 
           <div class="links">
             <a class="btn primary" href="https://github.com/jadenchua-dot/m5stack-fire-tilt-sensor">Code &amp; write-up ↗</a>
+            <a class="btn live" href="demos/tilt/">Try its dashboard</a>
           </div>
         </div>
 
@@ -1523,7 +1660,7 @@ html:not(.intro-done) #device { will-change: transform; }
               <path class="wire" d="M403 82 V148" marker-end="url(#ah2)"/>
               <path class="wire" d="M477 82 V148" marker-end="url(#ah2)"/>
             </svg>
-            <figcaption>Fig. 4 · Sense, decide, then alert and log</figcaption>
+            <figcaption>Fig. 5 · Sense, decide, then alert and log</figcaption>
           </figure>
         </div>
       </article>
@@ -1595,7 +1732,7 @@ html:not(.intro-done) #device { will-change: transform; }
               <path class="wire" d="M324 146 H346 V178 H368" marker-end="url(#ah4)"/>
               <text class="pin" x="336" y="222">D6 · D7</text>
             </svg>
-            <figcaption>Fig. 5 · How the buttons, sensor and motor connect</figcaption>
+            <figcaption>Fig. 6 · How the buttons, sensor and motor connect</figcaption>
           </figure>
 
           <div class="readout" aria-label="Key values">
@@ -1618,23 +1755,23 @@ html:not(.intro-done) #device { will-change: transform; }
           <h3>SafeLens AI</h3>
           <ul class="stack"><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Team of 3</li></ul>
           <p>Built at GovTech's Digital4Good hackathon, this browser prototype helps young people spot harmful messages online. It blurs risky messages, explains why they are harmful, and then helps the user report them.</p>
-          <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">Code ↗</a></div>
+          <div class="links"><a class="btn live" href="https://jadenchua-dot.github.io/Safe-Lens-AI/">Live demo ↗</a> <a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">Code ↗</a></div>
         </article>
-        <article class="card" data-c="emb">
+        <article class="card" id="p-labs" data-c="emb">
           <span class="p-num">08 / Coursework</span>
           <h3>ATmega328P embedded C labs</h3>
           <ul class="stack"><li>AVR C</li><li>Registers</li><li>Interrupts</li></ul>
           <p>Seven labs that program a microcontroller directly in C, covering inputs, outputs, sensors and interrupts. They build up to a temperature monitor that switches on a fan.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/MicroController-embedded-system">Code ↗</a></div>
         </article>
-        <article class="card" data-c="sw">
+        <article class="card" id="p-shop" data-c="sw">
           <span class="p-num">09 / Python</span>
           <h3>Fast food ordering system</h3>
           <ul class="stack"><li>Python 3</li><li>CLI</li></ul>
           <p>A terminal ordering app with menus, an editable cart and automatic discounts and GST, plus a lucky-draw game at checkout.</p>
           <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/python-terminal-shop">Code ↗</a></div>
         </article>
-        <article class="card" data-c="sw">
+        <article class="card" id="p-pokemon" data-c="sw">
           <span class="p-num">10 / Python · Nov 2026</span>
           <h3>Pokémon card portfolio tracker</h3>
           <ul class="stack"><li>Python 3</li><li>Telegram Bot API</li><li>launchd</li><li>JSON</li></ul>
@@ -1693,7 +1830,7 @@ html:not(.intro-done) #device { will-change: transform; }
           <p>With teammates Justin and Hong Sen, I took on problem statement 3, "Report Inappropriate Content": how might we help youths recognise online harm when it happens?</p>
           <p>Our first version didn't work. It checked messages against a fixed list of inputs, so anything a user typed that wasn't on the list slipped through. We rebuilt the core so AI reads what the user actually typed and judges whether it's harmful, then blurs risky messages and helps the user report them.</p>
           <p>For the pitch, I used ElevenLabs for voiceover and Sora for video for the first time, and we made an AI demo video on the day.</p>
-          <div class="links"><a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">SafeLens AI code ↗</a> <a class="btn" href="#p-safelens">Project card</a></div>
+          <div class="links"><a class="btn live" href="https://jadenchua-dot.github.io/Safe-Lens-AI/">Try SafeLens ↗</a> <a class="btn" href="https://github.com/jadenchua-dot/Safe-Lens-AI">Code ↗</a> <a class="btn" href="#p-safelens">Project card</a></div>
         </div>
         <div>
           <h4 style="margin-top:0">What I took away</h4>
@@ -1799,6 +1936,8 @@ html:not(.intro-done) #device { will-change: transform; }
           <div class="qa"><button aria-expanded="false">Where can I see the code?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Every project is on <a href="https://github.com/jadenchua-dot">GitHub</a>, together with a README, the wiring and the problems I solved along the way.</p></div></div></div>
           <div class="qa"><button aria-expanded="false">Do you work in teams?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. The elevating wheelchair was a team of four, and SafeLens AI was built with a team of three at GovTech's Digital4Good hackathon.</p></div></div></div>
           <div class="qa"><button aria-expanded="false">What are you building now?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>ExitPilot, an M5Stack Fire that sits by the front door. It shows live bus arrivals for my stop, tells me when to leave, warns me about rain, and sends my family a Telegram message when I tap my card on the way out and back in.</p></div></div></div>
+          <div class="qa"><button aria-expanded="false">Can I try any of it in the browser?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. The <a href="demos/tilt/">tilt monitor</a> and <a href="demos/garden/">garden monitor</a> dashboards run here on simulated sensors, using the same page each device serves over Wi-Fi, and <a href="https://jadenchua-dot.github.io/Safe-Lens-AI/">SafeLens AI</a> runs live on GitHub Pages.</p></div></div></div>
+          <div class="qa"><button aria-expanded="false">Do you have a résumé?<span class="plus" aria-hidden="true"></span></button><div class="ans"><div><p>Yes. <a href="resume.html">Read it here</a> or <a href="assets/Jaden-Chua-Resume.pdf" download>download the PDF</a>.</p></div></div></div>
         </div>
       </div>
     </section>
@@ -1819,14 +1958,44 @@ html:not(.intro-done) #device { will-change: transform; }
         <div class="cell" style="--i:1"><a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/"><span>LinkedIn</span><b>jaden-chua</b><i class="arr" aria-hidden="true"><svg viewBox="0 0 18 18"><path d="M5 13L13 5M6.5 5H13v6.5"/></svg></i></a></div>
         <div class="cell" style="--i:2"><a href="https://github.com/jadenchua-dot"><span>GitHub</span><b>jadenchua-dot</b><i class="arr" aria-hidden="true"><svg viewBox="0 0 18 18"><path d="M5 13L13 5M6.5 5H13v6.5"/></svg></i></a></div>
       </div>
+      <div class="contact-cta">
+        <a class="btn solid" href="resume.html">Read my résumé</a>
+        <a class="btn" href="assets/Jaden-Chua-Resume.pdf" download>Download PDF</a>
+        <span class="topics">Or start an email about <a href="mailto:jadenchua20@gmail.com?subject=Working%20together">working together</a>, <a href="mailto:jadenchua20@gmail.com?subject=A%20question%20about%20one%20of%20your%20builds">one of my builds</a> or <a href="mailto:jadenchua20@gmail.com?subject=Hello">anything else</a>.</span>
+      </div>
       <p class="langs">Languages: English, Chinese</p>
       <p class="vh" id="copy-status" aria-live="polite"></p>
     </div>
   </section>
 </main>
 
-<footer>
-  <div class="wrap">© 2026 Jaden Chua · Singapore</div>
+<footer class="signoff">
+  <div class="wrap">
+    <div class="so-grid">
+      <div>
+        <span class="label">Local time · Singapore</span>
+        <div class="so-time"><span id="sgt-time">GMT+8</span><small id="sgt-day"></small></div>
+        <p class="so-note" id="sgt-note">Email is the quickest way to reach me.</p>
+      </div>
+      <div class="so-gh">
+        <span class="label">Latest on GitHub</span>
+        <a id="gh-latest" href="https://github.com/jadenchua-dot"><b>github.com/jadenchua-dot</b><q>Every project, with its code and write-up.</q><span class="when">Open GitHub ↗</span></a>
+      </div>
+      <div>
+        <span class="label">Elsewhere</span>
+        <ul class="so-links">
+          <li><a href="mailto:jadenchua20@gmail.com">Email</a></li>
+          <li><a href="resume.html">Résumé</a></li>
+          <li><a href="https://github.com/jadenchua-dot">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">LinkedIn</a></li>
+          <li><a href="demos/tilt/">Tilt demo</a></li>
+          <li><a href="demos/garden/">Garden demo</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="so-mark" aria-hidden="true">Jaden Chua<em>.</em></div>
+    <div class="so-base"><span>© 2026 Jaden Chua · Singapore</span><span>Hand-built: one HTML file, no framework · <a href="https://github.com/jadenchua-dot/jaden-portfolio">source</a></span><a href="#top">Back to top ↑</a></div>
+  </div>
 </footer>
 </div>
 </div>
@@ -1840,18 +2009,31 @@ html:not(.intro-done) #device { will-change: transform; }
     <li style="--i:0"><a href="#p-garden" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/DR6Jm-IQAWk/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Self-watering garden monitor</b><small>M5Stack Fire · sensors · servo valve</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
     <li style="--i:1"><a href="#p-tilt" data-close><span class="mthumb"><img class="short" src="https://i.ytimg.com/vi/oyhKpcI64IE/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Equipment levelling monitor</b><small>IMU tilt alarm · web dashboard · push</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
     <li style="--i:2"><a href="#p-vibration" data-close><span class="mthumb"><img src="assets/vibration/poster.jpg" alt="" loading="lazy"></span><span><b>TinyML vibration detector</b><small>M5Stack Fire · on-device ML</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:2"><a href="#p-exitpilot" data-close><span class="mthumb"><img src="assets/exitpilot/poster.jpg" alt="" loading="lazy"></span><span><b>ExitPilot</b><small>M5Stack Fire · live buses · RFID + Telegram</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:3"><a href="#p-window" data-close><span class="mthumb"><img src="https://i.ytimg.com/vi/IUG_-EWEwes/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Smart Window Energy Guard</b><small>Arduino · Raspberry Pi · Flask</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:3"><a href="#p-wheelchair" data-close><span class="mthumb"><img src="assets/wheelchair/final-prototype.jpg" alt="" loading="lazy"></span><span><b>Smart elevating wheelchair</b><small>Team of 4 · servo scissor lift</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:4"><a href="#p-safelens" data-close><span class="mthumb">07</span><span><b>SafeLens AI</b><small>Hackathon · online-harm detector</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
-    <li style="--i:5"><a href="#p-small" data-close><span class="mthumb">+3</span><span><b>More builds</b><small>AVR C labs · Python apps</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:3"><a href="#p-exitpilot" data-close><span class="mthumb"><img src="assets/exitpilot/poster.jpg" alt="" loading="lazy"></span><span><b>ExitPilot</b><small>M5Stack Fire · live buses · RFID + Telegram</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:4"><a href="#p-window" data-close><span class="mthumb"><img src="https://i.ytimg.com/vi/IUG_-EWEwes/hqdefault.jpg" alt="" loading="lazy"></span><span><b>Smart Window Energy Guard</b><small>Arduino · Raspberry Pi · Flask</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:5"><a href="#p-wheelchair" data-close><span class="mthumb"><img src="assets/wheelchair/final-prototype.jpg" alt="" loading="lazy"></span><span><b>Smart elevating wheelchair</b><small>Team of 4 · servo scissor lift</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:6"><a href="#p-safelens" data-close><span class="mthumb">07</span><span><b>SafeLens AI</b><small>Hackathon · online-harm detector</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
+    <li style="--i:7"><a href="#p-small" data-close><span class="mthumb">+3</span><span><b>More builds</b><small>AVR C labs · Python apps</small></span><span class="arrow"><svg viewBox="0 0 12 12"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span></a></li>
   </ul>
-  <a class="menu-feat" href="#p-exitpilot" data-close style="--i:6">
+  <a class="menu-feat" href="#p-exitpilot" data-close style="--i:8">
     <span class="feat-ph"><img src="assets/exitpilot/poster.jpg" alt="" loading="lazy"></span>
     <span><span class="label">Just shipped</span><b>ExitPilot</b><small>Tells you when to leave for the bus, from beside your front door.</small></span>
   </a>
-  <div class="panel-foot" style="--i:7"><span>Find me on</span><span><a href="https://github.com/jadenchua-dot">GitHub</a><a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">LinkedIn</a></span></div>
+  <div class="panel-foot" style="--i:9"><button class="search-inline" type="button" data-close data-open-cmdk>Search <kbd class="kb">Ctrl K</kbd></button><span><a href="resume.html">Résumé</a><a href="https://github.com/jadenchua-dot">GitHub</a><a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">LinkedIn</a></span></div>
 </aside>
+<!-- Search: ⌘K / Ctrl K, or / -->
+<div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="Search the site">
+  <div class="cmdk-scrim" data-cmdk-close></div>
+  <div class="cmdk-box">
+    <div class="cmdk-in">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+      <input id="cmdk-q" type="text" placeholder="Search projects, sections and actions" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list" aria-label="Search">
+      <kbd>esc</kbd>
+    </div>
+    <ul class="cmdk-list" id="cmdk-list" role="listbox" aria-label="Results"></ul>
+    <div class="cmdk-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> move</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
 <div class="progress" aria-hidden="true"></div>
 <button class="to-top" type="button" aria-label="Back to top"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg></button>
 
@@ -1874,7 +2056,7 @@ html:not(.intro-done) #device { will-change: transform; }
     });
   });
 
-  var targets = document.querySelectorAll('.sec-head, .project, .card, .skills > div, .entry, .now, .contact h2, .bento > .bx, .town, .steps, .faq > div');
+  var targets = document.querySelectorAll('.sec-head, .project, .card, .skills > div, .entry, .now, .contact h2, .bento > .bx, .town, .steps, .faq > div, .so-mark');
   targets.forEach(function (el) { el.classList.add('reveal'); });
   document.querySelectorAll('.grid3 .card').forEach(function (c, i) { c.style.transitionDelay = (i % 2) * 0.1 + 's'; });
   root.classList.add('motion');
@@ -2002,7 +2184,7 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
     function (x, y) { // ATmega chip + trees
       var s = tree(x + 1.5, y + 1.5, Z) + tree(x + 8.5, y + 1.2, Z) + box(x + 3, y + 3, Z, 4, 4, .7, 'd');
       for (var i = 0; i < 4; i++) s += box(x + 3.3 + i, y + 7, Z, .4, .6, .3) + box(x + 7, y + 3.3 + i, Z, .6, .4, .3);
-      pins.push({ x: x + 5, y: y + 5, z: Z + 4, n: '08', t: 'ATmega328P embedded C labs', h: '#p-small' });
+      pins.push({ x: x + 5, y: y + 5, z: Z + 4, n: '08', t: 'ATmega328P embedded C labs', h: '#p-labs' });
       return s + tree(x + 1.5, y + 8.5, Z) + tree(x + 8.8, y + 8.8, Z);
     },
     function (x, y) { // garden
@@ -2039,7 +2221,7 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
       var s = tree(x + 1.2, y + 1.2, Z) + box(x + 2, y + 2.5, Z, 6.5, 5.5, 4);
       s += faceY(y + 8, x + 3, x + 4.6, Z, Z + 2.6, 'win') + faceY(y + 8, x + 5.4, x + 7.8, Z + 1, Z + 2.8, 'win') + faceX(x + 8.5, y + 3.4, y + 7, Z + 1, Z + 2.8, 'win');
       s += box(x + 1.6, y + 2.1, Z + 4, 7.3, 6.3, .9, 'd');
-      pins.push({ x: x + 5.2, y: y + 5.2, z: Z + 7.5, n: '09', t: 'Fast food ordering system', h: '#p-small' });
+      pins.push({ x: x + 5.2, y: y + 5.2, z: Z + 7.5, n: '09', t: 'Fast food ordering system', h: '#p-shop' });
       return s + tree(x + 9.3, y + 9.2, Z);
     },
     function (x, y) { // wheelchair with scissor lift
@@ -2063,7 +2245,7 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
       var s = tree(x + 1.4, y + 1.4, Z);
       for (var i = 0; i < 4; i++) s += box(x + 2 + i * .25, y + 4.6 - i * .25, Z + i * .3, 2.8, 3.8, .3, i === 3 ? 'd' : 'f');
       s += box(x + 6.2, y + 3, Z, 2.4, .5, 4.6, 'd') + faceY(y + 3.5, x + 6.45, x + 8.35, Z + .5, Z + 4.1, 'scr ok');
-      pins.push({ x: x + 5.6, y: y + 4.4, z: Z + 8, n: '10', t: 'Pokemon card portfolio tracker', h: '#p-small' });
+      pins.push({ x: x + 5.6, y: y + 4.4, z: Z + 8, n: '10', t: 'Pokemon card portfolio tracker', h: '#p-pokemon' });
       return s + tree(x + 8.8, y + 8.8, Z);
     },
     function (x, y) { // motor on a base with the vibration monitor on top
@@ -2167,15 +2349,26 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
 // ---------- Step-by-step tabs ----------
 (function () {
   var root = document.getElementById('steps'), tabs = root.querySelectorAll('.tabs button');
-  var stages = root.querySelectorAll('.st-stage');
+  var stages = root.querySelectorAll('.st-stage'), cards = stages[0].children;
   function go(i) {
-    tabs.forEach(function (t, j) { t.setAttribute('aria-selected', i === j); });
+    tabs.forEach(function (t, j) { t.setAttribute('aria-selected', i === j); t.tabIndex = i === j ? 0 : -1; });
     stages.forEach(function (s) { Array.from(s.children).forEach(function (c, j) { c.classList.toggle('on', i === j); }); });
+    Array.from(cards).forEach(function (c, j) { c.hidden = false; c.setAttribute('aria-hidden', i !== j); });
   }
   tabs.forEach(function (t, i) {
+    t.id = 'step-tab-' + i; t.setAttribute('aria-controls', 'step-panel-' + i);
+    cards[i].id = 'step-panel-' + i; cards[i].setAttribute('aria-labelledby', t.id);
     t.addEventListener('click', function () { root.classList.remove('auto'); go(i); });
     t.addEventListener('animationend', function () { if (root.classList.contains('auto')) go((i + 1) % tabs.length); });
+    // Arrow keys, Home and End move between steps, like any tab list
+    t.addEventListener('keydown', function (e) {
+      var n = tabs.length, k = e.key;
+      var j = k === 'ArrowRight' || k === 'ArrowDown' ? (i + 1) % n : k === 'ArrowLeft' || k === 'ArrowUp' ? (i + n - 1) % n : k === 'Home' ? 0 : k === 'End' ? n - 1 : -1;
+      if (j < 0) return;
+      e.preventDefault(); root.classList.remove('auto'); go(j); tabs[j].focus();
+    });
   });
+  go(0);
   if (!reduceMotion && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { root.classList.add('auto'); o.disconnect(); } }, { threshold: .4 }).observe(root);
   }
@@ -2188,7 +2381,7 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
   function place(b) { knob.style.left = b.offsetLeft + 'px'; knob.style.top = b.offsetTop + 'px'; knob.style.width = b.offsetWidth + 'px'; knob.style.height = b.offsetHeight + 'px'; }
   btns.forEach(function (b) {
     b.addEventListener('click', function () {
-      btns.forEach(function (o) { o.setAttribute('aria-selected', o === b); });
+      btns.forEach(function (o) { o.setAttribute('aria-pressed', o === b); });
       place(b);
       var f = b.dataset.f;
       items.forEach(function (c) {
@@ -2199,7 +2392,7 @@ document.querySelectorAll('a[href^="http"]').forEach(function (a) {
     });
   });
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () { place(btns[0]); });
-  addEventListener('resize', function () { place(seg.querySelector('[aria-selected="true"]')); });
+  addEventListener('resize', function () { place(seg.querySelector('[aria-pressed="true"]')); });
 })();
 
 // ---------- FAQ accordion ----------
@@ -2488,6 +2681,221 @@ document.querySelectorAll('a.video[data-yt]').forEach(function (link) {
   heads.forEach(function (h) { io.observe(h); });
   media.forEach(function (m) { io.observe(m); });
   if (list) io.observe(list);
+})();
+
+// ---------- Search: ⌘K / Ctrl K (or /) opens a palette to jump anywhere or run an action ----------
+(function () {
+  var dlg = document.getElementById('cmdk');
+  if (!dlg) return;
+  var root = document.documentElement, input = document.getElementById('cmdk-q'), list = document.getElementById('cmdk-list');
+  var trigger = document.querySelector('.search-btn'), themeBtn = document.querySelector('.theme-btn');
+  var mac = /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent || '');
+  document.querySelectorAll('.kb').forEach(function (k) { k.textContent = mac ? '⌘K' : 'Ctrl K'; });
+  if (trigger) trigger.setAttribute('aria-keyshortcuts', mac ? 'Meta+K' : 'Control+K');
+  // The contact section's email link is the one source for the address
+  var mailLink = document.querySelector('.contact-list a[href^="mailto:"]');
+  var mailHref = mailLink ? mailLink.getAttribute('href') : '', address = mailHref.replace(/^mailto:/, '');
+  var ICON = {
+    go: '<svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5"/></svg>',
+    out: '<svg viewBox="0 0 16 16"><path d="M5 11l6-6M6 5h5v5"/></svg>',
+    theme: '<svg viewBox="0 0 16 16"><path d="M13 9.6A5.5 5.5 0 0 1 6.4 3a5.5 5.5 0 1 0 6.6 6.6z"/></svg>',
+    copy: '<svg viewBox="0 0 16 16"><rect x="5.5" y="5.5" width="8" height="8" rx="1.8"/><path d="M10.5 5.5V4A1.5 1.5 0 0 0 9 2.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/></svg>',
+    doc: '<svg viewBox="0 0 16 16"><path d="M4 2h5.5L12 4.5V14H4z"/><path d="M6 8h4M6 10.5h4"/></svg>',
+    play: '<svg viewBox="0 0 16 16"><path d="M5 3.5l7 4.5-7 4.5z"/></svg>',
+    mail: '<svg viewBox="0 0 16 16"><rect x="2" y="3.5" width="12" height="9" rx="1.5"/><path d="M2.5 4.5L8 9l5.5-4.5"/></svg>'
+  };
+  var items = [];
+  // Projects are read from the page itself, so this list can't fall out of date
+  document.querySelectorAll('#work [data-c][id]').forEach(function (el) {
+    var h = el.querySelector('h3'), num = el.querySelector('.p-num'), tags = el.querySelectorAll('.stack li');
+    if (!h) return;
+    items.push({ group: 'Projects', label: h.textContent.trim(), href: '#' + el.id, num: num ? num.textContent.trim().slice(0, 2) : '',
+      hint: Array.prototype.slice.call(tags, 0, 3).map(function (t) { return t.textContent; }).join(' · '), keys: el.textContent });
+  });
+  [['About', '#about', 'what I build, in one line'], ['Projects', '#work', 'all ten builds and the project map'], ['Awards', '#awards', "Director's List and Edusave"],
+   ['GovTech Digital4Good hackathon', '#hackathon', 'SafeLens AI and what I took away'], ['How I build', '#process', 'from the problem to the write-up'],
+   ['Toolkit', '#skills', 'languages, hardware, tools, theory'], ['Education and leadership', '#record', 'Nanyang Polytechnic, SYLP'],
+   ['FAQ', '#faq', 'quick answers'], ['Contact', '#contact', 'email, LinkedIn, GitHub']].forEach(function (s) {
+    items.push({ group: 'Sections', label: s[0], hint: s[2], href: s[1], icon: ICON.go });
+  });
+  items.push(
+    { group: 'Actions', label: 'Read my résumé', hint: 'one page, with a PDF download', href: 'resume.html', icon: ICON.doc, keys: 'resume cv curriculum vitae' },
+    { group: 'Actions', label: 'Download my résumé (PDF)', hint: 'Jaden-Chua-Resume.pdf', href: 'assets/Jaden-Chua-Resume.pdf', download: true, icon: ICON.doc, keys: 'resume cv pdf' },
+    { group: 'Actions', label: 'Copy my email address', hint: address, run: copyAddress, icon: ICON.copy, keys: 'email mail contact' },
+    { group: 'Actions', label: 'Email me', hint: address, href: mailHref, icon: ICON.mail, keys: 'email mail contact message' },
+    { group: 'Actions', label: function () { return root.getAttribute('data-theme') === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'; },
+      hint: 'same as the sun and moon button', run: function () { close(); if (themeBtn) themeBtn.click(); }, icon: ICON.theme, keys: 'theme dark light mode colour color' },
+    { group: 'Try it', label: 'Tilt monitor dashboard', hint: 'the device\'s own page, on simulated sensors', href: 'demos/tilt/', icon: ICON.play, keys: 'demo live levelling dashboard' },
+    { group: 'Try it', label: 'Garden monitor dashboard', hint: 'watch it decide when to water', href: 'demos/garden/', icon: ICON.play, keys: 'demo live watering dashboard' },
+    { group: 'Try it', label: 'SafeLens AI', hint: 'live on GitHub Pages', href: 'https://jadenchua-dot.github.io/Safe-Lens-AI/', icon: ICON.out, keys: 'demo live hackathon online safety' },
+    { group: 'Links', label: 'GitHub', hint: 'github.com/jadenchua-dot', href: 'https://github.com/jadenchua-dot', icon: ICON.out, keys: 'code repositories source' },
+    { group: 'Links', label: 'LinkedIn', hint: 'jaden-chua', href: 'https://www.linkedin.com/in/jaden-chua-9177aa3b8/', icon: ICON.out, keys: 'profile' }
+  );
+  if (!address) items = items.filter(function (it) { return it.run !== copyAddress && it.href !== mailHref; });
+
+  var shown = [], active = 0, lastFocus = null;
+  function labelOf(it) { return typeof it.label === 'function' ? it.label() : it.label; }
+  function score(it, q) {
+    if (!q) return 1;
+    var l = labelOf(it).toLowerCase(), all = (l + ' ' + (it.hint || '') + ' ' + (it.keys || '') + ' ' + it.group).toLowerCase();
+    var s = l.indexOf(q) === 0 ? 4 : (' ' + l).indexOf(' ' + q) > -1 ? 3 : l.indexOf(q) > -1 ? 2 :
+            q.split(/\s+/).every(function (w) { return all.indexOf(w) > -1; }) ? 1 : 0;
+    return s && it.group === 'Projects' ? s + 1 : s;   // a project beats a link that merely mentions it
+  }
+  function render() {
+    var q = input.value.trim().toLowerCase();
+    shown = items.map(function (it, i) { return { it: it, s: score(it, q), i: i }; }).filter(function (r) { return r.s > 0; });
+    if (q) shown.sort(function (a, b) { return b.s - a.s || a.i - b.i; });
+    list.textContent = '';
+    if (!shown.length) {
+      var e = document.createElement('li');
+      e.className = 'cmdk-empty'; e.setAttribute('role', 'presentation');
+      e.textContent = 'Nothing matches "' + input.value.trim() + '". Try a board, a sensor or a section.';
+      list.appendChild(e); input.removeAttribute('aria-activedescendant');
+      return;
+    }
+    var group = null;
+    shown.forEach(function (r, n) {
+      if (!q && r.it.group !== group) {
+        group = r.it.group;
+        var g = document.createElement('li'); g.className = 'cmdk-group'; g.setAttribute('role', 'presentation'); g.textContent = group;
+        list.appendChild(g);
+      }
+      var li = document.createElement('li'), ic = document.createElement('span'), tx = document.createElement('span');
+      var b = document.createElement('b'), sm = document.createElement('small'), go = document.createElement('span');
+      li.className = 'cmdk-item'; li.id = 'cmdk-o' + n; li.setAttribute('role', 'option');
+      ic.className = 'ci'; ic.setAttribute('aria-hidden', 'true');
+      if (r.it.num) ic.textContent = r.it.num; else ic.innerHTML = r.it.icon;
+      b.textContent = labelOf(r.it); sm.textContent = r.it.hint || ''; tx.append(b, sm);
+      go.className = 'go'; go.setAttribute('aria-hidden', 'true'); go.textContent = r.it.href && /^https?:/.test(r.it.href) ? 'opens a tab ↗' : '↵';
+      li.append(ic, tx, go);
+      li.addEventListener('mousemove', function () { if (active !== n) setActive(n, false); });
+      li.addEventListener('click', function () { run(n); });
+      list.appendChild(li);
+      r.el = li;
+    });
+    setActive(0, false);
+  }
+  function setActive(n, scroll) {
+    if (!shown.length) return;
+    active = (n + shown.length) % shown.length;
+    shown.forEach(function (r, i) { r.el.setAttribute('aria-selected', i === active ? 'true' : 'false'); });
+    input.setAttribute('aria-activedescendant', shown[active].el.id);
+    if (scroll) shown[active].el.scrollIntoView({ block: 'nearest' });
+  }
+  function run(n) {
+    var r = shown[n];
+    if (!r) return;
+    if (r.it.run) { r.it.run(r); return; }
+    close(false);
+    // A real link click, so section jumps go through the same intro-aware handler as the nav
+    var a = document.createElement('a');
+    a.href = r.it.href;
+    if (r.it.download) a.setAttribute('download', '');
+    if (/^https?:/.test(r.it.href)) { a.target = '_blank'; a.rel = 'noopener'; }
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function copyAddress(r) {
+    var sm = r.el.querySelector('small');
+    function ok() { sm.textContent = 'Copied to your clipboard'; setTimeout(close, 800); }
+    function fail() { sm.textContent = "Couldn't copy here. It's " + address; }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(address).then(ok, fail); else fail();
+  }
+  function isOpen() { return dlg.classList.contains('open'); }
+  function open() {
+    if (isOpen()) return;
+    lastFocus = document.activeElement;
+    dlg.classList.add('open');
+    if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    input.value = ''; render(); list.scrollTop = 0;
+    requestAnimationFrame(function () { input.focus(); });
+  }
+  function close(restore) {
+    if (!isOpen()) return;
+    dlg.classList.remove('open');
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    if (restore !== false && lastFocus && lastFocus.focus && lastFocus.offsetParent !== null) lastFocus.focus();
+  }
+  input.addEventListener('input', function () { render(); list.scrollTop = 0; });
+  dlg.querySelector('[data-cmdk-close]').addEventListener('click', function () { close(); });
+  if (trigger) trigger.addEventListener('click', open);
+  document.querySelectorAll('[data-open-cmdk]').forEach(function (b) { b.addEventListener('click', function () { setTimeout(open, 80); }); });
+  dlg.addEventListener('wheel', function (e) { if (!list.contains(e.target)) e.preventDefault(); }, { passive: false });
+  document.addEventListener('keydown', function (e) {
+    var k = e.key;
+    if ((e.metaKey || e.ctrlKey) && !e.altKey && !e.shiftKey && (k === 'k' || k === 'K')) { e.preventDefault(); if (isOpen()) close(); else open(); return; }
+    if (!isOpen()) {
+      var t = e.target, typing = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+      if (k === '/' && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); open(); }
+      return;
+    }
+    if (k === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
+    else if (k === 'ArrowDown') { e.preventDefault(); setActive(active + 1, true); }
+    else if (k === 'ArrowUp') { e.preventDefault(); setActive(active - 1, true); }
+    else if (k === 'Enter') { e.preventDefault(); run(active); }
+    else if (k === 'Tab') { e.preventDefault(); input.focus(); }
+  }, true);
+})();
+
+// ---------- Sign-off footer: the time in Singapore, and the latest commit on GitHub ----------
+(function () {
+  var t = document.getElementById('sgt-time'), day = document.getElementById('sgt-day'), note = document.getElementById('sgt-note');
+  if (t && window.Intl) {
+    var tz = 'Asia/Singapore';
+    var clock = new Intl.DateTimeFormat('en-SG', { timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: true });
+    var wd = new Intl.DateTimeFormat('en-SG', { timeZone: tz, weekday: 'short' });
+    var hr = new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: 'numeric', hourCycle: 'h23' });
+    (function tick() {
+      var now = new Date(), h = parseInt(hr.format(now), 10);
+      t.textContent = clock.format(now).replace(/\s/g, ' ').toLowerCase();
+      day.textContent = wd.format(now) + ' · GMT+8';
+      note.textContent = h >= 23 || h < 7 ? "It's night in Singapore right now, so a reply may take a few hours." : 'Email is the quickest way to reach me.';
+      setTimeout(tick, 60000 - now.getSeconds() * 1000 - now.getMilliseconds() + 50);
+    })();
+  }
+
+  var box = document.getElementById('gh-latest');
+  if (!box || !window.fetch) return;
+  var KEY = 'gh-latest-v1', cached = null;
+  try { cached = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+  function ago(iso) {
+    var s = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (s < 3600) return Math.max(1, Math.round(s / 60)) + ' min ago';
+    if (s < 86400) return Math.round(s / 3600) + ' h ago';
+    var d = Math.round(s / 86400);
+    return d === 1 ? 'yesterday' : d + ' days ago';
+  }
+  function show(c) {
+    if (!/^https:\/\/github\.com\//.test(c.url)) return;
+    box.href = c.url;
+    box.querySelector('b').textContent = c.repo;
+    box.querySelector('q').textContent = c.msg;
+    box.querySelector('.when').textContent = ago(c.date) + ' · live from GitHub';
+  }
+  function load() {
+    var api = 'https://api.github.com', h = { headers: { Accept: 'application/vnd.github+json' } };
+    fetch(api + '/users/jadenchua-dot/repos?sort=pushed&per_page=1', h)
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (repos) {
+        if (!repos[0]) throw new Error('no repos');
+        return fetch(api + '/repos/' + repos[0].full_name + '/commits?per_page=1', h)
+          .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+          .then(function (cs) {
+            var c = cs[0], out = { repo: repos[0].name, msg: c.commit.message.split('\n')[0], date: c.commit.committer.date, url: c.html_url, at: Date.now() };
+            try { sessionStorage.setItem(KEY, JSON.stringify(out)); } catch (e) {}
+            show(out);
+          });
+      })
+      .catch(function () {});   // offline or rate-limited: the plain GitHub link stays
+  }
+  if (cached && Date.now() - cached.at < 15 * 60 * 1000) { show(cached); return; }
+  // Only call the API once the footer is close, so visitors who never scroll that far cost nothing
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); load(); }
+    }, { rootMargin: '800px 0px' });
+    io.observe(box);
+  } else load();
 })();
 </script>
 </body>
