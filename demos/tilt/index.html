@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en"><head>
+<!-- Portfolio demo. Everything outside the DEMO blocks is the device's own page, copied unchanged from
+     include/web_page.h in github.com/jadenchua-dot/m5stack-fire-tilt-sensor. -->
+<!-- DEMO: simulated device -->
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<meta name="description" content="Try the tilt monitor's real dashboard, running on a simulated M5Stack Fire: tilt it, bump it, set your own limit.">
+<script>
+/* A simulated M5Stack Fire that answers the dashboard's /api calls with the firmware's rules:
+   gravity smoothed with tau 0.25 s, "careful" above 70% of the limit, alarm after 0.5 s over it,
+   clears 1.5 degrees under it, limit 1-60 degrees, last 12 events kept. */
+(function () {
+  var D = 57.29578, t0 = performance.now(), last = t0;
+  function ms() { return Math.round(performance.now() - t0); }
+  function norm(v) { var m = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / m, v[1] / m, v[2] / m]; }
+  function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+  function cross(a, b) { return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; }
+  var sim = window.tiltSim = {
+    target: [0, 0], grav: [0, 0, 1], ref: [0, 0, 1], refU: [1, 0, 0], refV: [0, 1, 0],
+    tilt: 0, x: 0, y: 0, limit: 10, alarm: false, warn: false, muted: false, overSince: 0, events: []
+  };
+  function zero() {
+    sim.ref = sim.grav.slice();
+    sim.refU = norm([1 - sim.ref[0] * sim.ref[0], -sim.ref[0] * sim.ref[1], -sim.ref[0] * sim.ref[2]]);
+    sim.refV = cross(sim.ref, sim.refU);
+  }
+  function addEvent(a) { if (sim.events.length === 12) sim.events.shift(); sim.events.push({ t: ms(), a: a, deg: +sim.tilt.toFixed(1) }); }
+  setInterval(function () {
+    var t = performance.now(), dt = (t - last) / 1000, n = ms(); last = t;
+    var g = norm([Math.tan(sim.target[0] / D), Math.tan(sim.target[1] / D), 1]), a = 1 - Math.exp(-dt / 0.25);
+    sim.grav = norm([sim.grav[0] + (g[0] - sim.grav[0]) * a, sim.grav[1] + (g[1] - sim.grav[1]) * a, sim.grav[2] + (g[2] - sim.grav[2]) * a]);
+    var c = Math.max(-1, Math.min(1, dot(sim.grav, sim.ref)));
+    sim.tilt = Math.acos(c) * D;
+    sim.x = Math.atan2(dot(sim.grav, sim.refU), c) * D;
+    sim.y = Math.atan2(dot(sim.grav, sim.refV), c) * D;
+    sim.warn = !sim.alarm && sim.tilt > sim.limit * 0.7;
+    if (!sim.alarm) {
+      if (sim.tilt > sim.limit) {
+        if (!sim.overSince) sim.overSince = n || 1;
+        if (n - sim.overSince >= 500) { sim.alarm = true; sim.warn = false; addEvent(true); }
+      } else sim.overSince = 0;
+    } else if (sim.tilt < sim.limit - 1.5) { sim.alarm = false; sim.overSince = 0; addEvent(false); }
+  }, 50);
+  function status() {
+    return { tilt: +sim.tilt.toFixed(2), x: +sim.x.toFixed(2), y: +sim.y.toFixed(2), limit: +sim.limit.toFixed(1), alarm: sim.alarm,
+      warn: sim.warn, muted: sim.muted, ip: 'simulated in your browser', now: ms(), events: sim.events.slice() };
+  }
+  var realFetch = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    var u = new URL(typeof input === 'string' ? input : input.url, location.href), m = u.pathname.match(/\/api\/(status|zero|limit|mute)$/);
+    if (!m) return realFetch(input, init);
+    if (m[1] === 'zero') zero();
+    if (m[1] === 'limit') { var d = parseFloat(u.searchParams.get('deg')); if (!isNaN(d)) sim.limit = Math.max(1, Math.min(60, d)); }
+    if (m[1] === 'mute') sim.muted = u.searchParams.get('on') === '1';
+    return new Promise(function (ok) {
+      setTimeout(function () { ok(new Response(JSON.stringify(status()), { headers: { 'Content-Type': 'application/json' } })); }, 25 + Math.random() * 50);
+    });
+  };
+})();
+</script>
+<style>
+.sim{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 8px 24px -18px rgba(0,0,0,.5)}
+.sim-in{max-width:720px;margin:0 auto;padding:12px 16px;display:flex;gap:16px;align-items:center}
+.pad{position:relative;width:104px;height:104px;flex:none;border-radius:50%;border:1.5px dashed var(--muted);touch-action:none;cursor:grab;
+ background:radial-gradient(circle,transparent 0 30%,var(--bg) 31% 33%,transparent 34%),var(--bg)}
+.pad:focus-visible{outline:2px solid var(--warn);outline-offset:3px}
+.pad i{position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:var(--text);box-shadow:0 4px 10px rgba(0,0,0,.35)}
+.sim-txt{flex:1;min-width:0}
+.sim-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:2px}
+.sim-head b{font-size:15px}
+.sim-tag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:#e2541f;border-radius:99px;padding:2px 9px}
+.sim .k a{color:inherit}
+.sim-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.sim-btns button{padding:6px 11px;font-size:13px}
+@media (max-width:520px){.sim-in{flex-direction:column;align-items:stretch}.pad{align-self:center}}
+</style>
+<!-- /DEMO -->
+
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tilt Sensor</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--text:#16181d;--muted:#6b7280;--line:#e5e7eb;
+--ok:#1e9e48;--warn:#f0a500;--bad:#d32020}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#181b21;--text:#eceef2;--muted:#9aa1ad;--line:#2a2e36}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:18px;margin:4px 0 14px;display:flex;justify-content:space-between;align-items:center}
+#conn{font-size:12px;font-weight:500;color:var(--muted)}
+#status{border-radius:16px;padding:22px;color:#fff;display:flex;gap:18px;align-items:center;
+justify-content:space-between;transition:background .2s;background:var(--ok)}
+#status.warn{background:var(--warn);color:#1a1300}
+#status.bad{background:var(--bad);animation:pulse 1s infinite}
+@keyframes pulse{50%{filter:brightness(.8)}}
+#state{font-size:30px;font-weight:800;letter-spacing:.5px}
+#msg{opacity:.9;margin-top:4px}
+#deg{font-size:56px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:14px}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.grow{flex:1;min-width:200px}
+svg{display:block;margin:auto}
+.k{color:var(--muted);font-size:13px}
+.v{font-weight:700;font-variant-numeric:tabular-nums}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--text);
+padding:9px 14px;border-radius:10px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button.primary{background:var(--text);color:var(--bg);border-color:var(--text)}
+input[type=range]{width:100%}
+ul{list-style:none;margin:0;padding:0}
+li{padding:7px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between}
+li:first-child{border-top:0}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px}
+</style></head><body>
+<!-- DEMO: control strip -->
+<div class="sim" role="region" aria-label="Simulator">
+ <div class="sim-in">
+  <div class="pad" id="pad" tabindex="0" role="slider" aria-label="Tilt: drag the dot, or use the arrow keys" aria-valuetext="level"><i id="knob"></i></div>
+  <div class="sim-txt">
+   <div class="sim-head"><b>You are the accelerometer</b><span class="sim-tag">Demo</span></div>
+   <div class="k">This is the page the M5Stack Fire serves over Wi-Fi, unchanged, running on a simulated sensor. Drag the dot to tilt the device. <a href="../../">Back to the portfolio</a></div>
+   <div class="sim-btns"><button id="sLevel">Lay it flat</button><button id="sBump">Bump it</button><button id="sTip">Knock it over</button><button id="sPhone" hidden>Use my phone's tilt</button></div>
+  </div>
+ </div>
+</div>
+<!-- /DEMO -->
+<main>
+<h1><span>Tilt Sensor</span><span id="conn">connecting...</span></h1>
+
+<div id="status"><div><div id="state">--</div><div id="msg"></div></div><div id="deg">--</div></div>
+
+<div class="card row">
+ <svg id="lvl" width="190" height="190" viewBox="-100 -100 200 200">
+  <circle r="92" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="2"/>
+  <circle id="ring" r="46" fill="none" stroke="var(--bad)" stroke-dasharray="5 5" stroke-width="2"/>
+  <line x1="-92" x2="92" stroke="currentColor" stroke-opacity=".15"/>
+  <line y1="-92" y2="92" stroke="currentColor" stroke-opacity=".15"/>
+  <circle id="bub" r="12" fill="var(--ok)"/>
+ </svg>
+ <div class="grow">
+  <div class="row" style="justify-content:space-between">
+   <div><div class="k">X tilt</div><div class="v" id="px">--</div></div>
+   <div><div class="k">Y tilt</div><div class="v" id="py">--</div></div>
+   <div><div class="k">Alarm limit</div><div class="v" id="lim">--</div></div>
+  </div>
+  <div style="margin-top:14px"><input id="slider" type="range" min="1" max="45" step="0.5"></div>
+  <div class="row" style="margin-top:12px">
+   <button class="primary" id="zero">Set current position as level</button>
+   <button id="mute">Mute device</button>
+   <button id="snd">Enable sound here</button>
+  </div>
+ </div>
+</div>
+
+<div class="card"><div class="k" style="margin-bottom:6px">Recent events</div><ul id="ev"><li class="k">No events yet</li></ul></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let last=null, actx=null, beepT=0, dragging=false;
+function fmt(s){s=Math.round(s);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';return Math.floor(s/3600)+'h ago'}
+function beep(){if(!actx)return;const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=1800;
+ g.gain.value=.15;o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+.18)}
+async function post(u){try{await fetch(u,{method:'POST'});poll()}catch(e){}}
+async function poll(){
+ try{
+  const r=await fetch('/api/status',{cache:'no-store'});const d=await r.json();last=d;
+  $('conn').textContent='live - '+d.ip;
+  const st=$('status');st.className=d.alarm?'bad':(d.warn?'warn':'');
+  $('state').textContent=d.alarm?'TILTED - FIX IT':(d.warn?'CAREFUL':'LEVEL - OK');
+  $('msg').textContent=d.alarm?'Tilt is over the '+d.limit+'° limit. Straighten it.':
+    (d.warn?'Getting close to the '+d.limit+'° limit.':'Within the '+d.limit+'° limit.');
+  $('deg').textContent=d.tilt.toFixed(1)+'°';
+  $('px').textContent=d.x.toFixed(1)+'°';$('py').textContent=d.y.toFixed(1)+'°';
+  $('lim').textContent=d.limit+'°';
+  if(!dragging)$('slider').value=d.limit;
+  const s=46/d.limit;let bx=d.x*s,by=d.y*s;const m=Math.hypot(bx,by);if(m>80){bx*=80/m;by*=80/m}
+  $('bub').setAttribute('cx',bx);$('bub').setAttribute('cy',by);
+  $('bub').setAttribute('fill',d.alarm?'var(--bad)':(d.warn?'var(--warn)':'var(--ok)'));
+  $('mute').textContent=d.muted?'Unmute device':'Mute device';
+  document.title=(d.alarm?'⚠ TILTED ':'')+'Tilt Sensor';
+  if(d.alarm&&Date.now()-beepT>1000){beep();beepT=Date.now()}
+  const ev=$('ev');
+  ev.innerHTML=d.events.length?d.events.slice().reverse().map(e=>
+   `<li><span><span class="dot" style="background:var(${e.a?'--bad':'--ok'})"></span>${e.a?'Tilted':'Back to level'} (${e.deg.toFixed(1)}°)</span><span class="k">${fmt((d.now-e.t)/1000)}</span></li>`).join(''):'<li class="k">No events yet</li>';
+ }catch(e){$('conn').textContent='offline - retrying';}
+}
+$('zero').onclick=()=>post('/api/zero');
+$('mute').onclick=()=>post('/api/mute?on='+(last&&last.muted?0:1));
+$('snd').onclick=()=>{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume();beep();$('snd').textContent='Sound on';};
+$('slider').oninput=e=>{dragging=true;$('lim').textContent=e.target.value+'°'};
+$('slider').onchange=e=>{dragging=false;post('/api/limit?deg='+e.target.value)};
+setInterval(poll,400);poll();
+</script><!-- DEMO: controls -->
+<script>
+(function () {
+  var sim = window.tiltSim, pad = document.getElementById('pad'), knob = document.getElementById('knob'), R = 40;
+  function show() {
+    var r = pad.clientWidth / 2 - 13, x = sim.target[0], y = sim.target[1], m = Math.hypot(x, y), k = m > R ? R / m : 1;
+    knob.style.transform = 'translate(' + (x * k / R * r) + 'px,' + (y * k / R * r) + 'px)';
+    pad.setAttribute('aria-valuetext', m < .5 ? 'level' : 'tilted ' + m.toFixed(0) + ' degrees');
+  }
+  function set(x, y, free) {
+    var m = Math.hypot(x, y), lim = free ? 85 : R;
+    if (m > lim) { x *= lim / m; y *= lim / m; }
+    sim.target = [x, y]; show();
+  }
+  function fromPointer(e) { var b = pad.getBoundingClientRect(), r = b.width / 2 - 13; set((e.clientX - b.left - b.width / 2) / r * R, (e.clientY - b.top - b.height / 2) / r * R); }
+  pad.addEventListener('pointerdown', function (e) { pad.setPointerCapture(e.pointerId); pad.style.cursor = 'grabbing'; fromPointer(e); });
+  pad.addEventListener('pointermove', function (e) { if (pad.hasPointerCapture(e.pointerId)) fromPointer(e); });
+  pad.addEventListener('pointerup', function () { pad.style.cursor = ''; });
+  pad.addEventListener('dblclick', function () { set(0, 0); });
+  pad.addEventListener('keydown', function (e) {
+    var s = e.shiftKey ? 5 : 1, x = sim.target[0], y = sim.target[1], k = e.key;
+    if (k === 'ArrowLeft') x -= s; else if (k === 'ArrowRight') x += s; else if (k === 'ArrowUp') y -= s; else if (k === 'ArrowDown') y += s;
+    else if (k === 'Home' || k === '0') { x = 0; y = 0; } else return;
+    e.preventDefault(); set(x, y);
+  });
+  document.getElementById('sLevel').onclick = function () { set(0, 0); };
+  var bumpT;   // a knock that's over in a moment: the 0.5 s delay ignores it
+  document.getElementById('sBump').onclick = function () {
+    var keep = sim.target.slice(); clearTimeout(bumpT); set(keep[0] + 22, keep[1] - 6);
+    bumpT = setTimeout(function () { set(keep[0], keep[1]); }, 250);
+  };
+  document.getElementById('sTip').onclick = function () { set(19, 9); };
+  // On a phone, the phone becomes the accelerometer (zero it wherever you hold it)
+  var phone = document.getElementById('sPhone');
+  if (window.DeviceOrientationEvent && matchMedia('(pointer: coarse)').matches) phone.hidden = false;
+  phone.onclick = function () {
+    function start() {
+      phone.textContent = 'Using your phone: press "Set current position as level"';
+      addEventListener('deviceorientation', function (e) { if (e.beta != null) set(e.gamma, e.beta, true); });
+    }
+    if (DeviceOrientationEvent.requestPermission) DeviceOrientationEvent.requestPermission().then(function (s) { if (s === 'granted') start(); }).catch(function () {});
+    else start();
+  };
+  show();
+})();
+</script>
+<!-- /DEMO -->
+</body></html>

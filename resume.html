@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jaden Chua · Résumé</title>
+<meta name="description" content="Résumé of Jaden Chua, Electronic and Computer Engineering student at Nanyang Polytechnic: education, embedded and IoT projects, leadership and skills.">
+<link rel="canonical" href="https://jaden-portfolio-psi.vercel.app/resume.html">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Jaden Chua · Résumé">
+<meta property="og:description" content="Electronic and Computer Engineering, Nanyang Polytechnic. GPA 3.97, Director's List every semester. Embedded and IoT projects on ESP32, Arduino and Raspberry Pi.">
+<meta property="og:url" content="https://jaden-portfolio-psi.vercel.app/resume.html">
+<meta property="og:image" content="https://jaden-portfolio-psi.vercel.app/assets/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#e7e3da">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #e7e3da; --paper: #fffdf8; --ink: #15130f; --soft: #5b554b; --rule: #e0d8ca; --accent: #b8400f;
+  --display: "Fraunces", Georgia, serif; --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root { --bg: #0d0c0a; } }
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body { margin: 0; font: 400 14px/1.5 var(--body); color: var(--ink); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+.bar { position: sticky; top: 0; z-index: 2; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 14px 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.bar a, .bar button { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px; border: 1.5px solid #15130f;
+  background: #fffdf8; color: #15130f; font: 600 14px var(--body); text-decoration: none; cursor: pointer; }
+.bar .primary { background: #15130f; color: #fffdf8; }
+.bar a:hover, .bar button:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (prefers-color-scheme: dark) { .bar a, .bar button { border-color: #f1ece2; } }
+
+.sheet { width: min(210mm, 100% - 24px); margin: 6px auto 40px; padding: 15mm 16mm 14mm; background: var(--paper);
+  border-radius: 6px; box-shadow: 0 30px 70px -40px rgba(40,30,15,.55); }
+header { display: grid; grid-template-columns: 1fr auto; gap: 6px 24px; align-items: end; padding-bottom: 12px; border-bottom: 2px solid var(--ink); }
+h1 { margin: 0; font: 400 40px/1 var(--display); letter-spacing: -.03em; }
+.role { grid-column: 1; margin: 6px 0 0; font-size: 14px; color: var(--soft); }
+.contact { grid-column: 2; grid-row: 1 / 3; margin: 0; padding: 0; list-style: none; text-align: right; font: 400 12px/1.6 var(--mono); }
+.contact a { text-decoration: none; }
+.contact a:hover { color: var(--accent); }
+.summary { margin: 12px 0 2px; font-size: 13.5px; }
+
+h2 { margin: 16px 0 6px; padding-bottom: 3px; border-bottom: 1px solid var(--rule); font: 600 11.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.item { display: grid; grid-template-columns: 1fr auto; gap: 0 16px; margin: 0 0 8px; }
+.item h3 { margin: 0; font: 600 14px/1.35 var(--body); }
+.item h3 span { font-weight: 400; color: var(--soft); }
+.when { font: 400 11.5px/1.6 var(--mono); color: var(--soft); white-space: nowrap; text-align: right; }
+.item ul, .item p { grid-column: 1 / -1; margin: 2px 0 0; }
+.item ul { padding-left: 16px; }
+.item li { margin: 1px 0; font-size: 13px; }
+.item p { font-size: 13px; }
+.tags { font: 400 11px var(--mono); color: var(--soft); }
+.skills { display: grid; grid-template-columns: 7.5em 1fr; gap: 3px 12px; margin: 0; font-size: 13px; }
+.skills dt { font-weight: 600; }
+.skills dd { margin: 0; }
+.foot { margin: 14px 0 0; font: 400 11px var(--mono); color: var(--soft); text-align: center; }
+
+@media (max-width: 640px) {
+  .sheet { padding: 22px 18px; border-radius: 14px; }
+  header { grid-template-columns: 1fr; }
+  .contact { grid-column: 1; grid-row: auto; text-align: left; margin-top: 8px; }
+  h1 { font-size: 34px; }
+  .item { grid-template-columns: 1fr; }
+  .when { text-align: left; }
+  .skills { grid-template-columns: 1fr; }
+  .skills dd { margin-bottom: 6px; }
+}
+
+/* One A4 page when printed or saved as PDF */
+@page { size: A4; margin: 9mm 12mm; }
+@media print {
+  html, body { background: #fff; }
+  .bar { display: none; }
+  .sheet { width: auto; margin: 0; padding: 0; box-shadow: none; border-radius: 0; background: #fff; }
+  body { font-size: 9.2pt; line-height: 1.36; }
+  header { padding-bottom: 7pt; }
+  h1 { font-size: 24pt; }
+  .role, .summary { font-size: 9.2pt; }
+  .summary { margin: 7pt 0 0; }
+  .contact { font-size: 8pt; line-height: 1.5; }
+  h2 { font-size: 8pt; margin: 8pt 0 3pt; padding-bottom: 2pt; }
+  .item { margin-bottom: 4pt; break-inside: avoid; }
+  .item h3 { font-size: 9.4pt; }
+  .item ul { padding-left: 13pt; }
+  .item li, .item p, .skills { font-size: 8.8pt; }
+  .item li { margin: 0; }
+  .when { font-size: 8pt; line-height: 1.5; }
+  .tags { font-size: 7.6pt; }
+  .skills { gap: 1pt 10pt; }
+  a { text-decoration: none; }
+  .foot { display: none; }   /* the header already links GitHub */
+}
+</style>
+</head>
+<body>
+<nav class="bar" aria-label="Résumé actions">
+  <a href="./">← Portfolio</a>
+  <a class="primary" href="assets/Jaden-Chua-Resume.pdf" download>Download PDF</a>
+  <button type="button" onclick="window.print()">Print</button>
+</nav>
+
+<main class="sheet">
+  <header>
+    <h1>Jaden Chua</h1>
+    <p class="role">Electronic &amp; Computer Engineering student · Nanyang Polytechnic · Singapore</p>
+    <ul class="contact">
+      <li><a href="mailto:jadenchua20@gmail.com">jadenchua20@gmail.com</a></li>
+      <li><a href="https://jaden-portfolio-psi.vercel.app/">jaden-portfolio-psi.vercel.app</a></li>
+      <li><a href="https://github.com/jadenchua-dot">github.com/jadenchua-dot</a></li>
+      <li><a href="https://www.linkedin.com/in/jaden-chua-9177aa3b8/">linkedin.com/in/jaden-chua-9177aa3b8</a></li>
+    </ul>
+  </header>
+  <p class="summary">Year 2 diploma student with a 3.97 GPA and a place on the Director's List every semester. I build small embedded and IoT devices that solve everyday problems, on ESP32, Arduino, ATmega328P and Raspberry Pi, and document each one with its code, wiring and what went wrong, so others can rebuild it.</p>
+
+  <h2>Education</h2>
+  <div class="item">
+    <h3>Nanyang Polytechnic <span>· Diploma in Electronic and Computer Engineering</span></h3>
+    <span class="when">2025 – 2028 (expected)</span>
+    <ul>
+      <li>Cumulative GPA 3.97 / 4.00. Director's List (top 15% of the cohort) in Year&nbsp;1 Semester&nbsp;1, Year&nbsp;1 Semester&nbsp;2 and Year&nbsp;2 Semester&nbsp;1.</li>
+      <li>Edusave Certificate of Academic Achievement 2026 (top 25% of level and course, with good conduct).</li>
+      <li>Modules include Microcontroller Systems, Electronic Communication System Analysis, Smart Connected System Project for Sustainability, and Statistical Analysis for Computing.</li>
+    </ul>
+  </div>
+
+  <h2>Projects</h2>
+  <div class="item">
+    <h3>ExitPilot <span>· when to leave for the bus</span></h3>
+    <span class="when">Nov 2026</span>
+    <ul>
+      <li>M5Stack Fire by the front door that turns live LTA DataMall bus arrivals into "leave in 4 min", warns of rain from NEA's 2-hour forecast, and sends a Telegram message when a card is tapped on the way out or back in.</li>
+      <li>All network calls run on the ESP32's second core (FreeRTOS), so the screen and RFID reader never wait; wakes on approach with a ToF sensor and dims itself at night.</li>
+    </ul>
+    <span class="tags">ESP32 · C++ · PlatformIO · REST APIs · RFID · Telegram Bot API</span>
+  </div>
+  <div class="item">
+    <h3>TinyML vibration anomaly detector</h3>
+    <span class="when">Nov 2026</span>
+    <ul>
+      <li>Learns a machine's normal vibration in 30 s, then trains a 16-8-4-8-16 autoencoder on the ESP32 itself in about 3 seconds and alarms on anything unusual, with no internet. GitHub Actions publishes ready-to-flash firmware.</li>
+    </ul>
+    <span class="tags">ESP32 · C++ · FFT · on-device machine learning · GitHub Actions</span>
+  </div>
+  <div class="item">
+    <h3>Equipment levelling monitor</h3>
+    <span class="when">Nov 2026</span>
+    <ul>
+      <li>Tilt alarm with a live Wi-Fi dashboard, JSON API and phone push alerts. Traced drifting readings to slow gyro integration and switched to accelerometer-only filtering, cutting jitter to 0.1–0.35°.</li>
+    </ul>
+    <span class="tags">ESP32 · MPU6886 IMU · web server · ntfy</span>
+  </div>
+  <div class="item">
+    <h3>Self-watering garden monitor</h3>
+    <span class="when">Nov 2026</span>
+    <ul>
+      <li>Reads soil moisture, air and tank level, and opens a servo valve only after five dry readings in a row, skipping when the tank or humidity says not to. Fixed resets and screen flicker caused by the servo's current draw.</li>
+    </ul>
+    <span class="tags">M5Stack Fire · I2C sensors · servo · Wi-Fi dashboard</span>
+  </div>
+  <div class="item">
+    <h3>Smart elevating wheelchair <span>· team of 4</span></h3>
+    <span class="when">Team project</span>
+    <ul>
+      <li>Lego Technic prototype with a push-button scissor-lift seat and a rear ultrasonic warning for obstacles closer than 25 cm, chosen after comparing four ideas on a value-effort map.</li>
+    </ul>
+    <span class="tags">Arduino Uno · servo · HC-SR04 · Tinkercad</span>
+  </div>
+  <div class="item">
+    <h3>Smart Window Energy Guard</h3>
+    <span class="when">Coursework</span>
+    <ul>
+      <li>Arduino and Raspberry Pi system that gives an open window a 5–60 s grace period before sounding an alarm, logs every reading to MariaDB and shows it on a Flask dashboard.</li>
+    </ul>
+    <span class="tags">Arduino · Raspberry Pi · Python · Flask · MariaDB</span>
+  </div>
+
+  <h2>Leadership &amp; activities</h2>
+  <div class="item">
+    <h3>GovTech Digital4Good Hackathon <span>· team of 3</span></h3>
+    <span class="when">6 Nov 2026</span>
+    <p>Built SafeLens AI, a browser prototype that blurs harmful messages, explains the risk and helps young people report them. Rebuilt the core mid-event when a fixed-list approach missed real input.</p>
+  </div>
+  <div class="item">
+    <h3>Singapore Young Leaders Programme</h3>
+    <span class="when">2026</span>
+    <p>Selected for SYLP and completed the NYC Youth Leaders' Course (NYCLC).</p>
+  </div>
+  <div class="item">
+    <h3>Polytechnic Forum</h3>
+    <span class="when">2026</span>
+    <p>Represented Nanyang Polytechnic.</p>
+  </div>
+
+  <h2>Skills</h2>
+  <dl class="skills">
+    <dt>Languages</dt><dd>C / C++ (Arduino, AVR), Python, HTML, CSS, JavaScript, SQL (MariaDB)</dd>
+    <dt>Hardware</dt><dd>M5Stack Fire (ESP32) and units, ATmega328P, Arduino Uno, Raspberry Pi, BeagleBone Black, mikroBUS Clicks, PCB layout</dd>
+    <dt>Tools</dt><dd>PlatformIO, Arduino IDE 2, Edge Impulse, Git and GitHub Actions, Flask, pandas, seaborn</dd>
+    <dt>Theory</dt><dd>AC / DC circuit analysis, BPSK, QPSK, QAM, BER and link budgets, statistics</dd>
+    <dt>Spoken</dt><dd>English, Chinese</dd>
+  </dl>
+
+  <p class="foot">Code, wiring and write-ups for every project: github.com/jadenchua-dot</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Portfolio demo. Everything outside the DEMO blocks is the device's own page, copied unchanged from
+     PAGE in firmware/garden_monitor_wifi/garden_monitor_wifi.ino in github.com/jadenchua-dot/m5stack-garden-monitor. -->
+<!-- DEMO: simulated garden -->
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<meta name="description" content="Try the garden monitor's real dashboard on a simulated garden: dry the soil, empty the tank, make it humid, and watch it decide when to water.">
+<script>
+/* A simulated garden that answers the dashboard's /data calls with the firmware's rules: one reading a second;
+   water after 5 dry readings in a row (soil above 3300) unless the tank is under 20% or the air is at 90%
+   humidity or more; button A waters now (but never from a low tank); valve open 5 s, then a 60 s cooldown. */
+(function () {
+  var g = window.garden = { soil: 2600, target: 2600, temp: 29.4, hum: 68, humid: false, level: 72, state: 'Waiting',
+    dry: 0, note: '', since: 0, clock: 0, speed: 1, btnA: false, onStep: null };
+  function step() {
+    g.clock += 1000;
+    if (g.state === 'Watering') { g.soil += (2050 - g.soil) * .45; g.level = Math.max(0, g.level - 1.6); }
+    else {
+      if (g.state === 'Waiting') g.target = Math.min(4095, g.target + 4);   // the soil slowly dries out
+      g.soil += (g.target - g.soil) * .15 + (Math.random() - .5) * 14;
+    }
+    g.soil = Math.round(Math.max(1900, Math.min(4095, g.soil)));
+    g.temp = +(29.4 + Math.sin(g.clock / 90000) * .4 + (Math.random() - .5) * .1).toFixed(1);
+    g.hum = Math.round((g.humid ? 92 : 68) + (Math.random() - .5) * 2);
+    var lvl = Math.round(g.level), low = lvl >= 0 && lvl < 20, btnA = g.btnA;
+    g.btnA = false; g.note = '';
+    if (g.state === 'Waiting') {
+      if (g.soil > 3300) g.dry++; else g.dry = 0;
+      if (g.dry >= 5 || btnA) {
+        if (low) g.note = 'Tank low: skipped';
+        else if (!btnA && g.hum >= 90) g.note = 'Humid air: skipped';
+        else { g.state = 'Watering'; g.since = g.clock; g.dry = 0; }
+      }
+    } else if (g.state === 'Watering' && g.clock - g.since >= 5000) { g.state = 'Cooldown'; g.since = g.clock; g.target = Math.min(g.target, 2200); }
+    else if (g.state === 'Cooldown' && g.clock - g.since >= 60000) { g.state = 'Waiting'; g.dry = 0; }
+    if (g.onStep) g.onStep();
+  }
+  (function tick() { step(); setTimeout(tick, 1000 / g.speed); })();
+  var realFetch = window.fetch.bind(window);
+  window.fetch = function (input, init) {
+    var u = new URL(typeof input === 'string' ? input : input.url, location.href);
+    if (!/\/data$/.test(u.pathname)) return realFetch(input, init);
+    var d = { soil: g.soil, temp: g.temp, hum: g.hum, level: Math.round(g.level), threshold: 3300, state: g.state, note: g.note };
+    return new Promise(function (ok) {
+      setTimeout(function () { ok(new Response(JSON.stringify(d), { headers: { 'Content-Type': 'application/json' } })); }, 25 + Math.random() * 50);
+    });
+  };
+})();
+</script>
+<style>
+.sim{position:sticky;top:0;z-index:5;background:#161d12;border-bottom:1px solid #2a3326;box-shadow:0 8px 24px -16px rgba(0,0,0,.7)}
+.sim-in{max-width:520px;margin:0 auto;padding:12px 18px}
+.sim-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.sim-head b{font-size:15px}
+.sim-tag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10140f;background:#f2c14e;border-radius:99px;padding:2px 9px}
+.sim p{margin:4px 0 0;color:#8aa17d;font-size:13px}
+.sim p a{color:#e8efe3}
+.sim-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.sim button{font:600 13px system-ui,sans-serif;color:#e8efe3;background:#1f2819;border:1px solid #344030;border-radius:9px;padding:7px 10px;cursor:pointer}
+.sim button:hover{border-color:#5fa85f}
+.sim button[aria-pressed="true"]{background:#2d3b25;border-color:#5fa85f}
+.sim label{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:#8aa17d}
+.sim input[type=range]{flex:1;accent-color:#5fa85f}
+.sim-why{margin-top:8px;font:12px ui-monospace,monospace;color:#c9d6bf;min-height:16px}
+</style>
+<!-- /DEMO -->
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Garden Monitor</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; font-family: system-ui, sans-serif; background:#10140f; color:#e8efe3; }
+  header { padding:22px 18px; border-bottom:1px solid #2a3326; }
+  h1 { margin:0; font-size:20px; }
+  header p { margin:4px 0 0; color:#8aa17d; font-size:13px; }
+  main { display:grid; gap:12px; padding:18px; max-width:520px; margin:0 auto;
+         grid-template-columns:1fr 1fr; }
+  .card { background:#19200f3b; background:#1a2115; border:1px solid #2a3326;
+          border-radius:12px; padding:16px; }
+  .card.wide { grid-column:1 / -1; }
+  .label { color:#8aa17d; font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+  .value { font-size:30px; font-weight:650; margin-top:6px; }
+  .unit { font-size:15px; color:#8aa17d; font-weight:400; }
+  .state { font-size:22px; font-weight:650; margin-top:6px; }
+  .bar { height:10px; border-radius:6px; background:#2a3326; margin-top:10px; overflow:hidden; }
+  .bar span { display:block; height:100%; background:#5fa85f; }
+  .low .value, .low .bar span { color:#ff6b6b; background:#ff6b6b; }
+  .note { color:#f2c14e; min-height:18px; margin-top:8px; font-size:14px; }
+  footer { text-align:center; color:#5f6f55; font-size:12px; padding:14px; }
+</style>
+</head>
+<body>
+<!-- DEMO: control strip -->
+<div class="sim" role="region" aria-label="Simulator">
+ <div class="sim-in">
+  <div class="sim-head"><b>You are the weather</b><span class="sim-tag">Demo</span></div>
+  <p>This is the page the M5Stack Fire serves over Wi-Fi, unchanged, running on a simulated garden. <a href="../../">Back to the portfolio</a></p>
+  <div class="sim-btns">
+   <button id="gDry">Dry out the soil</button><button id="gWet">Water by hand</button><button id="gHumid" aria-pressed="false">Humid day</button><button id="gBtnA">Press button A (water now)</button><button id="gSpeed" aria-pressed="false">Speed ×5</button>
+  </div>
+  <label>Tank <input id="gTank" type="range" min="0" max="100" value="72" aria-label="Water left in the tank"><span id="gTankV">72%</span></label>
+  <div class="sim-why" id="gWhy" aria-live="polite"></div>
+ </div>
+</div>
+<!-- /DEMO -->
+
+<header>
+  <h1>Garden Monitor</h1>
+  <p id="conn">Connecting to the Fire...</p>
+</header>
+<main>
+  <div class="card">
+    <div class="label">Soil</div>
+    <div class="value" id="soil">--</div>
+    <div class="note" id="soilnote"></div>
+  </div>
+  <div class="card">
+    <div class="label">Air</div>
+    <div class="value" id="temp">--<span class="unit"> C</span></div>
+    <div class="note" id="hum"></div>
+  </div>
+  <div class="card wide" id="watercard">
+    <div class="label">Water tank</div>
+    <div class="value" id="level">--<span class="unit"> %</span></div>
+    <div class="bar"><span id="bar" style="width:0%"></span></div>
+  </div>
+  <div class="card wide">
+    <div class="label">Valve</div>
+    <div class="state" id="state">--</div>
+    <div class="note" id="note"></div>
+  </div>
+</main>
+<footer>Updates every 2 seconds &middot; served by the M5Stack Fire</footer>
+<script>
+async function tick() {
+  try {
+    const r = await fetch('/data');
+    const d = await r.json();
+    document.getElementById('conn').textContent = 'Live';
+    document.getElementById('soil').textContent = d.soil;
+    document.getElementById('soilnote').textContent =
+      d.soil > d.threshold ? 'Dry (limit ' + d.threshold + ')' : 'Wet enough';
+    document.getElementById('temp').innerHTML =
+      (d.temp < -100 ? '--' : d.temp) + '<span class="unit"> C</span>';
+    document.getElementById('hum').textContent =
+      d.hum < 0 ? 'Humidity: --' : 'Humidity: ' + d.hum + ' %';
+    document.getElementById('level').innerHTML =
+      (d.level < 0 ? '--' : d.level) + '<span class="unit"> %</span>';
+    const lvl = d.level < 0 ? 0 : d.level;
+    document.getElementById('bar').style.width = lvl + '%';
+    document.getElementById('watercard').className =
+      'card wide' + (d.level >= 0 && d.level < 20 ? ' low' : '');
+    document.getElementById('state').textContent = d.state;
+    document.getElementById('note').textContent = d.note;
+  } catch (e) {
+    document.getElementById('conn').textContent = 'Lost connection, retrying...';
+  }
+}
+tick();
+setInterval(tick, 2000);
+</script>
+<!-- DEMO: controls -->
+<script>
+(function () {
+  var g = window.garden, why = document.getElementById('gWhy'), tank = document.getElementById('gTank'), tv = document.getElementById('gTankV');
+  document.getElementById('gDry').onclick = function () { g.target = 4095; };
+  document.getElementById('gWet').onclick = function () { g.target = 2100; g.soil = Math.min(g.soil, 2600); };
+  document.getElementById('gBtnA').onclick = function () { g.btnA = true; };
+  var humid = document.getElementById('gHumid');
+  humid.onclick = function () { g.humid = !g.humid; humid.setAttribute('aria-pressed', g.humid); };
+  var speed = document.getElementById('gSpeed');
+  speed.onclick = function () { g.speed = g.speed === 1 ? 5 : 1; speed.setAttribute('aria-pressed', g.speed === 5); };
+  tank.oninput = function () { g.level = +tank.value; tv.textContent = tank.value + '%'; };
+  g.onStep = function () {
+    if (document.activeElement !== tank) { tank.value = Math.round(g.level); tv.textContent = Math.round(g.level) + '%'; }
+    var s = g.state === 'Watering' ? 'Valve open: ' + Math.max(0, Math.ceil((5000 - (g.clock - g.since)) / 1000)) + ' s left'
+      : g.state === 'Cooldown' ? 'Cooldown: ' + Math.ceil((60000 - (g.clock - g.since)) / 1000) + ' s before it can water again'
+      : 'Dry readings in a row: ' + Math.min(g.dry, 5) + ' of 5' + (g.soil > 3300 ? '' : ' (soil is wet enough)');
+    why.textContent = s;
+  };
+})();
+</script>
+<!-- /DEMO -->
+</body>
+</html>
