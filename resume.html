@@ -137,7 +137,7 @@ h2 { margin: 16px 0 6px; padding-bottom: 3px; border-bottom: 1px solid var(--rul
     <span class="when">Nov 2026</span>
     <ul>
       <li>M5Stack Fire by the front door that turns live LTA DataMall bus arrivals into "leave in 4 min", warns of rain from NEA's 2-hour forecast, and sends a Telegram message when a card is tapped on the way out or back in.</li>
-      <li>All network calls run on the ESP32's second core (FreeRTOS), so the screen and RFID reader never wait; wakes on approach with a ToF sensor and dims itself at night.</li>
+      <li>Wakes when someone walks up, dims itself at night, and responds to card taps instantly, even while it's fetching bus times.</li>
     </ul>
     <span class="tags">ESP32 · C++ · PlatformIO · REST APIs · RFID · Telegram Bot API</span>
   </div>
@@ -145,7 +145,7 @@ h2 { margin: 16px 0 6px; padding-bottom: 3px; border-bottom: 1px solid var(--rul
     <h3>TinyML vibration anomaly detector</h3>
     <span class="when">Nov 2026</span>
     <ul>
-      <li>Learns a machine's normal vibration in 30 s, then trains a 16-8-4-8-16 autoencoder on the ESP32 itself in about 3 seconds and alarms on anything unusual, with no internet. GitHub Actions publishes ready-to-flash firmware.</li>
+      <li>Learns a machine's normal vibration in 30 seconds, teaches itself what normal looks like, and alerts on anything unusual, all on the device with no internet. Anyone can download ready-to-install firmware.</li>
     </ul>
     <span class="tags">ESP32 · C++ · FFT · on-device machine learning · GitHub Actions</span>
   </div>
@@ -153,7 +153,7 @@ h2 { margin: 16px 0 6px; padding-bottom: 3px; border-bottom: 1px solid var(--rul
     <h3>Equipment levelling monitor</h3>
     <span class="when">Nov 2026</span>
     <ul>
-      <li>Tilt alarm with a live Wi-Fi dashboard, JSON API and phone push alerts. Traced drifting readings to slow gyro integration and switched to accelerometer-only filtering, cutting jitter to 0.1–0.35°.</li>
+      <li>Tilt alarm with a live web dashboard and phone alerts. Tracked down why the reading drifted while it sat still and switched to a better-suited sensor, so it now holds steady.</li>
     </ul>
     <span class="tags">ESP32 · MPU6886 IMU · web server · ntfy</span>
   </div>

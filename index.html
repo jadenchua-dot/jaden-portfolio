@@ -1291,7 +1291,7 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
           <ul class="fixes">
             <li><b>The board restarted mid-watering.</b> The servo arm jammed against the Lego frame and drew too much power, so I gave it more room and made it move more gently.</li>
             <li><b>The screen flickered whenever the servo moved.</b> The laptop's USB port could not supply enough power, so running it from a battery solved the problem.</li>
-            <li><b>The screen and a sensor interfered with each other.</b> Switching to a different display library kept them apart.</li>
+            <li><b>The screen and a sensor interfered with each other.</b> I changed how the screen is driven, and both now work side by side.</li>
           </ul>
 
           <div class="links">
@@ -1336,16 +1336,13 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
               <path class="wire" d="M324 190 H346 V236 H368" marker-end="url(#ah1)"/>
               <text class="pin" x="350" y="200">Port C · G17</text>
             </svg>
-            <figcaption>Fig. 1 · How the sensors and valve connect to the Fire</figcaption>
+            <figcaption>Fig. 1 · How the sensors and the valve connect</figcaption>
           </figure>
 
-          <div class="readout" aria-label="Measured values">
-            <div><span>Waters after</span><b>5 dry checks</b></div>
-            <div><span>Skips if tank</span><b>&lt; 20%</b></div>
-            <div><span>Skips if humidity</span><b>&gt; 90%</b></div>
-            <div><span>Sensors</span><b>3</b></div>
-            <div><span>Valve shut · open</span><b>25° · 130°</b></div>
-            <div><span>Milestone sketches</span><b>11</b></div>
+          <div class="readout" aria-label="At a glance">
+            <div><span>Waters</span><b>only when dry</b></div>
+            <div><span>Holds off</span><b>low tank, humid day</b></div>
+            <div><span>Check on it</span><b>from your phone</b></div>
           </div>
 
           <h4>Build log</h4>
@@ -1364,7 +1361,7 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
           <h3>Equipment levelling monitor</h3>
           <ul class="stack"><li>ESP32 · M5Stack Fire</li><li>C++ / PlatformIO</li><li>MPU6886 IMU</li><li>Web server + JSON API</li><li>ntfy push</li></ul>
           <p>When a 3D printer, tripod or bench machine gets knocked off level, it can ruin the work or even tip over. However, nobody usually notices until it is too late, since a spirit level only tells you it was level when you last checked.</p>
-          <p>This monitor sits on the equipment and keeps watch the whole time. You set "level" with one button, and as the tilt nears your limit it turns amber. If it goes past, it turns red, beeps and sends an alert to your phone. On top of that, a WiFi dashboard shows the live angle and lets you change the limit or mute the alarm, while brief bumps are ignored.</p>
+          <p>This monitor sits on the equipment and keeps watch the whole time. You set "level" with one button, and as the tilt nears your limit it turns amber. If it goes past, it turns red, beeps and sends an alert to your phone. You can also check it and change the limit from a web page on your phone, and a quick bump won't set it off.</p>
 
           <div class="demo">
             <div class="demo-grid">
@@ -1387,9 +1384,9 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
 
           <h4>What broke, and the fix</h4>
           <ul class="fixes">
-            <li><b>The screen rotated the wrong way.</b> The motion sensor sits turned 90° inside the Fire, so I worked out its real orientation and corrected for it.</li>
-            <li><b>The reading drifted while lying still.</b> The gyro could not keep up, so I switched to the accelerometer instead. As a result, the reading now stays within 0.35° rather than swinging by tens of degrees.</li>
-            <li><b>The WiFi kept failing to connect.</b> I added automatic retries and a phone hotspot backup, so it now reconnects on its own.</li>
+            <li><b>The screen turned the wrong way.</b> The motion sensor sits sideways inside the device, so I worked out which way it really faces and corrected for it.</li>
+            <li><b>The reading drifted while it was lying still.</b> I measured what was going wrong, switched to a sensor that reads gravity directly, and now it holds steady.</li>
+            <li><b>The Wi-Fi kept dropping.</b> It now keeps trying on its own and can fall back to a phone hotspot, so the alerts don't stop.</li>
           </ul>
 
           <div class="links">
@@ -1434,13 +1431,10 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
             <figcaption>Fig. 2 · One sensor in, four outputs</figcaption>
           </figure>
 
-          <div class="readout" aria-label="Measured values">
-            <div><span>Default limit</span><b>10°</b></div>
-            <div><span>Flat jitter</span><b>0.1–0.35°</b></div>
-            <div><span>Warn zone</span><b>70% of limit</b></div>
-            <div><span>Alarm delay</span><b>0.5 s</b></div>
-            <div><span>Hysteresis</span><b>1.5°</b></div>
-            <div><span>Screen rotations</span><b>4</b></div>
+          <div class="readout" aria-label="At a glance">
+            <div><span>Set up with</span><b>one button</b></div>
+            <div><span>Alerts you by</span><b>light, beep, phone</b></div>
+            <div><span>Ignores</span><b>quick bumps</b></div>
           </div>
         </div>
       </article>
@@ -1452,7 +1446,7 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
           <h3>TinyML vibration anomaly detector</h3>
           <ul class="stack"><li>ESP32 · M5Stack Fire</li><li>C++ / PlatformIO</li><li>MPU6886 IMU</li><li>FFT</li><li>On-device autoencoder</li><li>GitHub Actions</li></ul>
           <p>Motors, pumps and fans usually start to vibrate differently well before they break. However, nobody stands next to a machine listening for it, and cloud monitoring needs WiFi and a subscription that many workshops and plant rooms don't have.</p>
-          <p>So this detector learns each machine for itself. You stick the Fire on, press one button, and it records 30 seconds of normal running. It then trains a small neural network on the device in about three seconds. From then on, if the vibration stops looking normal, the screen and LED bars turn red, it beeps and names what changed, such as a new rattle in one frequency band. Everything runs on the device, with no internet at all.</p>
+          <p>So this detector learns each machine for itself. You stick the Fire on, press one button, and it records 30 seconds of normal running. It then teaches itself what normal looks like, in a few seconds. From then on, if the vibration changes, the screen and lights turn red, it beeps and tells you what changed, such as a new rattle. Everything runs on the device, with no internet at all.</p>
 
           <div class="demo">
             <video class="video" src="assets/vibration/how-to-use.mp4" poster="assets/vibration/poster.jpg" controls preload="none" playsinline aria-label="Animation: how to use the vibration anomaly detector" style="max-width:560px"></video>
@@ -1462,8 +1456,8 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
           <h4>What broke, and the fix</h4>
           <ul class="fixes">
             <li><b>The alarm could keep itself going.</b> The Fire's own beeper and button presses shake the case, so the moments around them are now left out of the alarm decision.</li>
-            <li><b>The sensor ran slower than expected.</b> It measured about 219 readings a second instead of 250, so the device now measures the real rate and labels the frequencies from that.</li>
-            <li><b>Quiet machines gave false alarms.</b> On a very still machine, tiny changes looked huge, so I set a minimum spread for every measurement.</li>
+            <li><b>The sensor ran slower than its spec.</b> That threw off what it reported, so the device now checks its real speed and reports correctly.</li>
+            <li><b>Quiet machines gave false alarms.</b> On a very still machine, tiny changes looked huge, so it now ignores changes too small to matter.</li>
           </ul>
 
           <div class="links">
@@ -1502,16 +1496,13 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
               <path class="wire" d="M324 140 H368" marker-end="url(#ah5)"/>
               <path class="wire" d="M324 180 H346 V225 H368" marker-end="url(#ah5)"/>
             </svg>
-            <figcaption>Fig. 3 · Learns, trains and detects on the device, with no internet</figcaption>
+            <figcaption>Fig. 3 · It learns and keeps watch on its own, with no internet</figcaption>
           </figure>
 
-          <div class="readout" aria-label="Measured values">
-            <div><span>Learning time</span><b>30 s</b></div>
-            <div><span>Training on ESP32</span><b>3.2 s</b></div>
-            <div><span>Network</span><b>16-8-4-8-16</b></div>
-            <div><span>Model size</span><b>1.4 KB</b></div>
-            <div><span>Normal score</span><b>0.05–0.34</b></div>
+          <div class="readout" aria-label="At a glance">
+            <div><span>Learns a machine in</span><b>30 seconds</b></div>
             <div><span>Internet needed</span><b>None</b></div>
+            <div><span>Tells you</span><b>what changed</b></div>
           </div>
         </div>
       </article>
@@ -1523,7 +1514,7 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
           <h3>ExitPilot: when to leave for the bus</h3>
           <ul class="stack"><li>ESP32 · M5Stack Fire</li><li>C++ / PlatformIO</li><li>LTA DataMall API</li><li>NEA forecast API</li><li>ToF · Light · RFID · ENV II</li><li>Telegram Bot API</li><li>FreeRTOS, 2 cores</li></ul>
           <p>Every morning in Singapore goes the same way: you check the bus app, guess how long the walk takes, and either wait ten minutes at the stop or run for the bus. Then it rains, and the umbrella is still at home. And your parents text &ldquo;reach already?&rdquo;</p>
-          <p>ExitPilot sits inside the flat, next to the front door. Walk up and its ToF sensor wakes the screen with live arrivals for my stop. It works out the next bus I can still catch after my 5-minute walk and shows one big line: &ldquo;Leave in 3 min&rdquo;, then &ldquo;LEAVE NOW&rdquo; in red. If NEA's 2-hour forecast says rain, the bar turns blue, the LEDs breathe blue and it beeps, right next to the umbrella stand. Tapping my card on the way out sends my family a Telegram with the time and the bus I'm catching; tapping back in says I'm home. Nobody around? The screen sleeps after 60 seconds, and at night the Light unit dims it.</p>
+          <p>ExitPilot sits inside the flat, next to the front door. Walk up and the screen wakes with live arrivals for my stop. It works out the next bus I can still catch after my 5-minute walk and shows one big line: &ldquo;Leave in 3 min&rdquo;, then &ldquo;LEAVE NOW&rdquo; in red. If rain is forecast, it turns blue and beeps, right next to the umbrella stand. Tapping my card on the way out sends my family a Telegram with the time and the bus I'm catching; tapping back in says I'm home. When nobody's around it goes to sleep, and at night it dims itself.</p>
 
           <div class="demo">
             <video class="video" src="assets/exitpilot/exitpilot-demo.mp4" poster="assets/exitpilot/poster.jpg" controls preload="none" playsinline aria-label="3D animation: how ExitPilot works at home, from checking the bus time to tapping out and coming home at night" style="max-width:560px"></video>
@@ -1532,10 +1523,10 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
 
           <h4>What broke, and the fix</h4>
           <ul class="fixes">
-            <li><b>The bus API answered &ldquo;401 Unauthorized&rdquo;.</b> LTA sent two emails, and I had pasted the SDK key from one instead of the API key from the other. The serial log made it obvious once the right key went in.</li>
-            <li><b>Night mode never turned on.</b> I assumed the Light unit reads lower in the dark, but this one reads higher: about 2,150 with the lights on and 4,095 when covered. I flipped the logic and made it hold for 3 seconds so a passing shadow can't flicker the screen.</li>
-            <li><b>The screen never went to sleep.</b> A fixed wake distance didn't work, because the desk was already inside it. The ToF now learns the empty background and only wakes when something comes 25 cm closer than that, so it works wherever it's mounted.</li>
-            <li><b>Card taps were slow and sometimes counted twice.</b> The reader was only checked between downloads that block for seconds. I moved all internet work to the ESP32's second core and made a tap count only when a card arrives, with a lockout, so one tap can't log &ldquo;left&rdquo; and &ldquo;home&rdquo; together.</li>
+            <li><b>The bus times wouldn't load.</b> LTA had sent me two different keys and I'd used the wrong one. Reading the device's log made it obvious.</li>
+            <li><b>Night mode never turned on.</b> The light sensor works the opposite way to what I assumed. I tested it, flipped the logic, and made it wait a moment so a passing shadow can't flicker the screen.</li>
+            <li><b>The screen never went to sleep.</b> It kept mistaking the desk for a person. It now learns what's normally in front of it and only wakes when someone walks up, wherever it's placed.</li>
+            <li><b>Card taps were slow and sometimes counted twice.</b> The device was busy fetching bus times when you tapped. I split the internet work off so taps register instantly, and each tap now counts once.</li>
           </ul>
 
           <div class="links">
@@ -1586,7 +1577,7 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
               <path class="wire" d="M336 170 H378" marker-end="url(#ah6)"/>
               <path class="wire" d="M336 210 H356 V237 H378" marker-end="url(#ah6)"/>
             </svg>
-            <figcaption>Fig. 4 · Four units, three web services, two cores</figcaption>
+            <figcaption>Fig. 4 · What it senses, what it checks online, and how it tells you</figcaption>
           </figure>
 
           <figure class="figure" style="margin:16px 0 0">
@@ -1594,13 +1585,10 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
             <figcaption>The real screen: &ldquo;Leave in 3 min&rdquo; for bus 169 at Yishun Emerald</figcaption>
           </figure>
 
-          <div class="readout" aria-label="Measured values">
-            <div><span>Wakes when</span><b>25 cm closer</b></div>
-            <div><span>Sleeps after</span><b>60 s</b></div>
-            <div><span>Bus refresh</span><b>30 s / 2 min</b></div>
-            <div><span>Screen on</span><b>when near</b></div>
-            <div><span>Night backlight</span><b>25 of 180</b></div>
-            <div><span>RFID check</span><b>every 50 ms</b></div>
+          <div class="readout" aria-label="At a glance">
+            <div><span>Tells you</span><b>when to leave</b></div>
+            <div><span>Warns you</span><b>to take an umbrella</b></div>
+            <div><span>Lets family know</span><b>you're out or home</b></div>
           </div>
         </div>
       </article>
@@ -1734,9 +1722,9 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
             <figcaption>Fig. 6 · How the buttons, sensor and motor connect</figcaption>
           </figure>
 
-          <div class="readout" aria-label="Key values">
-            <div><span>Warning range</span><b>&lt; 25 cm</b></div>
-            <div><span>Seat servo</span><b>0° · 90°</b></div>
+          <div class="readout" aria-label="At a glance">
+            <div><span>Seat rises</span><b>at a button press</b></div>
+            <div><span>Warns of</span><b>obstacles behind</b></div>
             <div><span>Ideas compared</span><b>4</b></div>
           </div>
 
@@ -1856,7 +1844,7 @@ footer.signoff { font-family: var(--body); font-size: 16px; color: var(--ink); }
         <div class="st-stage">
           <div class="step-card on" role="tabpanel"><span class="ic">01</span><h3>1. Find the problem</h3><p>I start from a real problem someone faces. For the wheelchair, that was a user who couldn't reach high shelves without help, so we compared four ideas before building one.</p></div>
           <div class="step-card" role="tabpanel"><span class="ic">02</span><h3>2. Prototype fast</h3><p>Next, I get something working early. The garden monitor began with a single sensor, and I added one part at a time until it could water itself.</p></div>
-          <div class="step-card" role="tabpanel"><span class="ic">03</span><h3>3. Debug properly</h3><p>When something breaks, I measure instead of guessing. For example, when the tilt reading drifted, the data showed the gyro was too slow, so I switched to the accelerometer.</p></div>
+          <div class="step-card" role="tabpanel"><span class="ic">03</span><h3>3. Debug properly</h3><p>When something breaks, I measure instead of guessing. When the tilt reading drifted, the data showed exactly which sensor was at fault, so I switched to a better one.</p></div>
           <div class="step-card" role="tabpanel"><span class="ic">04</span><h3>4. Write it up</h3><p>Finally, every project comes with a README, the wiring and a list of what went wrong, so someone else can rebuild it.</p></div>
         </div>
         <div class="st-stage" aria-hidden="true">
